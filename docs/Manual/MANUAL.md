@@ -102,7 +102,7 @@ Earlier versions of Falcon BMS are not supported by the exporter, as the .LOD mo
 The BMS Plugin supports **Windows**, **Linux** and should work with **Mac** (untested). This includes the DDS texture export.
 
 ### 1.2. Troubleshooting
-If you want to report an issue, please [use this projects issue tracker](https://github.com/BenchmarkSims/bms-substance-plugin/issues) and provide the following details:
+If you want to report an issue, please [use this projects issue tracker](https://github.com/BenchmarkSims/bms-blender-plugin/issues) and provide the following details:
 
 * The versions of the plugin (displayed in the Blender preferences), your Blender version and the Falcon BMS version.
 * The full Blender text output (see [how to launch Blender from the command line](https://docs.blender.org/manual/en/latest/advanced/command_line/launch/index.html#command-line-launch-index)).
