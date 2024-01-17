@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="hotspot_icon.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="8.2528619"
+     inkscape:cx="270.33046"
+     inkscape:cy="127.95561"
+     inkscape:window-width="2560"
+     inkscape:window-height="1371"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.90349206;stroke-dasharray:none"
+       id="rect1-88"
+       width="19.74338"
+       height="0.75207013"
+       x="40.993462"
+       y="48.559334"
+       transform="matrix(0.92724128,-0.37446442,0.50102576,0.86543237,0,0)"
+       inkscape:export-filename="hotspot_icon.png"
+       inkscape:export-xdpi="43.503193"
+       inkscape:export-ydpi="43.503193" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.90349206;stroke-dasharray:none"
+       id="rect1-88-4"
+       width="19.74338"
+       height="0.75207013"
+       x="39.509392"
+       y="51.305885"
+       transform="matrix(0.92724128,-0.37446442,0.50102576,0.86543237,0,0)" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.90349206;stroke-dasharray:none"
+       id="rect1-88-6"
+       width="19.74338"
+       height="0.75207013"
+       x="38.025318"
+       y="54.052437"
+       transform="matrix(0.92724128,-0.37446442,0.50102576,0.86543237,0,0)" />
+    <rect
+       style="fill:#ffffff;stroke:none;stroke-width:0.90349206;stroke-dasharray:none"
+       id="rect1-88-0"
+       width="19.74338"
+       height="0.75207013"
+       x="36.541245"
+       y="56.798988"
+       transform="matrix(0.92724128,-0.37446442,0.50102576,0.86543237,0,0)" />
+  </g>
+</svg>
