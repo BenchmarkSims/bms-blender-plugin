@@ -1,16 +1,17 @@
-name: Deploy develop
+name: Release Develop
 
 on:
   workflow_run:
-    workflows: [Python lint]
+    workflows: [Python Lint]
     branches:
-       - '**' # remove me!
-       - 'develop'
-    types: completed
+      - '**' # remove me!
+      - 'develop'
+    types: 
+      - completed
 
 jobs:
   deploy-develop:
-    name: Deploy develop
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
 
