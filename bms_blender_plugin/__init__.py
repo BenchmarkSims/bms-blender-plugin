@@ -13,8 +13,8 @@ bl_info = {
     "location": "File > Export",
     "description": "Export as Falcon BMS BML",
     "warning": "",
-    "doc_url": "",
-    "tracker_url": "https://git.benchmarksims.org/falcon-bms/bms-blender-plugin",
+    "doc_url": "https://github.com/BenchmarkSims/bms-blender-plugin",
+    "tracker_url": "https://github.com/BenchmarkSims/bms-blender-plugin/issues",
     "support": "COMMUNITY",
     "category": "Import-Export",
 }
