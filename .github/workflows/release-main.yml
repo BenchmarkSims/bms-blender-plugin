@@ -5,6 +5,7 @@ on:
       - closed
     branches:
       - main
+      - test-main
       
 jobs:
   lint:
