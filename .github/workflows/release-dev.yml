@@ -1,9 +1,11 @@
-name: My deploy workflow
+name: Deploy develop
 
 on:
   workflow_run:
     workflows: Python lint
-    #branches:
+    branches:
+       - 'public_release_preparations'
+       - 'develop'
     types: completed
 
 jobs:
