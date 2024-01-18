@@ -1,16 +1,30 @@
 name: Release Develop
 
 on:
-  workflow_run:
-    workflows: [Python Lint]
-    branches:
-      - '**' # remove me!
-      - 'develop'
-    types: 
-      - completed
+  push:
+      branches:    
+      - '**' # remove me
+      - develop
 
 jobs:
-  deploy-develop:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    - name: Install ruff
+      run: |
+        python -m pip install --upgrade pip
+        pip install ruff
+    - name: Lint with ruff
+      run: |
+       ruff check .
+       
+  release-develop:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
