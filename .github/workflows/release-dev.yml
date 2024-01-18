@@ -18,21 +18,21 @@ jobs:
           version_suffix=$(date +%s)
           echo "::set-output name=version_suffix::$version_suffix"
 
-      - name: Build and zip folder
-        run: |
-          version_suffix=${{ steps.get_version.outputs.version_suffix }}
-          sed "s/\"version\"\:.*/'version'\: (0, 0, "$version_suffix"\)\,/" bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp && mv bms_blender_plugin/__init__.py.tmp bms_blender_plugin/__init__.py
-          zip -r "bms_blender_plugin-develop_"$version_suffix".zip" bms_blender_plugin/
-          echo "Zip file built"
+    - name: Build and zip folder
+      run: |
+        version_suffix=${{ steps.get_version.outputs.version_suffix }}
+        sed "s/\"version\"\:.*/'version'\: (0, 0, "$version_suffix"\)\,/" bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp && mv bms_blender_plugin/__init__.py.tmp bms_blender_plugin/__init__.py
+        zip -r "bms_blender_plugin-develop_"$version_suffix".zip" bms_blender_plugin/
+        echo "Zip file built"
 
 
-      - name: Update develop release
-        if: matrix.os == 'windows-latest'
-        uses: WebFreak001/deploy-nightly@v3.0.0
-        with:
-          upload_url: https://uploads.github.com/repos/BenchmarkSims/bms-blender-plugin/releases/137519287/assets{?name,label}
-          release_id: 137519287 # same as above (id can just be taken out the upload_url, it's used to find old releases)
-          asset_path: bms_blender_plugin-develop_*.zip
-          asset_content_type: application/zip # required by GitHub API
-          max_releases: 1 # optional, if there are more releases than this matching 
+    - name: Update develop release
+      if: matrix.os == 'windows-latest'
+      uses: WebFreak001/deploy-nightly@v3.0.0
+      with:
+        upload_url: https://uploads.github.com/repos/BenchmarkSims/bms-blender-plugin/releases/137519287/assets{?name,label}
+        release_id: 137519287 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+        asset_path: bms_blender_plugin-develop_*.zip
+        asset_content_type: application/zip # required by GitHub API
+        max_releases: 1 # optional, if there are more releases than this matching 
 
