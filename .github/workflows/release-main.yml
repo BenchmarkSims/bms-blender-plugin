@@ -1,0 +1,67 @@
+name: Release Main
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install ruff
+        run: |
+          pip install ruff
+      - name: Lint with ruff
+        run: |
+          ruff check .
+  release-main:
+    needs: lint
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: version
+        uses: paulhatch/semantic-version@v5.3.0
+        id: version
+        with:
+          tag_prefix: ""
+          major_pattern: (MAJOR)
+          major_regexp_flags: ""
+          minor_pattern: (MINOR)
+          minor_regexp_flags: ""
+          version_format: ${major}.${minor}.${patch}
+          change_path: bms_blender_plugin
+          bump_each_commit: false
+          search_commit_body: false
+          user_format_type: csv
+          debug: false
+          version_from_branch: false
+          
+      - name: Build and zip folder
+        run: |
+          blender_version=$(echo ${{steps.version.outputs.version_tag}} | tr . ,)
+          sed "s/\"version\"\:.*/'version'\: ("$blender_version"\)\,/" bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp && mv bms_blender_plugin/__init__.py.tmp bms_blender_plugin/__init__.py
+          zip -r "bms_blender_plugin-${{steps.version.outputs.version_tag}}.zip" bms_blender_plugin/
+          echo "Zip file built"
+      
+      - name: Tag
+        run: |
+          git tag ${{ steps.version.outputs.version_tag }}
+          git push origin ${{ steps.version.outputs.version_tag }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag: ${{ steps.version.outputs.version_tag }}
+          files: |
+            bms_blender_plugin*.zip
