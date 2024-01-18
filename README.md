@@ -51,7 +51,7 @@ Access the plugin panel from the Blender toolbar.
 ## Contact, Reporting Issues
 For general questions or feature requests, you can contact the BMS team on [Discord](https://discord.gg/KQNHQBz) or [the Forum](https://forum.falcon-bms.com/).
 
-If you want to report an issue, please [use this projects issue tracker](https://github.com/BenchmarkSims/bml-substance-plugin/issues) and provide the following details:
+If you want to report an issue, please [use this projects issue tracker](https://github.com/BenchmarkSims/bms-blender-plugin/issues) and provide the following details:
 
 * The versions of the plugin (displayed in the Blender preferences), your Blender version and the Falcon BMS version.
 * The full Blender text output (see [how to launch Blender from the command line](https://docs.blender.org/manual/en/latest/advanced/command_line/launch/index.html#command-line-launch-index)).
