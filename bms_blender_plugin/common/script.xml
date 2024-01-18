@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Script>
+		<ScriptNum>0</ScriptNum>
+		<Name>UH1</Name>
+	</Script>
+	<Script>
+		<ScriptNum>1</ScriptNum>
+		<Name>AH64</Name>
+	</Script>
+	<Script>
+		<ScriptNum>2</ScriptNum>
+		<Name>Hokum</Name>
+	</Script>
+	<Script>
+		<ScriptNum>3</ScriptNum>
+		<Name>One Prop</Name>
+	</Script>
+	<Script>
+		<ScriptNum>4</ScriptNum>
+		<Name>C130</Name>
+	</Script>
+	<Script>
+		<ScriptNum>5</ScriptNum>
+		<Name>E3</Name>
+	</Script>
+	<Script>
+		<ScriptNum>6</ScriptNum>
+		<Name>VASIF</Name>
+	</Script>
+	<Script>
+		<ScriptNum>7</ScriptNum>
+		<Name>VASIN</Name>
+	</Script>
+	<Script>
+		<ScriptNum>8</ScriptNum>
+		<Name>Chaff</Name>
+	</Script>
+	<Script>
+		<ScriptNum>9</ScriptNum>
+		<Name>Beacon</Name>
+	</Script>
+	<Script>
+		<ScriptNum>10</ScriptNum>
+		<Name>Collapse Chute</Name>
+	</Script>
+	<Script>
+		<ScriptNum>11</ScriptNum>
+		<Name>Longbow</Name>
+	</Script>
+	<Script>
+		<ScriptNum>12</ScriptNum>
+		<Name>Cycle2</Name>
+	</Script>
+	<Script>
+		<ScriptNum>13</ScriptNum>
+		<Name>Cycle4</Name>
+	</Script>
+	<Script>
+		<ScriptNum>14</ScriptNum>
+		<Name>Cycle10</Name>
+	</Script>
+	<Script>
+		<ScriptNum>15</ScriptNum>
+		<Name>Tstrobe</Name>
+	</Script>
+	<Script>
+		<ScriptNum>16</ScriptNum>
+		<Name>TU95</Name>
+	</Script>
+	<Script>
+		<ScriptNum>17</ScriptNum>
+		<Name>Meat Ball</Name>
+	</Script>
+	<Script>
+		<ScriptNum>18</ScriptNum>
+		<Name>Complex Prop</Name>
+	</Script>
+	<Script>
+		<ScriptNum>19</ScriptNum>
+		<Name>Complex E3</Name>
+	</Script>
+	<Script>
+		<ScriptNum>20</ScriptNum>
+		<Name>PAPI</Name>
+	</Script>
+</Root>

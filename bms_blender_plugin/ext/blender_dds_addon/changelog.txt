@@ -1,0 +1,48 @@
+ver 0.3.3
+- Fixed a crash when closing Blender after exporting BC6 or BC7 textures.
+- Fixed a bug that sRGB formats make textures brighter when exporting.
+- Fixed an error when importing files from some specific directory structures.
+- Fixed a bug that the `Import from a Directory` operation can not count DDS files correctly.
+- Fixed an error when releasing DLL resources on Linux.
+- Made the addon release DLL resources for each operation.
+- Added an error for ARM devices.
+
+ver 0.3.2
+- Fixed an error when importing dds without image editor opened.
+- Fixed an error when changing workspace with file picker opened.
+
+ver 0.3.1
+- Fixed an error when loading volume textures.
+
+ver 0.3.0
+- Support texture arrays and volume textures.
+
+ver 0.2.1
+- Fixed a bug that Blender can't remove the addon after using it in the process.
+- Added "Image Filter" option. (Possible to use cubic filter for mip generation.)
+- Improved error messages for unsupported files.
+
+ver 0.2.0
+- Added "Import from a Directory" operation
+- Added "Export All Images" operation
+- Added custom properties to store meta data
+- Updated texconv to fix a bug that cubemap images will be written on non-zeroed buffers
+- Refined codes
+
+ver 0.1.3
+- Supported dds files that have no fourCC
+- Supported UINT and SINT formats
+- Used "sRGB" as a color space for SRGB formats
+- Refined codes
+
+ver 0.1.2
+- Improved exporting speed for cubemaps.
+- Improved fourCC handling.
+- Improved error handling for unsupported formats.
+
+ver 0.1.1
+- Added support for cubemaps
+- Fixed typo
+
+ver 0.1.0
+- Initial release

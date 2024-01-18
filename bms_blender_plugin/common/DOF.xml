@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<DOF>
+		<DOFNum>0</DOFNum>
+		<Name>Left Stabilizer</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>1</DOFNum>
+		<Name>Right Stabilizer</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>2</DOFNum>
+		<Name>Left Aileron</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>3</DOFNum>
+		<Name>Right Aileron</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>4</DOFNum>
+		<Name>Rudder</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>5</DOFNum>
+		<Name>Nose Gear Rot</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>6</DOFNum>
+		<Name>Wing Fold</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>7</DOFNum>
+		<Name>Thrust Reverser</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>8</DOFNum>
+	</DOF>
+	<DOF>
+		<DOFNum>9</DOFNum>
+		<Name>Left LEF</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>10</DOFNum>
+		<Name>Right LEF</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>11</DOFNum>
+		<Name>Nose Gear Broken</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>12</DOFNum>
+		<Name>Left Gear Broken</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>13</DOFNum>
+		<Name>Right Gear Broken</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>14</DOFNum>
+		<Name/>
+	</DOF>
+	<DOF>
+		<DOFNum>15</DOFNum>
+		<Name>Left Air Brake Top</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>16</DOFNum>
+		<Name>Left Air Brake Bottom</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>17</DOFNum>
+		<Name>Right Air Brake Top</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>18</DOFNum>
+		<Name>Right Air Brake Bottom</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>19</DOFNum>
+		<Name>Nose Gear</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>20</DOFNum>
+		<Name>Left Gear</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>21</DOFNum>
+		<Name>Right Gear</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>22</DOFNum>
+		<Name>Nose Gear Door</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>23</DOFNum>
+		<Name>Left Gear Door</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>24</DOFNum>
+		<Name>Right Gear Door</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>25</DOFNum>
+		<Name>Wingflex Left</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>26</DOFNum>
+		<Name>Wingflex Right</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>27</DOFNum>
+		<Name/>
+	</DOF>
+	<DOF>
+		<DOFNum>28</DOFNum>
+		<Name>Left TEF</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>29</DOFNum>
+		<Name>Right TEF</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>30</DOFNum>
+		<Name>Canopy</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>31</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>32</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>33</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>34</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>35</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>36</DOFNum>
+		<Name>Prop Animation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>37</DOFNum>
+		<Name>Tail hook</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>38</DOFNum>
+		<Name>Afterburner</Name>
+		<Comments>afterburner DOF, for scaling.</Comments>
+	</DOF>
+	<DOF>
+		<DOFNum>39</DOFNum>
+		<Name>Nozzle 1</Name>
+		<Comments>exhuast nozzle</Comments>
+	</DOF>
+	<DOF>
+		<DOFNum>40</DOFNum>
+		<Name>Propeller</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>41</DOFNum>
+		<Name>Refuel</Name>
+		<Comments>refuel probe</Comments>
+	</DOF>
+	<DOF>
+		<DOFNum>42</DOFNum>
+		<Name>Left Spoiler 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>43</DOFNum>
+		<Name>Right Spolier1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>44</DOFNum>
+		<Name>Left Spoiler2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>45</DOFNum>
+		<Name>Right Spoiler2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>46</DOFNum>
+		<Name>Swing Wing</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>47</DOFNum>
+		<Name>Throttle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>48</DOFNum>
+		<Name>RPM</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>49</DOFNum>
+		<Name/>
+	</DOF>
+	<DOF>
+		<DOFNum>50</DOFNum>
+		<Name>Wheel 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>51</DOFNum>
+		<Name>Wheel 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>52</DOFNum>
+		<Name>Wheel 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>53</DOFNum>
+		<Name>Wheel 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>54</DOFNum>
+		<Name>Wheel 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>55</DOFNum>
+		<Name>Wheel 6</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>56</DOFNum>
+		<Name>Wheel 7</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>57</DOFNum>
+		<Name>Wheel 8</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>58</DOFNum>
+		<Name>Gear Extension 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>59</DOFNum>
+		<Name>Gear Extension 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>60</DOFNum>
+		<Name>Gear Extension 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>61</DOFNum>
+		<Name>Gear Extension 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>62</DOFNum>
+		<Name>Gear Extension 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>63</DOFNum>
+		<Name>Gear Extension 6</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>64</DOFNum>
+		<Name>Gear Extension 7</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>65</DOFNum>
+		<Name>Gear Extension 8</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>66</DOFNum>
+		<Name>Afterburner</Name>
+		<Comments>afterburner DOF, for scaling.</Comments>
+	</DOF>
+	<DOF>
+		<DOFNum>67</DOFNum>
+		<Name>Nozzle 2</Name>
+		<Comments>exhaust nozzle</Comments>
+	</DOF>
+	<DOF>
+		<DOFNum>68</DOFNum>
+		<Name>Gear 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>69</DOFNum>
+		<Name>Gear 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>70</DOFNum>
+		<Name>Gear 6</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>71</DOFNum>
+		<Name>Gear 7</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>72</DOFNum>
+		<Name>Gear 8</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>73</DOFNum>
+		<Name>Gear Door 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>74</DOFNum>
+		<Name>Gear Door 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>75</DOFNum>
+		<Name>Gear Door 6</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>76</DOFNum>
+		<Name>Gear Door 7</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>77</DOFNum>
+		<Name>Gear Door 8</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>78</DOFNum>
+		<Name>Weapon Bay 0</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>79</DOFNum>
+		<Name>Weapon Bay 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>80</DOFNum>
+		<Name>Weapon Bay 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>81</DOFNum>
+		<Name>Weapon Bay 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>82</DOFNum>
+		<Name>Weapon Bay 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>83</DOFNum>
+		<Name>Intake 1 Ramp 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>84</DOFNum>
+		<Name>Intake 1 Ramp 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>85</DOFNum>
+		<Name>Intake 1 Ramp 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>86</DOFNum>
+		<Name>Intake 2 Ramp 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>87</DOFNum>
+		<Name>Intake 2 Ramp 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>88</DOFNum>
+		<Name>Intake 2 Ramp 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>89</DOFNum>
+		<Name>Pilot 1 Head Tilt</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>90</DOFNum>
+		<Name>Pilot 1 Head Pan</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>91</DOFNum>
+		<Name>Pilot 2 Head Tilt</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>92</DOFNum>
+		<Name>Pilot 2 Head Pan</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>93</DOFNum>
+		<Name>TGP Head Roll</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>94</DOFNum>
+		<Name>TGP Head Elevation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>95</DOFNum>
+		<Name>VTOL</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>96</DOFNum>
+		<Name>Flutter 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>97</DOFNum>
+		<Name>Flutter 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>98</DOFNum>
+		<Name>Max Dof</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>99</DOFNum>
+	</DOF>
+	<DOF>
+		<DOFNum>100</DOFNum>
+		<Name>Main ADI Ball Roll</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>101</DOFNum>
+		<Name>Main ADI Ball Pitch</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>102</DOFNum>
+		<Name>ASI Instrument Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>103</DOFNum>
+		<Name>Backup ADI Ball Roll</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>104</DOFNum>
+		<Name>Backup ADI Ball Pitch</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>105</DOFNum>
+		<Name>Alt Instrument Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>106</DOFNum>
+		<Name>ILS Vertical Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>107</DOFNum>
+		<Name>ILS Horizontal Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>108</DOFNum>
+		<Name>Backup Magnetic Compass</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>109</DOFNum>
+		<Name>ASI Mach Digital Readout Left Digit</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>110</DOFNum>
+		<Name>ASI Mach Digital Readout Right Digit</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>111</DOFNum>
+		<Name>Alt Digital Readout Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>112</DOFNum>
+		<Name>Alt Digital Readout Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>113</DOFNum>
+		<Name>Alt Digital Readout Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>114</DOFNum>
+		<Name>HSI Current Heading</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>115</DOFNum>
+		<Name>HSI Desired Course</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>116</DOFNum>
+		<Name>HSI Desired Heading</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>117</DOFNum>
+		<Name>HSI Beacon Course</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>118</DOFNum>
+		<Name>HSI Course Deviation</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>119</DOFNum>
+		<Name>HSI Distance To Beacon Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>120</DOFNum>
+		<Name>HSI Distance To Beacon Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>121</DOFNum>
+		<Name>HSI Distance To Beacon Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>122</DOFNum>
+		<Name>HSI Course Beacon Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>123</DOFNum>
+		<Name>HSI Course To Beacon Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>124</DOFNum>
+		<Name>HSI Course Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>125</DOFNum>
+		<Name>Fuel Flow Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>126</DOFNum>
+		<Name>Fuel Flow Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>127</DOFNum>
+		<Name>Fuel Flow Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>128</DOFNum>
+		<Name>Oil Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>129</DOFNum>
+		<Name>Nozzle Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>130</DOFNum>
+		<Name>RPM Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>131</DOFNum>
+		<Name>FTIT Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>132</DOFNum>
+		<Name>AOA Tape</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>133</DOFNum>
+		<Name>VVI Tape</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>134</DOFNum>
+		<Name>Hydraulic A Press Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>135</DOFNum>
+		<Name>Hydraulic B Press Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>136</DOFNum>
+		<Name>EPU Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>137</DOFNum>
+		<Name>Fuel Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>138</DOFNum>
+		<Name>Fuel Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>139</DOFNum>
+		<Name>Fuel Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>140</DOFNum>
+		<Name>Fuel Digit 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>141</DOFNum>
+		<Name>Fuel Digit 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>142</DOFNum>
+		<Name>Fuel Aft</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>143</DOFNum>
+		<Name>Fuel Forward</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>144</DOFNum>
+		<Name>G-Meter Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>145</DOFNum>
+		<Name>Gear Handle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>146</DOFNum>
+		<Name>Ejection Seat Arm Handle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>147</DOFNum>
+		<Name>Flight Stick Roll</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>148</DOFNum>
+		<Name>Flight Stick Pitch</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>149</DOFNum>
+		<Name>Rudder</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>150</DOFNum>
+		<Name>HUD Sym Wheel</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>151</DOFNum>
+		<Name>HUD Depr Wheel</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>152</DOFNum>
+		<Name>ASI Mach Rotating Dial</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>153</DOFNum>
+		<Name>Airbrakes Position Indicator</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>154</DOFNum>
+		<Name>TACAN Mode Y/X</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>155</DOFNum>
+		<Name>TACAN Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>156</DOFNum>
+		<Name>TACAN Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>157</DOFNum>
+		<Name>TACAN Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>158</DOFNum>
+		<Name>Pitch Trim Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>159</DOFNum>
+		<Name>Roll Trim Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>160</DOFNum>
+		<Name>Yaw Trim Knob</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>161</DOFNum>
+		<Name>Cabin Press Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>162</DOFNum>
+		<Name>Clock Hour Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>163</DOFNum>
+		<Name>Clock Minute Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>164</DOFNum>
+		<Name>Clock Second Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>165</DOFNum>
+		<Name>Backup UHF Channel Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>166</DOFNum>
+		<Name>Backup UHF Channel Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>167</DOFNum>
+		<Name>Throttle 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>168</DOFNum>
+		<Name>Throttle 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>169</DOFNum>
+		<Name>Altitude Pressure 0</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>170</DOFNum>
+		<Name>Altitude Pressure 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>171</DOFNum>
+		<Name>Altitude Pressure 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>172</DOFNum>
+		<Name>Altitude Pressure 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>173</DOFNum>
+		<Name>Radar Altitude</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>174</DOFNum>
+		<Name>Wing Fold</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>175</DOFNum>
+		<Name>RPM Needle 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>176</DOFNum>
+		<Name>Nozzle Needle 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>177</DOFNum>
+		<Name>FTIT 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>178</DOFNum>
+		<Name>Fuel Flow Digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>179</DOFNum>
+		<Name>Fuel Flow Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>180</DOFNum>
+		<Name>Fuel Flow Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>181</DOFNum>
+		<Name>HUD Brightness Wheel</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>182</DOFNum>
+		<Name>Oil Needle 2</Name>
+	</DOF>
+</Root>
