@@ -28,6 +28,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
 
     - name: Use seconds since epoch for the release
       id: get_version
