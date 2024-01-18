@@ -2,9 +2,9 @@ name: Deploy develop
 
 on:
   workflow_run:
-    workflows: Python lint
+    workflows: [Python lint]
     branches:
-       - 'public_release_preparations'
+       - '**' # remove me!
        - 'develop'
     types: completed
 
@@ -29,7 +29,6 @@ jobs:
 
 
     - name: Update develop release
-      if: matrix.os == 'windows-latest'
       uses: WebFreak001/deploy-nightly@v3.0.0
       with:
         upload_url: https://uploads.github.com/repos/BenchmarkSims/bms-blender-plugin/releases/137519287/assets{?name,label}
