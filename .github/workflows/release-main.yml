@@ -63,6 +63,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag: ${{ steps.version.outputs.version_tag }}
+          tag_name: ${{ steps.version.outputs.version_tag }}
           files: |
             bms_blender_plugin*.zip
