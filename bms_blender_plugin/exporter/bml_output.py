@@ -32,12 +32,19 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     print(f"Starting BML export at {start_time}\n")
 
     # determine whether the current scene is set to imperial units, otherwise we have to scale our objects
+    scale_factor = 1
+
     if bpy.context.scene.unit_settings.system == "METRIC":
-        scale_factor = 3.28084
-        print("Scaling all objects to imperial units...")
-    else:
-        scale_factor = 1
-        print("No unit scaling is applied")
+        if bpy.context.scene.unit_settings.length_unit == "METERS":
+            scale_factor = 3.28084
+        elif bpy.context.scene.unit_settings.length_unit == "CENTIMETERS":
+            scale_factor = 3.28084 * 100
+        elif bpy.context.scene.unit_settings.length_unit == "MILLIMETERS":
+            scale_factor = 3.28084 * 1000
+    elif bpy.context.scene.unit_settings.length_unit == "INCHES":
+        scale_factor = 0.0833333
+
+    print(f"unit scaling factor: {scale_factor}")
 
     bounding_box_1_coords = Vector((0, 0, 0))
     bounding_box_2_coords = Vector((0, 0, 0))
