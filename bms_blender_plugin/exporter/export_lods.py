@@ -292,7 +292,14 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
 def join_objects_with_same_materials(objects, materials_objects, auto_smooth_value):
     """Joins objects of the same BML node level (i.e. not separated by DOFs, Switches or Slots)
     to a single Blender object. This is critical to reduce draw calls"""
+
+    object_names = []
     for obj in objects:
+        if obj:
+            object_names.append(obj.name)
+
+    for obj_name in object_names:
+        obj = bpy.data.objects[obj_name]
 
         if obj.type == "MESH":
             # regular meshes
