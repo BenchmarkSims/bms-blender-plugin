@@ -28,15 +28,16 @@ class CreateDof(Operator):
             "bms_blender_plugin"
         ].preferences.dof_rotate_empty_type
 
-        dof_object.empty_display_size = 1
+        dof_object.empty_display_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.dof_rotate_empty_size
 
         if context.active_object:
             # assumes that every object is linked to at least one collection
+            dof_object.matrix_world = context.active_object.matrix_world
+            dof_object.rotation_euler = context.active_object.rotation_euler
             context.active_object.users_collection[0].objects.link(dof_object)
             dof_object.parent = context.active_object.parent
-            dof_object.matrix_world.translation = (
-                context.active_object.matrix_world.translation
-            )
         else:
             context.collection.objects.link(dof_object)
 

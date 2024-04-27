@@ -1,5 +1,5 @@
 import bpy
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatProperty
 from bpy.types import Operator
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType
@@ -53,6 +53,13 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         default="CIRCLE",
     )
 
+    dof_rotate_empty_size: FloatProperty(
+        default=1.0,
+        min=0.01,
+        name="Size",
+        description="The size of the Empty to display a Rotate DOF as"
+     )
+
     dof_translate_empty_type: EnumProperty(
         name="Translate",
         description="The Empty to display a Translate DOF as",
@@ -60,11 +67,25 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         default="PLAIN_AXES",
     )
 
+    dof_translate_empty_size: FloatProperty(
+        default=1.0,
+        min=0.01,
+        name="Size",
+        description="The size of the Empty to display a Translate DOF as"
+     )
+
     dof_scale_empty_type: EnumProperty(
         name="Scale",
         description="The Empty to display a Scale DOF as",
         items=empty_enum_items,
         default="CUBE",
+    )
+
+    dof_scale_empty_size: FloatProperty(
+        default=1.0,
+        min=0.01,
+        name="Size",
+        description="The size of the Empty to display a Scale DOF as"
     )
 
     def draw(self, context):
@@ -77,9 +98,18 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         layout.separator()
         layout.label(text="DOF Display")
         box = layout.box()
-        box.prop(self, "dof_rotate_empty_type")
-        box.prop(self, "dof_translate_empty_type")
-        box.prop(self, "dof_scale_empty_type")
+        row = box.row()
+        row.prop(self, "dof_rotate_empty_type")
+        row.prop(self, "dof_rotate_empty_size")
+
+        row = box.row()
+        row.prop(self, "dof_translate_empty_type")
+        row.prop(self, "dof_translate_empty_size")
+
+        row = box.row()
+        row.prop(self, "dof_scale_empty_type")
+        row.prop(self, "dof_scale_empty_size")
+
         box.operator(ApplyEmptyDisplaysToDofs.bl_idname, icon="CHECKMARK")
 
         layout.separator()
@@ -99,17 +129,27 @@ class ApplyEmptyDisplaysToDofs(Operator):
     # noinspection PyMethodMayBeStatic
     def execute(self, context):
         rotate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_rotate_empty_type
+        rotate_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_rotate_empty_size
+
         translate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_type
+        translate_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_size
+
         scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
+        scale_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_size
 
         for obj in bpy.data.objects:
             if get_bml_type(obj) == BlenderNodeType.DOF:
                 if obj.dof_type == DofType.ROTATE.name:
                     obj.empty_display_type = rotate_empty
+                    obj.empty_display_size = rotate_empty_size
+
                 elif obj.dof_type == DofType.TRANSLATE.name:
                     obj.empty_display_type = translate_empty
+                    obj.empty_display_size = translate_empty_size
+
                 elif obj.dof_type == DofType.SCALE.name:
                     obj.empty_display_type = scale_empty
+                    obj.empty_display_size = scale_empty_size
 
         return {"FINISHED"}
 
