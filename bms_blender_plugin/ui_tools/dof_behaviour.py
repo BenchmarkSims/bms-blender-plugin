@@ -149,23 +149,35 @@ def update_dof_display_type(obj, context):
         obj.empty_display_type = context.preferences.addons[
             "bms_blender_plugin"
         ].preferences.dof_rotate_empty_type
+        obj.empty_display_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.dof_rotate_empty_size
+
     elif obj.dof_type == DofType.TRANSLATE.name:
         align_parent_dof_rotation(obj)
         obj.empty_display_type = context.preferences.addons[
             "bms_blender_plugin"
         ].preferences.dof_translate_empty_type
+        obj.empty_display_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.dof_translate_empty_size
+
     elif obj.dof_type == DofType.SCALE.name:
         clear_parent_dof_rotation(obj)
         obj.empty_display_type = context.preferences.addons[
             "bms_blender_plugin"
         ].preferences.dof_scale_empty_type
+        obj.empty_display_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.dof_scale_empty_size
 
 
 def dof_set_input(obj, value):
     """ Custom setter/getter methods for dof_input so it can be keyframed"""
-    obj["dof_input"] = value
-    dof_update_input(obj, None)
-    obj.update_tag()
+    if obj:
+        obj["dof_input"] = value
+        dof_update_input(obj, None)
+        obj.update_tag()
 
 
 def dof_get_input(obj):
