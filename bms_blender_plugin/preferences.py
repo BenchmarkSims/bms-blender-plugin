@@ -52,7 +52,7 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         items=empty_enum_items,
         default="CIRCLE",
     )
-
+      
     dof_rotate_empty_size: FloatProperty(
         default=1.0,
         min=0.01,
@@ -73,7 +73,7 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         name="Size",
         description="The size of the Empty to display a Translate DOF as"
      )
-
+      
     dof_scale_empty_type: EnumProperty(
         name="Scale",
         description="The Empty to display a Scale DOF as",
@@ -81,12 +81,14 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         default="CUBE",
     )
 
+
     dof_scale_empty_size: FloatProperty(
         default=1.0,
         min=0.01,
         name="Size",
         description="The size of the Empty to display a Scale DOF as"
     )
+
 
     def draw(self, context):
         layout = self.layout
@@ -137,6 +139,9 @@ class ApplyEmptyDisplaysToDofs(Operator):
         scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
         scale_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_size
 
+        translate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_type
+        scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
+
         for obj in bpy.data.objects:
             if get_bml_type(obj) == BlenderNodeType.DOF:
                 if obj.dof_type == DofType.ROTATE.name:
@@ -150,6 +155,10 @@ class ApplyEmptyDisplaysToDofs(Operator):
                 elif obj.dof_type == DofType.SCALE.name:
                     obj.empty_display_type = scale_empty
                     obj.empty_display_size = scale_empty_size
+                elif obj.dof_type == DofType.TRANSLATE.name:
+                    obj.empty_display_type = translate_empty
+                elif obj.dof_type == DofType.SCALE.name:
+                    obj.empty_display_type = scale_empty
 
         return {"FINISHED"}
 

@@ -38,6 +38,7 @@ class CreateDof(Operator):
             dof_object.rotation_euler = context.active_object.rotation_euler
             context.active_object.users_collection[0].objects.link(dof_object)
             dof_object.parent = context.active_object.parent
+
         else:
             context.collection.objects.link(dof_object)
 
