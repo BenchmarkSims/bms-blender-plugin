@@ -67,6 +67,9 @@ def group_bounding_box():
         0.0,
     ] * 3
     for obj in bpy.context.visible_objects:
+        # exclude eg camera, lights
+        if obj.type != "MESH":
+            continue
         for vertex in obj.bound_box:
             v_world = obj.matrix_world @ mathutils.Vector(
                 (vertex[0], vertex[1], vertex[2])

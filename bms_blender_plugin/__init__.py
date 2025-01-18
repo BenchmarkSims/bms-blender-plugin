@@ -7,8 +7,8 @@ from bms_blender_plugin.ext.blender_dds_addon.directx.texconv import unload_texc
 
 bl_info = {
     "name": "Falcon BMS Plugin",
-    "author": "Benchmark Sims / richionizor & Spearhead",
-    "version": (0, 0, 202308301),
+    "author": "Benchmark Sims",
+    "version": (0, 0, 20250118),
     "blender": (3, 6, 0),
     "location": "File > Export",
     "description": "Export as Falcon BMS BML",

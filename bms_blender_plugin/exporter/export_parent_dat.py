@@ -13,8 +13,9 @@ from bms_blender_plugin.common.util import (
 
 def get_highest_switch_and_dof_number(objs):
     """Returns the highest values of dofs and switches. Required for the Parent.dat"""
-    highest_switch_number = -1
-    highest_dof_number = -1
+    # default value 0 to prevent editor crashing
+    highest_switch_number = 0
+    highest_dof_number = 0
 
     for obj in objs:
         if len(obj.children) > 0:
@@ -46,6 +47,7 @@ def export_parent_dat(
     file_prefix: str,
     bounding_box_1_coords,
     bounding_box_2_coords,
+    scale_factor,
     number_of_texture_sets,
     slot_list,
     lod_list,
@@ -65,6 +67,8 @@ def export_parent_dat(
     bounding_sphere_center, bounding_sphere_radius = get_bounding_sphere(
         context.scene.objects
     )
+    
+    bounding_sphere_radius *= scale_factor
 
     with open(parent_dat_filepath, "w") as parent_dat_file:
         str_output = (
