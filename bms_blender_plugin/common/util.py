@@ -51,20 +51,20 @@ BMS_SPACE_MATRIX_INV = BMS_SPACE_MATRIX.inverted_safe()
 def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATRIX_INV):
     """Transforms from Blender space to BMS space (-Z forward, Y up)."""
     # matrix
-    if type(data) == Matrix:
+    if type(data) is Matrix:
         return space_mat @ data.to_4x4() @ space_mat_inv
     # quaternion
-    elif type(data) == Quaternion:
+    elif type(data) is Quaternion:
         mat = data.to_matrix()
         return (space_mat @ mat.to_4x4() @ space_mat_inv).to_quaternion()
-    elif type(data) == Euler:
+    elif type(data) is Euler:
         x_angle = data[0]
         y_angle = data[1]
         z_angle = data[2]
         return Euler((x_angle, z_angle, y_angle), "XYZ")
 
     # vector
-    elif type(data) == Vector or len(data) == 3:
+    elif type(data) is Vector or len(data) == 3:
         vec = Vector(data)
         return vec @ space_mat
     # uv coordinate
@@ -98,7 +98,7 @@ def get_bml_type(obj, purge_orphaned_object=True):
         return None
     else:
         # orphaned DOF or switch - e.g. the DOF was removed from the scene but is still referenced by a node
-        #if not bpy.app.background and purge_orphaned_object and len(obj.users_collection) == 0:
+        # if not bpy.app.background and purge_orphaned_object and len(obj.users_collection) == 0:
         #    bpy.data.objects.remove(obj)
         #    return None
         # TODO find a proper way to clean up objects without breaking the export

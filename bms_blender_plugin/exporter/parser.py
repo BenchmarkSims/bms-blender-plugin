@@ -200,7 +200,9 @@ def parse_dof(obj, nodes):
     # For TDOFs, this is not the actual position of the DOF in 3d but the matrix coordinates which are
     # entered by the user. The TDOF always resides at (0,0,0)
     if obj.dof_type == DofType.TRANSLATE.name:
-        translation = Vector((obj.dof_x, obj.dof_y, obj.dof_z))
+        translation = Vector((obj.dof_x, obj.dof_y, obj.dof_z, 0.0))
+        # calculate the objects translation in the space of its parent
+        translation = obj.matrix_parent_inverse @ translation
 
     # Other DOFs need their position set relative to their parent
     elif obj.dof_type == DofType.ROTATE.name or obj.dof_type == DofType.SCALE.name:
