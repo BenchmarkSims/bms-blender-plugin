@@ -1,4 +1,8 @@
 import bpy
+from bms_blender_plugin.common.bml_material import BlendLocation, BlendOperation
+from bms_blender_plugin.nodes_editor.util import get_bml_node_type
+from bms_blender_plugin.common.constants import BlenderEditorNodeType
+from bms_blender_plugin.common.bml_material import MaterialTemplate
 
 class OptimizeGlassMaterialOperator(bpy.types.Operator):
     """Sets optimal properties for glass materials to avoid visual artifacts"""
