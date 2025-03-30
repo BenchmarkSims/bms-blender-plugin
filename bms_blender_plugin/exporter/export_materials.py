@@ -59,152 +59,24 @@ def get_all_materials():
     return []
 
 
-def get_materials(material_node_tree: MaterialNodeTree):
-    """Returns all custom materials of a single MaterialNodeTree as a serializable list of bml_material.Material"""
-    if (
-        not material_node_tree
-        or get_bml_node_tree_type(material_node_tree) == BlenderNodeTreeType.DOF_TREE
-    ):
-        raise Exception(f"{material_node_tree.name} is not a MaterialNodeTree")
+def get_materials(material_tree):
+    """Gets all materials from a custom material node tree. Returns a list of (name, node)."""
+    materials = []
 
-    materials = list()
-    for material_node in material_node_tree.nodes:
-        if get_bml_node_type(material_node) != BlenderEditorNodeType.MATERIAL:
-            continue
-
-        # we can not export material nodes with no materials
-        if not material_node.material:
-            continue
-
-        # collect all shader and sampler nodes
-        sampler_nodes = list()
-        shader_parameter_nodes = list()
-        for incoming_node in get_incoming_nodes(material_node):
-            if (
-                get_bml_node_type(incoming_node)
-                == BlenderEditorNodeType.SHADER_PARAMETER
-            ):
-                shader_parameter_nodes.append(incoming_node)
-            elif get_bml_node_type(incoming_node) == BlenderEditorNodeType.SAMPLER:
-                sampler_nodes.append(incoming_node)
-            else:
-                raise Exception(
-                    f"Unknown node type: {get_bml_node_type(incoming_node)}"
-                )
-
-        # Textures
-        # Any Blender texture which might be exported as DDS will override the manual filename of the node
-        textures = list()
-
-        albedo_texture_filename = get_dds_texture_export_file_name(
-            get_albedo_texture(material_node.material)
-        )
-        if not albedo_texture_filename:
-            albedo_texture_filename = material_node.albedo_texture_file
-        if albedo_texture_filename != "":
-            textures.append(Texture(albedo_texture_filename, Slot.ALBEDO))
-
-        armw_texture_filename = get_dds_texture_export_file_name(
-            get_armw_texture(material_node.material)
-        )
-        if not armw_texture_filename:
-            armw_texture_filename = material_node.armw_texture_file
-        if armw_texture_filename != "":
-            textures.append(Texture(armw_texture_filename, Slot.ARMW))
-
-        normal_texture_filename = get_dds_texture_export_file_name(
-            get_normal_texture(material_node.material)
-        )
-        if not normal_texture_filename:
-            normal_texture_filename = material_node.normal_map_texture_file
-        if normal_texture_filename != "":
-            textures.append(Texture(normal_texture_filename, Slot.NORMAL_MAP))
-
-        emissive_texture_filename = get_dds_texture_export_file_name(
-            get_emissive_texture(material_node.material)
-        )
-        if not emissive_texture_filename:
-            emissive_texture_filename = material_node.emissive_texture_file
-        if emissive_texture_filename != "":
-            textures.append(Texture(emissive_texture_filename, Slot.EMISSIVE))
-
-        # Flag
-        flag = Flag(
-            material_node.cull,
-            material_node.depth_bias,
-            material_node.shadow_caster,
-            material_node.slope_scaled_depth_bias,
-        )
-
-        # Shader Parameters
-        shader_parameters = list()
-        for shader_parameter_node in shader_parameter_nodes:
-            shader_units = list()
-            if shader_parameter_node.shader_unit_vertex:
-                shader_units.append(ShaderUnit.VERTEX_SHADER)
-            if shader_parameter_node.shader_unit_compute:
-                shader_units.append(ShaderUnit.COMPUTE_SHADER)
-            if shader_parameter_node.shader_unit_hull:
-                shader_units.append(ShaderUnit.HULL_SHADER)
-            if shader_parameter_node.shader_unit_domain:
-                shader_units.append(ShaderUnit.DOMAIN_SHADER)
-            if shader_parameter_node.shader_unit_geometry:
-                shader_units.append(ShaderUnit.GEOMETRY_SHADER)
-            if shader_parameter_node.shader_unit_pixel:
-                shader_units.append(ShaderUnit.PIXEL_SHADER)
-
-            shader_parameter = ShaderParam(
-                shader_parameter_node.layout_name,
-                Slot[shader_parameter_node.slot],
-                shader_units,
-                ShaderParamConstants(
-                    shader_parameter_node.emission_intensity,
-                    shader_parameter_node.emission_callback,
-                ),
-            )
-            shader_parameters.append(shader_parameter)
-
-        # Template
-        template = Template(
-            material_node.template_file, material_node.template_material_name
-        )
-
-        # Samplers
-        samplers = list()
-        for sampler_node in sampler_nodes:
-            sampler = Sampler(
-                Slot[sampler_node.slot],
-                ShaderUnit[sampler_node.unit],
-                SamplerFilter[sampler_node.filter],
-                sampler_node.max_anisotropy,
-                SamplerAddress[sampler_node.address],
-            )
-            samplers.append(sampler)
-
-        # Blend
-        blend = None
-        if material_node.blend_enabled:
-            blend = Blend(
-                material_node.blend_enabled,
-                BlendLocation(material_node.blend_src),
-                BlendLocation(material_node.blend_dest),
-                BlendOperation(material_node.blend_op),
-                BlendLocation(material_node.blend_alpha_src),
-                BlendLocation(material_node.blend_alpha_dest),
-                BlendOperation(material_node.blend_alpha_op),
-            )
-
-        material = Material(
-            material_node.material.name,
-            textures,
-            flag,
-            shader_parameters,
-            template,
-            samplers,
-            blend,
-        )
-
-        materials.append(material)
+    for node in material_tree.nodes:
+        if get_bml_node_type(node) == BlenderEditorNodeType.MATERIAL:
+            # Check if we have transparent material settings that would benefit from alpha sorting
+            needs_alpha_sorting = False
+            if (node.blend_enabled and 
+                node.blend_src == BlendLocation.SRC_ALPHA.name and 
+                node.blend_dest == BlendLocation.INV_SRC_ALPHA.name):
+                needs_alpha_sorting = True
+            
+            # Set alpha_sort_triangles by default for transparent materials if not explicitly set
+            if needs_alpha_sorting and not hasattr(node, "alpha_sort_triangles"):
+                node.alpha_sort_triangles = True
+                
+            materials.append((node.name, node))
 
     return materials
 

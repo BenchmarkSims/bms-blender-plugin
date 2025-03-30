@@ -1,4 +1,5 @@
 import math
+import bpy
 
 from mathutils import Matrix, Vector
 
@@ -10,6 +11,9 @@ from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_swit
     get_non_translate_dof_parent
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
 from bms_blender_plugin.common.coordinates import to_bms_coords
+from bms_blender_plugin.nodes_editor.util import get_bml_node_type, get_bml_node_tree_type
+from bms_blender_plugin.common.blender_types import BlenderNodeTreeType
+from bms_blender_plugin.common.blender_types import BlenderEditorNodeType
 
 
 class ParsedNodes:
@@ -26,7 +30,12 @@ class ParsedNodes:
 
 
 def parse_mesh(
-    obj, nodes, vertex_indices, material_names, vertex_index_offset, vertex_start_offset
+    obj,
+    nodes,
+    vertex_indices,
+    material_names,
+    vertex_index_offset,
+    vertex_start_offset,
 ):
     """Adds a mesh to the BML node list"""
     print(f"parsing mesh {obj.name}")
@@ -60,6 +69,19 @@ def parse_mesh(
     else:
         reference_point = get_objcenter(obj)
 
+    # Get material properties for alpha sorting
+    use_alpha_sorting = False
+    if obj.data.materials and obj.data.materials[0]:
+        material_name = obj.data.materials[0].name
+        # Check if this material has a node in the material tree
+        for tree in bpy.data.node_groups.values():
+            if get_bml_node_tree_type(tree) == BlenderNodeTreeType.MATERIAL_TREE:
+                for node in tree.nodes:
+                    if (get_bml_node_type(node) == BlenderEditorNodeType.MATERIAL and 
+                        node.material and node.material.name == material_name):
+                        use_alpha_sorting = node.alpha_sort_triangles
+                        break
+
     node = Primitive(
         index=len(nodes),
         topology=PrimitiveTopology.TRIANGLE_LIST,
@@ -74,7 +96,7 @@ def parse_mesh(
             reference_point.x, reference_point.y, reference_point.z
         ),
         use_reference_point=1,
-        alpha_sort_triangles=0,
+        alpha_sort_triangles=1 if use_alpha_sorting else 0,  # Use the property from the material
         material_index=material_index,
     )
 

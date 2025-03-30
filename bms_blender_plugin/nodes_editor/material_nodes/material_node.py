@@ -27,6 +27,13 @@ class MaterialNode(MaterialBaseNode):
 
     bl_label = "Material"
 
+    # Add alpha_sort_triangles property
+    alpha_sort_triangles: BoolProperty(
+        name="Alpha Sort Triangles",
+        description="Sort triangles in the mesh from back to front for proper alpha blending",
+        default=False
+    )
+
     def init(self, context):
         self.bml_node_type = str(BlenderEditorNodeType.MATERIAL)
         self.inputs.new("NodeSocketVirtual", "Parameters")
@@ -92,7 +99,15 @@ class MaterialNode(MaterialBaseNode):
 
         layout.row()
         layout.prop(self, "blend_enabled", text="Enable Blend")
+        layout.prop(self, "alpha_sort_triangles", text="Sort Alpha Triangles")
         if self.blend_enabled:
+            # Recommend alpha sorting for transparent materials
+            if (self.blend_src == BlendLocation.SRC_ALPHA.name and 
+                self.blend_dest == BlendLocation.INV_SRC_ALPHA.name):
+                box = layout.box()
+                box.label(text="Transparency Detected", icon="INFO")
+                if not self.alpha_sort_triangles:
+                    box.label(text="Enable 'Sort Alpha Triangles' for better results", icon="ERROR")
             layout.prop(self, "blend_src")
             layout.prop(self, "blend_dest")
             layout.prop(self, "blend_op")
