@@ -48,20 +48,35 @@ class DofMediator:
     @classmethod
     def subscribe(cls, dof):
         """Subscribes a DOF to dof_input updates for his DOF number"""
-        try:
-            dofs = get_dofs()
-            if dof.dof_list_index >= 0 and dof.dof_list_index < len(dofs):
-                dof_number = dofs[dof.dof_list_index].dof_number
-                if dof_number in cls.dof_number_dofs:
-                    cls.dof_number_dofs[dof_number].add(dof)
-                else:
-                    cls.dof_number_dofs[dof_number] = {dof}
-                cls.dof_dof_number[dof] = dof_number
+        if get_bml_type(dof) != BlenderNodeType.DOF:
+            return
+        dof_number = get_dofs()[dof.dof_list_index].dof_number
+
+        # first time subscription
+        if dof not in cls.dof_dof_number.keys():
+            cls.dof_dof_number[dof] = dof_number
+
+            if dof_number not in cls.dof_number_dofs.keys():
+                cls.dof_number_dofs[dof_number] = {dof}
             else:
-                # Handle DOF with invalid index
-                print(f"Warning: DOF {dof.name} has invalid dof_list_index {dof.dof_list_index}")
-        except Exception as e:
-            print(f"Error subscribing DOF {dof.name}: {str(e)}")
+                cls.dof_number_dofs[dof_number].add(dof)
+
+        # update existing subscription
+        else:
+            # filter out unnecessary updates
+            old_dof_number = cls.dof_dof_number[dof]
+            if old_dof_number == dof_number:
+                return
+            else:
+                # unsubscribe from the old subscriptions
+                cls.dof_number_dofs[old_dof_number].remove(dof)
+
+                if dof_number not in cls.dof_number_dofs.keys():
+                    cls.dof_number_dofs[dof_number] = {dof}
+                else:
+                    cls.dof_number_dofs[dof_number].add(dof)
+
+            cls.dof_dof_number[dof] = dof_number
 
     @classmethod
     def unsubscribe(cls, dof):
