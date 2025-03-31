@@ -52,13 +52,75 @@ class CreateDofKeyframe(Operator):
         return{'FINISHED'}
 
 
+class RefreshDofList(Operator):
+    """Refreshes the DOF/Switch lists from the XML files"""
+    bl_idname = "bml.refresh_dof_list"
+    bl_label = "Refresh DOF/Switch Lists" 
+    bl_description = "Refreshes the DOF and Switch lists from the XML files"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context):
+        # Import needed modules
+        from bms_blender_plugin.common.util import get_dofs, get_switches
+        import importlib
+        import sys
+        
+        # Clear stored lists from scene
+        if 'dof_list' in context.scene:
+            del context.scene['dof_list']
+            self.report({'INFO'}, "DOF list cleared from scene")
+        
+        if 'switch_list' in context.scene:
+            del context.scene['switch_list']
+            self.report({'INFO'}, "Switch list cleared from scene")
+        
+        # Force reload of the utility module that loads the XML files
+        # This is more thorough than just calling cache_clear()
+        util_module = sys.modules['bms_blender_plugin.common.util']
+        
+        # Reset the module's global variables that store the lists
+        if hasattr(util_module, 'dofs'):
+            util_module.dofs = None
+        if hasattr(util_module, 'switches'):
+            util_module.switches = None
+            
+        # Force Python to reload the module from disk
+        importlib.reload(util_module)
+        
+        # Reset any function caches
+        if hasattr(get_dofs, 'cache_clear'):
+            get_dofs.cache_clear()
+        if hasattr(get_switches, 'cache_clear'):
+            get_switches.cache_clear()
+        
+        # Force immediate reloading of the data
+        _ = get_dofs()
+        _ = get_switches()
+        
+        # Clear DofMediator cache to ensure DOFs use the updated definitions
+        from bms_blender_plugin.ui_tools.dof_behaviour import DofMediator
+        DofMediator.rebuild_cache()
+        
+        # Force scene update to make sure DOFs are properly initialized
+        context.view_layer.update()
+        
+        # Force redraw of all UI areas
+        for area in context.screen.areas:
+            area.tag_redraw()
+        
+        self.report({'INFO'}, "DOF and Switch lists refreshed from XML files")
+        return {'FINISHED'}
+
+
 def register():
     bpy.utils.register_class(ResetSingleDof)
     bpy.utils.register_class(ResetAllDofs)
     bpy.utils.register_class(CreateDofKeyframe)
+    bpy.utils.register_class(RefreshDofList)
 
 
 def unregister():
     bpy.utils.unregister_class(CreateDofKeyframe)
     bpy.utils.unregister_class(ResetAllDofs)
     bpy.utils.unregister_class(ResetSingleDof)
+    bpy.utils.unregister_class(RefreshDofList)

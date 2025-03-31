@@ -67,6 +67,9 @@ class DofPanel(BasePanel, bpy.types.Panel):
             dof,
             "dof_list_index",
         )
+        
+        layout.operator("bml.refresh_dof_list", icon="FILE_REFRESH", text="Refresh DOF/Switch Lists")
+        
         row = layout.row()
         row.prop(dof, "dof_type")
 
