@@ -94,8 +94,14 @@ class RefreshDofList(Operator):
             get_switches.cache_clear()
         
         # Force immediate reloading of the data
-        _ = get_dofs()
+        dofs = get_dofs()
         _ = get_switches()
+        
+        # Reset DOF indices for all DOF objects in the scene
+        for obj in bpy.data.objects:
+            if get_bml_type(obj) == BlenderNodeType.DOF:
+                # Reset to a valid value or -1 to indicate unset
+                obj.dof_list_index = -1
         
         # Clear DofMediator cache to ensure DOFs use the updated definitions
         from bms_blender_plugin.ui_tools.dof_behaviour import DofMediator
