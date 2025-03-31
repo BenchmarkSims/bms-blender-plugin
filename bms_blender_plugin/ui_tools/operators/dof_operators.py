@@ -73,10 +73,9 @@ class RefreshDofList(Operator):
                     current_dofs = get_dofs()
                     if obj.dof_list_index < len(current_dofs):
                         dof_name_mapping[obj] = current_dofs[obj.dof_list_index].name
-                except:
+                except (IndexError, AttributeError) as e:
                     # Handle invalid index case
                     print(f"Warning: Error mapping DOF {obj.name}: {str(e)}")
-                    pass
         
         # Clear stored lists from scene
         if 'dof_list' in context.scene:
