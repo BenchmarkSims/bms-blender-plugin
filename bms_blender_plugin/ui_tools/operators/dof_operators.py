@@ -65,17 +65,26 @@ class RefreshDofList(Operator):
         import importlib
         import sys
         
+        # Store mapping of DOF objects to their names before refresh
+        dof_name_mapping = {}
+        for obj in bpy.data.objects:
+            if get_bml_type(obj) == BlenderNodeType.DOF and obj.dof_list_index >= 0:
+                try:
+                    current_dofs = get_dofs()
+                    if obj.dof_list_index < len(current_dofs):
+                        dof_name_mapping[obj] = current_dofs[obj.dof_list_index].name
+                except:
+                    # Handle invalid index case
+                    pass
+        
         # Clear stored lists from scene
         if 'dof_list' in context.scene:
             del context.scene['dof_list']
-            self.report({'INFO'}, "DOF list cleared from scene")
         
         if 'switch_list' in context.scene:
             del context.scene['switch_list']
-            self.report({'INFO'}, "Switch list cleared from scene")
         
         # Force reload of the utility module that loads the XML files
-        # This is more thorough than just calling cache_clear()
         util_module = sys.modules['bms_blender_plugin.common.util']
         
         # Reset the module's global variables that store the lists
@@ -93,14 +102,27 @@ class RefreshDofList(Operator):
         if hasattr(get_switches, 'cache_clear'):
             get_switches.cache_clear()
         
-        # Force immediate reloading of the data
-        dofs = get_dofs()
+        # Load the refreshed data
+        new_dofs = get_dofs()
         _ = get_switches()
         
-        # Reset DOF indices for all DOF objects in the scene
-        for obj in bpy.data.objects:
-            if get_bml_type(obj) == BlenderNodeType.DOF:
-                # Reset to a valid value or -1 to indicate unset
+        # Populate scene DOF list (ensure it exists)
+        if len(context.scene.dof_list) == 0:
+            for dof in new_dofs:
+                item = context.scene.dof_list.add()
+                item.name = dof.name
+                item.dof_number = int(dof.dof_number)
+        
+        # Restore DOF indices for all DOF objects in the scene based on names
+        for obj in dof_name_mapping:
+            dof_name = dof_name_mapping[obj]
+            # Find matching DOF in new list
+            for i, dof in enumerate(new_dofs):
+                if dof.name == dof_name:
+                    obj.dof_list_index = i
+                    break
+            else:
+                # No match found, reset index
                 obj.dof_list_index = -1
         
         # Clear DofMediator cache to ensure DOFs use the updated definitions
