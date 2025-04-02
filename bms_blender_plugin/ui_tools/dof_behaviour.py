@@ -170,6 +170,14 @@ def update_dof_display_type(obj, context):
         obj.empty_display_size = context.preferences.addons[
             "bms_blender_plugin"
         ].preferences.dof_scale_empty_size
+    
+    elif get_bml_type(obj) == BlenderNodeType.SWITCH:
+        obj.empty_display_type = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.switch_empty_type
+        obj.empty_display_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.switch_empty_size
 
 
 def dof_set_input(obj, value):

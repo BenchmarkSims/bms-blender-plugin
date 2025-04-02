@@ -89,6 +89,20 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         description="The size of the Empty to display a Scale DOF as"
     )
 
+    switch_empty_type: EnumProperty(
+        name="Switch",
+        description="The Empty to display a Switch as",
+        items=empty_enum_items,
+        default="SPHERE",
+    )
+
+    switch_empty_size: FloatProperty(
+        default=1.0,
+        min=0.01,
+        name="Size",
+        description="The size of the Empty to display a Switch as"
+    )
+
 
     def draw(self, context):
         layout = self.layout
@@ -98,7 +112,7 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         box.prop(self, "copy_to_clipboard_command", expand=True)
 
         layout.separator()
-        layout.label(text="DOF Display")
+        layout.label(text="DOF/Switch")
         box = layout.box()
         # Ajout de l'opérateur RefreshDofList ici
         box.operator("bml.refresh_dof_switch_list", icon="FILE_REFRESH", text="Refresh DOF/Switch Lists")
@@ -114,6 +128,10 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         row = box.row()
         row.prop(self, "dof_scale_empty_type")
         row.prop(self, "dof_scale_empty_size")
+
+        row = box.row()
+        row.prop(self, "switch_empty_type")
+        row.prop(self, "switch_empty_size")
 
         box.operator(ApplyEmptyDisplaysToDofs.bl_idname, icon="CHECKMARK")
 
@@ -142,26 +160,23 @@ class ApplyEmptyDisplaysToDofs(Operator):
         scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
         scale_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_size
 
-        translate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_type
-        scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
+        switch_empty = context.preferences.addons["bms_blender_plugin"].preferences.switch_empty_type
+        switch_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.switch_empty_size
 
         for obj in bpy.data.objects:
             if get_bml_type(obj) == BlenderNodeType.DOF:
                 if obj.dof_type == DofType.ROTATE.name:
                     obj.empty_display_type = rotate_empty
                     obj.empty_display_size = rotate_empty_size
-
                 elif obj.dof_type == DofType.TRANSLATE.name:
                     obj.empty_display_type = translate_empty
                     obj.empty_display_size = translate_empty_size
-
                 elif obj.dof_type == DofType.SCALE.name:
                     obj.empty_display_type = scale_empty
                     obj.empty_display_size = scale_empty_size
-                elif obj.dof_type == DofType.TRANSLATE.name:
-                    obj.empty_display_type = translate_empty
-                elif obj.dof_type == DofType.SCALE.name:
-                    obj.empty_display_type = scale_empty
+            elif get_bml_type(obj) == BlenderNodeType.SWITCH:
+                obj.empty_display_type = switch_empty
+                obj.empty_display_size = switch_empty_size
 
         return {"FINISHED"}
 
