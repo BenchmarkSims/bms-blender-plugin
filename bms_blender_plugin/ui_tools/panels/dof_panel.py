@@ -67,7 +67,6 @@ class DofPanel(BasePanel, bpy.types.Panel):
             dof,
             "dof_list_index",
         )
-        
         row = layout.row()
         row.prop(dof, "dof_type")
 
