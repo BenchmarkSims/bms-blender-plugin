@@ -25,11 +25,13 @@ def export_hotspots(hotspots: dict, file_directory):
                         print(f"{hotspot}\n", end="")
                     else:
                         print(line, end="")
-        
-        # Second: add the remaining hotspots to the end of the file
+
+        # then: append the remaining hotspots
         with open(hotspots_filepath, "a") as hotspots_file:
             for hotspot in hotspots.values():
                 hotspots_file.write(f"{hotspot}\n")
+
+    # new file
     else:
         with open(hotspots_filepath, "w") as hotspots_file:
             for hotspot in hotspots.values():
