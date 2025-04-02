@@ -52,9 +52,9 @@ class CreateDofKeyframe(Operator):
         return{'FINISHED'}
 
 
-class RefreshDofList(Operator):
+class RefreshDofAndSwitchList(Operator):
     """Refreshes the DOF/Switch lists from the XML files"""
-    bl_idname = "bml.refresh_dof_list"
+    bl_idname = "bml.refresh_dof_switch_list"
     bl_label = "Refresh DOF/Switch Lists" 
     bl_description = "Refreshes the DOF and Switch lists from the XML files"
     bl_options = {"REGISTER", "UNDO"}
@@ -144,11 +144,11 @@ def register():
     bpy.utils.register_class(ResetSingleDof)
     bpy.utils.register_class(ResetAllDofs)
     bpy.utils.register_class(CreateDofKeyframe)
-    bpy.utils.register_class(RefreshDofList)
+    bpy.utils.register_class(RefreshDofAndSwitchList)
 
 
 def unregister():
     bpy.utils.unregister_class(CreateDofKeyframe)
     bpy.utils.unregister_class(ResetAllDofs)
     bpy.utils.unregister_class(ResetSingleDof)
-    bpy.utils.unregister_class(RefreshDofList)
+    bpy.utils.unregister_class(RefreshDofAndSwitchList)

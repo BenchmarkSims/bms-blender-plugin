@@ -100,6 +100,9 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         layout.separator()
         layout.label(text="DOF Display")
         box = layout.box()
+        # Ajout de l'opérateur RefreshDofList ici
+        box.operator("bml.refresh_dof_switch_list", icon="FILE_REFRESH", text="Refresh DOF/Switch Lists")
+        
         row = box.row()
         row.prop(self, "dof_rotate_empty_type")
         row.prop(self, "dof_rotate_empty_size")
