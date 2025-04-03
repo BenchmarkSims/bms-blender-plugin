@@ -17,7 +17,8 @@ class OptimizeGlassMaterialOperator(bpy.types.Operator):
 
     def execute(self, context):
         node = context.active_node
-        # Set glass properties
+
+        # Set blending properties
         node.blend_enabled = True
         node.blend_src = BlendLocation.SRC_ALPHA.name
         node.blend_dest = BlendLocation.INV_SRC_ALPHA.name
@@ -25,15 +26,13 @@ class OptimizeGlassMaterialOperator(bpy.types.Operator):
         node.blend_alpha_src = BlendLocation.ONE.name
         node.blend_alpha_dest = BlendLocation.INV_SRC_ALPHA.name
         node.blend_alpha_op = BlendOperation.ADD.name
-        
-        # Enable alpha sorting for this material
+
+        # Enable alpha sorting
         node.alpha_sort_triangles = True
-        
-        # Use a glass template if available
-        if "PBR-OptimizedGlass" in MaterialTemplate.get_templates():
-            node.templates = "PBR-OptimizedGlass"
-        elif "PBR-Glass" in MaterialTemplate.get_templates():
+
+        # Use the PBR-Glass template
+        if "PBR-Glass" in MaterialTemplate.get_templates():
             node.templates = "PBR-Glass"
-            
+
         self.report({'INFO'}, "Material optimized for glass rendering")
         return {'FINISHED'}

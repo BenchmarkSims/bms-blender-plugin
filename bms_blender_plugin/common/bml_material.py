@@ -206,10 +206,6 @@ class MaterialTemplate:
                 "PBR-Glass": MaterialTemplate("PBR-Glass", "PBR"),
                 "PBR-Glass-Emissive": MaterialTemplate("PBR-Glass-Emissive", "PBR"),
                 "PBR-DefaultAlpha": MaterialTemplate("PBR-DefaultAlpha", "PBR"),
-                
-                # Glass templates with proper settings
-                "BMS-Glass": MaterialTemplate("BMS-Glass", "BMS"),
-                "PBR-OptimizedGlass": MaterialTemplate("PBR-OptimizedGlass", "PBR"),
             }
             
         return MaterialTemplate.templates
