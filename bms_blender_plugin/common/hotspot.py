@@ -1,6 +1,5 @@
 from enum import Enum
 from mathutils import Vector
-from bms_blender_plugin.common.util import to_bms_coords
 
 
 class MouseButton(int, Enum):
