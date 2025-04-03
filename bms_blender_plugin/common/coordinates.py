@@ -1,7 +1,5 @@
 import bpy
 
-import bpy.utils.previews
-
 from mathutils import Vector, Matrix, Quaternion, Euler
 
 # Define the matrices here

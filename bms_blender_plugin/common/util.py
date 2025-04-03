@@ -8,7 +8,7 @@ import struct
 
 import lzma
 import math
-from mathutils import Vector, Matrix, Quaternion, Euler
+from mathutils import Vector
 
 from bms_blender_plugin.common.bml_structs import (
     Header,
