@@ -6,9 +6,10 @@ from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import Primitive, PrimitiveTopology, Vector3, Slot, D3DMatrix, Switch, \
     DofType, Dof
 from bms_blender_plugin.common.hotspot import Hotspot, MouseButton, ButtonType
-from bms_blender_plugin.common.util import get_bml_type, to_bms_coords, get_objcenter, get_switches, get_dofs, \
+from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_switches, get_dofs, \
     get_non_translate_dof_parent
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
+from bms_blender_plugin.common.coordinates import to_bms_coords
 
 
 class ParsedNodes:

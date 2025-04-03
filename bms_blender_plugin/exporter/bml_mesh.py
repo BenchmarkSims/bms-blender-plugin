@@ -13,9 +13,9 @@ from bms_blender_plugin.common.bml_structs import (
 from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.util import (
     get_bml_type,
-    to_bms_coords,
     get_non_translate_dof_parent,
 )
+from bms_blender_plugin.common.coordinates import to_bms_coords
 
 
 def get_bml_mesh_data(obj, max_vertex_index):
