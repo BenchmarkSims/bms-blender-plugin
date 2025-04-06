@@ -23,12 +23,14 @@ class ToolsPanel(BasePanel, bpy.types.Panel):
             # Blenders internal coords are always in meters, despite the scene settings -> always convert to ft
             scale_factor = 3.28084
 
+            # Transform coordinates to BMS space
             obj_bms_coords = to_bms_coords(
                 context.active_object.matrix_world.translation
             )
-            x_coord_text = f"{round(obj_bms_coords.x * scale_factor, 2): .2f}"
-            y_coord_text = f"{round(obj_bms_coords.y * scale_factor, 2): .2f}"
-            z_coord_text = f"{round(obj_bms_coords.z * scale_factor, 2): .2f}"
+            # Adjust to the -Z, -X, +Y convention
+            x_coord_text = f"{round(-obj_bms_coords.z * scale_factor, 2): .2f}"
+            y_coord_text = f"{round(-obj_bms_coords.x * scale_factor, 2): .2f}"
+            z_coord_text = f"{round(obj_bms_coords.y * scale_factor, 2): .2f}"
 
             layout.label(text="BMS Coordinates")
             box = layout.box()
@@ -94,4 +96,4 @@ def register():
 def unregister():
     bpy.utils.unregister_class(ToolsPanel)
     bpy.utils.unregister_class(CopyTextToClipboard)
-    
+
