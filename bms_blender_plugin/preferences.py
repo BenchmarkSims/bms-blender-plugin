@@ -146,7 +146,7 @@ class ExporterPreferences(bpy.types.AddonPreferences):
 class ApplyEmptyDisplaysToDofs(Operator):
     """Applies the preferences for the DOF empties to all objects in the scene"""
     bl_idname = "bml.apply_empty_displays_to_dofs"
-    bl_label = "Apply to all DOFs"
+    bl_label = "Apply sizes to scene"
     bl_description = "Applies the display preferences to all DOFs in the scene"
 
     # noinspection PyMethodMayBeStatic
