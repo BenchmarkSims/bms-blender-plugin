@@ -28,7 +28,7 @@ addon_dir = os.path.dirname(__file__)
 py_paths = [
     os.path.join(root, f)
     for root, dirs, files in os.walk(addon_dir)
-    for f in files
+    for f in sorted(files)
     if f.endswith(".py") and f != "__init__.py" and f != "test.py"
 ]
 
@@ -60,7 +60,7 @@ def register():
         if module_name in sys.modules and hasattr(sys.modules[module_name], "register"):
             try:
                 sys.modules[module_name].register()
-            except ValueError:  # open template file may cause this problem
+            except (KeyError, ValueError): # open template file or re-enble may causes this
                 pass
 
 
