@@ -60,7 +60,7 @@ def register():
         if module_name in sys.modules and hasattr(sys.modules[module_name], "register"):
             try:
                 sys.modules[module_name].register()
-            except (KeyError, ValueError): # open template file or re-enble may causes this
+            except ValueError: # open template file or re-enble may causes this
                 pass
 
 
