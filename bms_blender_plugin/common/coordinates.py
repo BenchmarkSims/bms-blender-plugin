@@ -1,11 +1,11 @@
 from mathutils import Vector, Matrix, Quaternion, Euler
 
-# Define the matrices here
-BMS_SPACE_MATRIX = Matrix(((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
+# Define the matrices here - updated for correct BMS coordinate system (-Z forward, -X right, Y up)
+BMS_SPACE_MATRIX = Matrix(((0, 0, -1, 0), (-1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
 BMS_SPACE_MATRIX_INV = BMS_SPACE_MATRIX.inverted_safe()
 
 def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATRIX_INV):
-    """Transforms from Blender space to BMS space (-Z forward, Y up)."""
+    """Transforms from Blender space to BMS space (-Z forward, -X right, Y up)."""
     # matrix
     if type(data) is Matrix:
         return space_mat @ data.to_4x4() @ space_mat_inv
