@@ -6,9 +6,9 @@ from bms_blender_plugin.common.util import (
     get_bml_type,
     get_switches,
     get_dofs,
-    to_bms_coords,
     get_bounding_sphere,
 )
+from bms_blender_plugin.common.coordinates import to_bms_coords
 
 
 def get_highest_switch_and_dof_number(objs):

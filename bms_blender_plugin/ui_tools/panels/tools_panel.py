@@ -5,7 +5,7 @@ import bpy
 from bpy.types import Operator
 from bpy.props import StringProperty
 
-from bms_blender_plugin.common.util import to_bms_coords
+from bms_blender_plugin.common.coordinates import to_bms_coords
 from bms_blender_plugin.ext.blender_dds_addon.directx import util
 from bms_blender_plugin.ui_tools.operators.dof_operators import ResetAllDofs
 from bms_blender_plugin.ui_tools.panels.base_panel import BasePanel
