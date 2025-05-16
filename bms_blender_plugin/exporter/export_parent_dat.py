@@ -16,17 +16,28 @@ def get_highest_switch_and_dof_number(objs):
     # default value 0 to prevent editor crashing
     highest_switch_number = 0
     highest_dof_number = 0
+    BMS_MAX_VALUE = 2048
 
     for obj in objs:
         if len(obj.children) > 0:
             if get_bml_type(obj) == BlenderNodeType.SWITCH:
-                switch = get_switches()[obj.switch_list_index]
-                if switch.switch_number > highest_switch_number:
-                    highest_switch_number = switch.switch_number
+                try:
+                    switch = get_switches()[obj.switch_list_index]
+                    if switch.switch_number > highest_switch_number:
+                        highest_switch_number = switch.switch_number
+                except IndexError:
+                    raise IndexError(f"Switch index {obj.switch_list_index} not found in switch.xml. Object: {obj.name}. Please update XML files and reload switch list.")
             elif get_bml_type(obj) == BlenderNodeType.DOF:
-                dof = get_dofs()[obj.dof_list_index]
-                if dof.dof_number > highest_dof_number:
-                    highest_dof_number = dof.dof_number
+                try:
+                    dof = get_dofs()[obj.dof_list_index]
+                    if dof.dof_number > highest_dof_number:
+                        highest_dof_number = dof.dof_number
+                except IndexError:
+                    raise IndexError(f"DOF index {obj.dof_list_index} not found in dof.xml. Object: {obj.name}. Please update XML files and reload DOF list.")
+
+    # Cap values at BMS maximum
+    highest_switch_number = min(highest_switch_number, BMS_MAX_VALUE)
+    highest_dof_number = min(highest_dof_number, BMS_MAX_VALUE)
 
     return highest_switch_number, highest_dof_number
 
