@@ -16,6 +16,7 @@ def get_highest_switch_and_dof_number(objs):
     # default value 0 to prevent editor crashing
     highest_switch_number = 0
     highest_dof_number = 0
+    BMS_MAX_VALUE = 2048
 
     for obj in objs:
         if len(obj.children) > 0:
@@ -33,6 +34,10 @@ def get_highest_switch_and_dof_number(objs):
                         highest_dof_number = dof.dof_number
                 except IndexError:
                     raise IndexError(f"DOF index {obj.dof_list_index} not found in dof.xml. Object: {obj.name}. Please update XML files and reload DOF list.")
+
+    # Cap values at BMS maximum
+    highest_switch_number = min(highest_switch_number, BMS_MAX_VALUE)
+    highest_dof_number = min(highest_dof_number, BMS_MAX_VALUE)
 
     return highest_switch_number, highest_dof_number
 
