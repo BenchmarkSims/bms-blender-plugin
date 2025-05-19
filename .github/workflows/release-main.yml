@@ -55,7 +55,11 @@ jobs:
           echo "Zip file built"
       
       - name: Tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag ${{ steps.version.outputs.version_tag }}
           git push origin ${{ steps.version.outputs.version_tag }}
 
