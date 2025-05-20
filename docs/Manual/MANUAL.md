@@ -160,8 +160,9 @@ Although the BML Model format can act on its own, in order to get its full poten
 - **BML objects** - Up to 6 Levels of Detail. Naming convention is Model_0.bml (Highest level of detail) through Model_6.bml (lowest level of detail).
 - **3dButtons.dat** - Lists all Hotspots and their callbacks.
 
-All these files go into a parent folder, indexed by a number. All of Falcon's parent folders will be in ```<Your Falcon BMS Directory>/Data/Terrdata/Objects/Models```.
+With the exception of 3dButtons.dat, all these files go into a parent folder, indexed by a number. All of Falcon's parent folders will be in ```<Your Falcon BMS Directory>/Data/Terrdata/Objects/Models```.
 
+3dButtons.dat should be placed into ```<Your Falcon BMS Directory>/Data/Art/CkptArt/<Target Aircraft>```
 
 ### 3.3. Object Limitations
 Recommended Maximum Triangle count and Draw calls:
