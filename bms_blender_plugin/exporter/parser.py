@@ -284,7 +284,7 @@ def parse_hotspot(obj, hotspots: dict):
     Ignores all duplicate callback names."""
     print(f"{obj.name} is a HOTSPOT")
 
-    location = to_bms_coords(obj.matrix_world.translation)
+    location = obj.matrix_world.translation
     for callback in obj.bml_hotspot_callbacks:
         if callback.callback_name not in hotspots.keys():
             hotspot = Hotspot(
