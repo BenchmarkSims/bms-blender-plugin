@@ -22,7 +22,6 @@ class Callback:
 
 class Hotspot:
     """Represents a user-clickable hotspot in the 3d pit. Used in 3dButtons.dat"""
-    """Translations defines elsewhere are not compatible with the hotspots and 3dButton.dat file. This translation works."""
 
     def __init__(
         self,
