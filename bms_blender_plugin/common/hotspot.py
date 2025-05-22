@@ -1,5 +1,7 @@
 from enum import Enum
 from mathutils import Vector, Matrix
+from bms_blender_plugin.common.coordinates import BMS_HOTSPOT_MATRIX
+
 
 class MouseButton(int, Enum):
     LEFT_CLICK = 1
@@ -21,7 +23,6 @@ class Callback:
 class Hotspot:
     """Represents a user-clickable hotspot in the 3d pit. Used in 3dButtons.dat"""
     """Translations defines elsewhere are not compatible with the hotspots and 3dButton.dat file. This translation works."""
-    BMS_HOTSPOT_MATRIX = Matrix(((0, -1, 0), (-1, 0, 0), (0, 0, 1)))
 
     def __init__(
         self,
