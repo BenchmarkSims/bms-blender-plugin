@@ -122,9 +122,9 @@ Addon settings are accessed by Edit &rarr; Preferences &rarr; Add-ons &rarr; "Im
 
 
 ### 2.2. Debug Settings
->  ⚠️ All debug settings are OFF by default. Enabling debug settings may lead to issues in the Blender file and in the exported BML file.
-- *Do not delete export collection* - The export collection will not be deleted, showing the objects in the same configuration as they are getting exported. This is helpful while identifying exporter issues.
-- *Do not join same materials* - Keeps objects with same materials separated (By default objects with same materials are merged in order to reduce number of draw calls.)
+>  ⚠️ Enabling debug settings may lead to issues in the Blender file and in the exported BML file.
+- *Do not delete export collection (OFF by default)* - The export collection will not be deleted, showing the objects in the same configuration as they are getting exported. This is helpful while identifying exporter issues
+- *Do not join same materials (ON by default)* - Keeps objects with same materials separated (By default objects with same materials are merged in order to reduce number of draw calls.)
 
 ## 3. Modeling for Falcon BMS
 Since Falcon BMS 4.37.4, a new 3D model format has been introduced - *BML v2*. This format allows Benchmark Sims and independent artists to create very appealing and realistic looking 3D models using PBR (Physically Based Rendering) to be integrated into the Falcon world.
