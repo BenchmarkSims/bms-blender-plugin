@@ -3,6 +3,9 @@ from mathutils import Vector, Matrix, Quaternion, Euler
 # Define the matrices here
 BMS_SPACE_MATRIX = Matrix(((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
 BMS_SPACE_MATRIX_INV = BMS_SPACE_MATRIX.inverted_safe()
+""" Hotpots use an x=rearwards, y=left, z=up coordinate system, whereas blender uses an x=right, y=forward, z=up 
+coordinate system. The following transformation matrix will output a vector [-blender_y, -blender_x, blender_z] which 
+from our blender vector definitions is [-forward, -right, up] = [rearwards, left, up]"""
 BMS_HOTSPOT_MATRIX = Matrix(((0, -1, 0), (-1, 0, 0), (0, 0, 1)))
 
 def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATRIX_INV):
