@@ -30,8 +30,11 @@ def get_highest_switch_and_dof_number(objs):
             elif get_bml_type(obj) == BlenderNodeType.DOF:
                 try:
                     dof = get_dofs()[obj.dof_list_index]
-                    if dof.dof_number > highest_dof_number:
-                        highest_dof_number = dof.dof_number
+                    """parent.dat requires max(dof)+1 to function correctly due to a = vs <= issue in the BMS code. 
+                    This Should be resolved for 4.38."""
+                    required_dof_index = dof.dof_number+1
+                    if required_dof_index > highest_dof_number:
+                        highest_dof_number = required_dof_index
                 except IndexError:
                     raise IndexError(f"DOF index {obj.dof_list_index} not found in dof.xml. Object: {obj.name}. Please update XML files and reload DOF list.")
 
