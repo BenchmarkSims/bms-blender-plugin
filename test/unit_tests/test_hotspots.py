@@ -3,25 +3,30 @@ from bms_blender_plugin.common.hotspot import *
 from mathutils import Vector
 
 
-class TestHotspots(unittest.TestCase):
-    def setup(self):
-        self.test_mb = MouseButton(1, "p")
-        self.test_bt = ButtonType(1, "p")
-        self.test_obj = Hotspot("test", 1, 2, 3, 20, 10, self.test_mb, self.test_bt)
+class TestHotspotFunctions(unittest.TestCase):
+    def setUp(self):
+        """ Define a hotspot with dummy values for which we can easily calculate known values."""
+        self.test_mb = MouseButton.LEFT_CLICK.value
+        self.test_bt = ButtonType.PUSH_BUTTON.value
+        self.test_obj = Hotspot("test", 1.2345678, 2.3456789, 3.4567891, 20, 10, self.test_mb, self.test_bt)
 
     def test_blender_coords(self):
-        self.assertEqual(self.test_obj.blender_coords, Vector(1, 2, 3))
+        """Test that blender coords are ingested correctly.
+        Mainly serves to eliminate a possible source of error in the tranformation function."""
+        expected_vector = Vector((1.2345678, 2.3456789, 3.4567891))
+        self.assertEqual(expected_vector, self.test_obj.blender_coords)
 
     def test_blender_bms_transformation(self):
-        self.assertEqual(self.test_obj.bms_coords, Vector(1, 2, 3))
+        """Test that blender coords are transformed correctly to BMS coords"""
+        expected_vector = Vector((-2.3456789, -1.2345678, 3.4567891))
+        self.assertEqual(expected_vector, self.test_obj.bms_coords)
 
     def test_export_string_formatting(self):
-        self.assertEqual(self.test_obj, "Noise")
+        """Given a correct transformation, test that the export string is formatted correctly."""
+        expected_string = "test                            -2.345679   -1.234568    3.456789    20    10    1    p"
+        self.assertEqual(expected_string, self.test_obj.__str__())
 
-    def tearDown(self):
-        self.test_mb.dispose()
-        self.test_bt.dispose()
-        self.test_obj.dispose()
 
 if __name__ == '__main__':
     unittest.main()
+
