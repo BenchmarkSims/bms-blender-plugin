@@ -1,5 +1,5 @@
 from enum import Enum
-from mathutils import Vector, Matrix
+from mathutils import Vector
 from bms_blender_plugin.common.coordinates import BMS_HOTSPOT_MATRIX
 
 
