@@ -27,7 +27,7 @@ class ExporterPreferences(bpy.types.AddonPreferences):
     do_not_join_materials: BoolProperty(
         name="Do not join same materials",
         description="Does not join objects with identical materials",
-        default=False,
+        default=True,
     )
 
     copy_to_clipboard_command: StringProperty(
