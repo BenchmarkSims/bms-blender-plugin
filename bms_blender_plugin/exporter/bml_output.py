@@ -2,7 +2,6 @@ import datetime
 import math
 
 import bpy
-from mathutils import Vector
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType, LodItem
 from bms_blender_plugin.common.export_settings import ExportSettings

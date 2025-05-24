@@ -1,5 +1,3 @@
-from enum import Enum
-from mathutils import Vector
 from bms_blender_plugin.common.coordinates import vector_to_bms_coords
 
 class BoundingBox:

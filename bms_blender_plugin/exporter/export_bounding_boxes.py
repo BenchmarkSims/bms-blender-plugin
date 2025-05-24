@@ -1,4 +1,3 @@
-import operator
 import os
 
 def export_bounding_boxes(bounding_boxes, file_directory):
