@@ -59,8 +59,8 @@ def export_parent_dat(
     context,
     file_directory: str,
     file_prefix: str,
-    bounding_box_1_coords,
-    bounding_box_2_coords,
+    bounding_box_1_min_coords,
+    bounding_box_1_max_coords,
     scale_factor,
     number_of_texture_sets,
     slot_list,
@@ -68,9 +68,6 @@ def export_parent_dat(
 ):
     """Exports the Parent.dat as a file"""
     parent_dat_filepath = os.path.join(file_directory, "Parent.dat")
-
-    bounding_box_1_coords = to_bms_coords(bounding_box_1_coords)
-    bounding_box_2_coords = to_bms_coords(bounding_box_2_coords)
 
     # note: the "Switches" and "Dofs" config in the Parent.dat don't actually amount to the number of DOFs/switches but
     # to the highest dof_number in the model
@@ -86,10 +83,11 @@ def export_parent_dat(
 
     with open(parent_dat_filepath, "w") as parent_dat_file:
         str_output = (
+            f"# Dimensions = bounding_sphere_radius bbox_min_x bbox_max_x bbox_min_y bbox_max_y bbox_min_z bbox_max_z\n"
             f"Dimensions = {round(bounding_sphere_radius, 6)} "
-            f"{round(bounding_box_1_coords.x, 6):.6f} {round(bounding_box_2_coords.x, 6):.6f} "
-            f"{round(bounding_box_1_coords.y, 6):.6f} {round(bounding_box_2_coords.y, 6):.6f} "
-            f"{round(bounding_box_1_coords.z, 6):.6f} {round(bounding_box_2_coords.z, 6):.6f}\n"
+            f"{round(bounding_box_1_min_coords.x, 6):.6f} {round(bounding_box_1_max_coords.x, 6):.6f} "
+            f"{round(bounding_box_1_min_coords.y, 6):.6f} {round(bounding_box_1_max_coords.y, 6):.6f} "
+            f"{round(bounding_box_1_min_coords.z, 6):.6f} {round(bounding_box_1_max_coords.z, 6):.6f}\n"
             f"TextureSets = {number_of_texture_sets}\n"
             f"Switches = {highest_switch_number}\n"
             f"Dofs = {highest_dof_number}\n"
