@@ -23,8 +23,11 @@ def get_highest_switch_and_dof_number(objs):
             if get_bml_type(obj) == BlenderNodeType.SWITCH:
                 try:
                     switch = get_switches()[obj.switch_list_index]
-                    if switch.switch_number > highest_switch_number:
-                        highest_switch_number = switch.switch_number
+                    """parent.dat requires max(switch)+1 to function correctly due to a = vs <= issue in the BMS code. 
+                    This Should be resolved for 4.38."""
+                    required_switch_index = switch.switch_number+1
+                    if required_switch_index > highest_switch_number:
+                        highest_switch_number = required_switch_index
                 except IndexError:
                     raise IndexError(f"Switch index {obj.switch_list_index} not found in switch.xml. Object: {obj.name}. Please update XML files and reload switch list.")
             elif get_bml_type(obj) == BlenderNodeType.DOF:
