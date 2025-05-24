@@ -3,10 +3,13 @@ from mathutils import Vector, Matrix, Quaternion, Euler
 # Define the matrices here
 BMS_SPACE_MATRIX = Matrix(((1, 0, 0, 0), (0, 0, 1, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
 BMS_SPACE_MATRIX_INV = BMS_SPACE_MATRIX.inverted_safe()
-""" Hotpots use an x=rearwards, y=left, z=up coordinate system, whereas blender uses an x=right, y=forward, z=up 
+""" 
+Two different vector object types (bbox and hotspots) use an x=rearwards, y=left, z=up coordinate system, whereas blender uses an x=right, y=forward, z=up 
 coordinate system. The following transformation matrix will output a vector [-blender_y, -blender_x, blender_z] which 
-from our blender vector definitions is [-forward, -right, up] = [rearwards, left, up]"""
-BMS_HOTSPOT_MATRIX = Matrix(((0, -1, 0), (-1, 0, 0), (0, 0, 1)))
+from our blender vector definitions is [-forward, -right, up] = [rearwards, left, up]
+"""
+BMS_VECTOR_TRANSFORM_MATRIX = Matrix(((0, -1, 0), (-1, 0, 0), (0, 0, 1)))
+
 
 def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATRIX_INV):
     """Transforms from Blender space to BMS space (-Z forward, Y up)."""
@@ -33,3 +36,7 @@ def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATR
     # unknown
     else:
         raise NotImplementedError("Unknown data type encountered.")
+
+def vector_to_bms_coords(data):
+    # Transforms specific vectors correctly. Use cases so far are bounding boxes and hotspots.
+    return data @ BMS_VECTOR_TRANSFORM_MATRIX
