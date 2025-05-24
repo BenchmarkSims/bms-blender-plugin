@@ -373,16 +373,16 @@ The data definition of racks is located in the ```BmsRack.dat``` (not part of th
 Falcon uses bounding box dimensions in order to set the objects hitbox.
 In order to create a bounding box, Go to the "Add" panel, then "Falcon BMS", then "Bounding Box" (alternatively, you can use the BMS Tools Panel).
 A bounding box will be added to the scene and automatically fitted to the geometry of the currently active collection. The bounding box can be moved and scaled.
-The bounding box is only required once per scene.
+Multiple bounding boxes can be added to each scene, but only one is required.
 
 ![Bounding Box](Bounding_Box.png)
 
 > ⚠️ The bounding box rotation is constrained since Falcon only implements bounding boxes aligned with X/Y/Z Axis. *Do not* force a rotation on the bounding box.
 
 When applying a bounding box to your model, think about how the in-game hitbox should be. i.e. for an aircraft hangar the bounding box should only be the roof, since planes have the option to taxi into them.
-The bounding box will be exported into the ```Parent.dat``` file, and will populate the "dimensions" line.
 
-> ℹ️ BMS aircraft can have multiple additional bounding boxes. Those are defined in the \<Aircraft Name\>.dat (ACDATA). Their export is not yet implemented.
+The first bounding box will be exported into the ```Parent.dat``` file, and will populate the "dimensions" line. If more than one bounding box exists in the model, bounding box data will also be exported to bounding_boxes.txtpb
+This additional data will still need to be integrated into the \Data\Sim\Acdata\<Aircraft Name\>.txtpb file by the user, but should be formatted by the plugin to make this process easier.
 
 
 
