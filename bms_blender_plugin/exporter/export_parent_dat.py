@@ -83,7 +83,7 @@ def export_parent_dat(
 
     with open(parent_dat_filepath, "w") as parent_dat_file:
         str_output = (
-            f"# Dimensions = bounding_sphere_radius bbox_min_x bbox_max_x bbox_min_y bbox_max_y bbox_min_z bbox_max_z\n"
+            f"// Dimensions = bounding_sphere_radius bbox_min_x bbox_max_x bbox_min_y bbox_max_y bbox_min_z bbox_max_z\n"
             f"Dimensions = {round(bounding_sphere_radius, 6)} "
             f"{round(bounding_box_1_min_coords.x, 6):.6f} {round(bounding_box_1_max_coords.x, 6):.6f} "
             f"{round(bounding_box_1_min_coords.y, 6):.6f} {round(bounding_box_1_max_coords.y, 6):.6f} "
