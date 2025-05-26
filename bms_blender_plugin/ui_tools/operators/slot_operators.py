@@ -13,7 +13,7 @@ class CreateSlot(Operator):
 
     # noinspection PyMethodMayBeStatic
     def execute(self, context):
-        slot_object = bpy.data.objects.new("Slot #1", None)
+        slot_object = bpy.data.objects.new("Slot #0", None)
         slot_object.bml_type = str(BlenderNodeType.SLOT)
         slot_object.empty_display_type = "IMAGE"
         slot_object.empty_display_size = 2
