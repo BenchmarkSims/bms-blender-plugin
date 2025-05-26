@@ -60,10 +60,10 @@ def register_blender_properties():
     # Slots
     bpy.types.Object.bml_slot_number = bpy.props.IntProperty(
         name="Slot number",
-        description="Slot number (1-13)",
-        default=1,
-        min=1,
-        max=13,
+        description="Slot number (0-20)",
+        default=0,
+        min=0,
+        max=20,
         update=update_slot_number,
     )
 
