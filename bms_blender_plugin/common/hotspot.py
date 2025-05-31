@@ -1,6 +1,6 @@
 from enum import Enum
 from mathutils import Vector
-from bms_blender_plugin.common.coordinates import BMS_HOTSPOT_MATRIX
+from bms_blender_plugin.common.coordinates import vector_to_bms_coords
 
 
 class MouseButton(int, Enum):
@@ -43,12 +43,7 @@ class Hotspot:
         self.mouse_button = mouse_button
         self.button_type = button_type
         self.blender_coords = Vector((self.blend_x, self.blend_y, self.blend_z))
-        self.bms_coords = self.to_bms_hotspot_coords(self.blender_coords)
-
-    def to_bms_hotspot_coords(self, data, transformation=BMS_HOTSPOT_MATRIX):
-        """Transforms applied elsewhere do not seem to be compatible for hotspots (maybe other vectors as well?)
-        Without robust testing the safest way to fix this is within the hotspot class."""
-        return data @ transformation
+        self.bms_coords = vector_to_bms_coords(self.blender_coords)
 
     def __str__(self):
         """"Format according to 3dButtons.dat.
