@@ -215,17 +215,25 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
                 current_vertices_index += parsed_nodes.vertices_length
                 current_vertices_size += parsed_nodes.vertices_size
 
+            """
+            Certain nodes (dofs, switches) require an _END node which requires the same node index as the "START" node
+            The above steps have added +1 to the index count, and so we take the len(nodes) -1 to obtain the parent index
+            If I was going to refactor this I would explicitely calculate the node_index and avoid calculating it in each
+            Node definition.
+            """
+            parent_node_index = len(nodes) -1
+
             # recursively iterate over all children
             if obj.children:
                 _recursively_parse_nodes(obj.children)
 
             # append the end nodes for Switches, DOFs and Slots
             if get_bml_type(obj) == BlenderNodeType.SWITCH and len(obj.children) > 0:
-                nodes.append(SwitchEnd(len(nodes)))
+                nodes.append(SwitchEnd(parent_node_index))
             elif get_bml_type(obj) == BlenderNodeType.DOF and len(obj.children) > 0:
-                nodes.append(DofEnd(len(nodes)))
+                nodes.append(DofEnd(parent_node_index))
             elif get_bml_type(obj) == BlenderNodeType.SLOT:
-                nodes.append(SlotEnd(len(nodes)))
+                nodes.append(SlotEnd(parent_node_index))
 
     # parse all nodes of the root collection
     root_objects = []
