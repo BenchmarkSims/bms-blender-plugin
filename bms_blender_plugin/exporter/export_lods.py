@@ -304,7 +304,8 @@ def join_objects_with_same_materials(objects, materials_objects, auto_smooth_val
         if obj.type == "MESH":
             # regular meshes
             # "do not merge" flag - just use a custom material name which will never be looked up
-            if obj.bml_do_not_merge:
+            # enhance this by including BBOXs in the do not merge category - Otherwise joined objects will not render
+            if obj.bml_do_not_merge or get_bml_type(obj) == BlenderNodeType.BBOX:
                 materials_objects[obj.name] = [obj]
                 continue
 
