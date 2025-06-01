@@ -33,7 +33,7 @@ jobs:
       - name: Build and zip folder
         run: |
           blender_version=${VERSION_NAME}
-          sed 's/"version":.*/"version": (${blender_version}),/' bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp
+          sed 's|"version":.*|"version": (${blender_version}),|' bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp
           mv bms_blender_plugin/__init__.py.tmp bms_blender_plugin/__init__.py
           zip -r "bms_blender_plugin-${blender_version}.zip" bms_blender_plugin/
           echo "Zip file built"
