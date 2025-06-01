@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - release/**
+      - release/v*.*.*
 
 jobs:
   lint:
@@ -26,22 +26,18 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Update version in __init__.py
-        run: |
-          # Extract version from tag (e.g., release/1.2.3 -> 1 2 3)
-          version="${GITHUB_REF##*/}"
-          major=$(echo $version | cut -d. -f1)
-          minor=$(echo $version | cut -d. -f2)
-          patch=$(echo $version | cut -d. -f3)
-          sed -i "s/\"version\":\s*(.*)/\"version\": ($major, $minor, $patch),/" bms_blender_plugin/__init__.py
       - name: Build and zip folder
         run: |
-          zip -r "bms_blender_plugin-${GITHUB_REF##*/}.zip" bms_blender_plugin/
+          tag_version=$(echo "${GITHUB_REF#refs/tags/release/}")
+          version_tuple=$(echo "$tag_version" | awk -F'[v.]' '{print $2", "$3", "$4}')
+          sed -i "s/\"version\": .*/\"version\": (${version_tuple}),/" bms_blender_plugin/__init__.py
+          zip -r "bms_blender_plugin-${tag_version}.zip" bms_blender_plugin
           echo "Zip file built"
+          echo "TAG_VERSION=$tag_version" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: "Release ${{ github.ref }}"
+          tag_name: "release/${{ env.TAG_VERSION }}"
+          name: "${{ env.TAG_VERSION }}"
           files: |
             bms_blender_plugin*.zip
