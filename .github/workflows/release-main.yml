@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - release/**
+      - release/v*.*.*
 
 jobs:
   lint:
@@ -28,15 +28,16 @@ jobs:
           fetch-depth: 0
       - name: Build and zip folder
         run: |
-          blender_version=$(echo ${{ github.ref }} | tr . ,)
-          sed "s/\"version\":.*/'version': (${blender_version}),/" bms_blender_plugin/__init__.py > bms_blender_plugin/__init__.py.tmp
-          mv bms_blender_plugin/__init__.py.tmp bms_blender_plugin/__init__.py
-          zip -r "bms_blender_plugin-${{ github.ref }}.zip" bms_blender_plugin/
+          tag_version=$(echo "${GITHUB_REF#refs/tags/release/}")
+          version_tuple=$(echo "$tag_version" | awk -F'[v.]' '{print $2", "$3", "$4}')
+          sed -i "s/\"version\": .*/\"version\": (${version_tuple}),/" bms_blender_plugin/__init__.py
+          zip -r "bms_blender_plugin-${tag_version}.zip" bms_blender_plugin
           echo "Zip file built"
+          echo "TAG_VERSION=$tag_version" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          name: "Release ${{ github.ref }}"
+          tag_name: "release/${{ env.TAG_VERSION }}"
+          name: "${{ env.TAG_VERSION }}"
           files: |
             bms_blender_plugin*.zip
