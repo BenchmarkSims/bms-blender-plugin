@@ -17,6 +17,7 @@ from bms_blender_plugin.exporter.export_materials import (
 )
 from bms_blender_plugin.exporter.export_parent_dat import get_slots, export_parent_dat
 from bms_blender_plugin.exporter.export_bounding_boxes import export_bounding_boxes
+from mathutils import Vector
 
 
 def export_bml(context, lods, file_directory, file_prefix, export_settings: ExportSettings):
@@ -59,10 +60,16 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     """
     Get the first bounding box min and max coordinates. A bit arbitrary at this point, 
     but in instances of a single bbox, no harm and I suspect that these will be in named order. 
-    Scale appropriately
+    Scale appropriately.
+    If no bounding box is defined revert to a zero-sized box to avoid export failures.
     """
-    bounding_box_1_min_coords = BBox_Array[0].min_bms_vertex
-    bounding_box_1_max_coords = BBox_Array[0].max_bms_vertex
+    if len(BBox_Array) > 0:
+        bounding_box_1_min_coords = BBox_Array[0].min_bms_vertex
+        bounding_box_1_max_coords = BBox_Array[0].max_bms_vertex
+    else:
+        print("Model does not define a bounding box. Reverting to zero-size box.")
+        bounding_box_1_min_coords = Vector((0,0,0))
+        bounding_box_1_max_coords = Vector((0,0,0))
     bounding_box_1_min_coords *= scale_factor
     bounding_box_1_max_coords *= scale_factor
 
