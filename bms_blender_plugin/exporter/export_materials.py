@@ -75,6 +75,17 @@ def get_materials(material_node_tree: MaterialNodeTree):
         # we can not export material nodes with no materials
         if not material_node.material:
             continue
+            
+        # Check if we have transparent material settings that would benefit from alpha sorting
+        needs_alpha_sorting = False
+        if (material_node.blend_enabled and 
+            material_node.blend_src == BlendLocation.SRC_ALPHA.name and 
+            material_node.blend_dest == BlendLocation.INV_SRC_ALPHA.name):
+            needs_alpha_sorting = True
+        
+        # Set alpha_sort_triangles by default for transparent materials if not explicitly set
+        if needs_alpha_sorting and not hasattr(material_node, "alpha_sort_triangles"):
+            material_node.alpha_sort_triangles = True
 
         # collect all shader and sampler nodes
         sampler_nodes = list()
