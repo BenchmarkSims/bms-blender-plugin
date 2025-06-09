@@ -29,6 +29,10 @@ class CreateSwitch(Operator):
         )
         switch_object.bml_type = str(BlenderNodeType.SWITCH)
 
+        # Apply size from preferences
+        preferences = bpy.context.preferences.addons["bms_blender_plugin"].preferences
+        switch_object.scale = (preferences.switch_empty_size,) * 3
+
         if context.active_object:
             # assumes that every object is linked to at least one collection
             context.active_object.users_collection[0].objects.link(switch_object)
