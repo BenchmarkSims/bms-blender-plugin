@@ -45,8 +45,21 @@ def compress_lzma(data):
     return output[:5] + output[13:]
 
 
-def get_objcenter(obj, convert_to_bms_coords=True):
-    """Returns the center of an object based on its vertices"""
+def get_obj_origin(obj, convert_to_bms_coords=True):
+    """Returns the origin (pivot point) of an object"""
+    origin = obj.matrix_world.translation
+    
+    if convert_to_bms_coords:
+        return to_bms_coords(origin)
+    else:
+        return origin
+
+
+def get_objcenter(obj, convert_to_bms_coords=True, use_origin=False):
+    """Returns the center of an object based on its vertices or origin"""
+    if use_origin:
+        return get_obj_origin(obj, convert_to_bms_coords)
+    
     # https://blender.stackexchange.com/questions/62040/get-center-of-geometry-of-an-object
     x, y, z = [sum([v.co[i] for v in obj.data.vertices]) for i in range(3)]
     count = float(len(obj.data.vertices))

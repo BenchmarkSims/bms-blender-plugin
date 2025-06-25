@@ -6,7 +6,7 @@ from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import Primitive, PrimitiveTopology, Vector3, Slot, D3DMatrix, Switch, \
     DofType, Dof
 from bms_blender_plugin.common.hotspot import Hotspot, MouseButton, ButtonType
-from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_switches, get_dofs, \
+from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_obj_origin, get_switches, get_dofs, \
     get_non_translate_dof_parent
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
 from bms_blender_plugin.common.coordinates import to_bms_coords
@@ -58,7 +58,8 @@ def parse_mesh(
     if get_bml_type(obj.parent) == BlenderNodeType.DOF and obj.parent.dof_type != DofType.TRANSLATE.name:
         reference_point = to_bms_coords((0, 0, 0))
     else:
-        reference_point = get_objcenter(obj)
+        # Use object origin instead of geometric center for alpha sorting reference point
+        reference_point = get_obj_origin(obj)
 
     node = Primitive(
         index=len(nodes),
@@ -122,7 +123,8 @@ def parse_bbl_light(
     for obj_vertex in obj_vertices:
         obj_vertices_data += obj_vertex.to_data()
 
-    reference_point = get_objcenter(obj)
+    # Use object origin instead of geometric center for alpha sorting reference point
+    reference_point = get_obj_origin(obj)
     node = Primitive(
         index=len(nodes),
         topology=PrimitiveTopology.TRIANGLE_LIST,
