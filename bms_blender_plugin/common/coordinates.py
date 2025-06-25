@@ -37,6 +37,7 @@ def to_bms_coords(data, space_mat=BMS_SPACE_MATRIX, space_mat_inv=BMS_SPACE_MATR
     else:
         raise NotImplementedError("Unknown data type encountered.")
 
+
 def vector_to_bms_coords(data):
     # Transforms specific vectors correctly. Use cases so far are bounding boxes and hotspots.
     return data @ BMS_VECTOR_TRANSFORM_MATRIX
