@@ -273,6 +273,9 @@ def copy_collection_flat(
         if copied_object:
             bpy.context.view_layer.objects.active = copied_object
             bpy.ops.object.mode_set(mode="OBJECT")
+    
+    # Single scene update at the end to refresh all transform matrices - attempt to fix nested DOF transforms failing due to Blender quirk
+    bpy.context.view_layer.update()
 
 
 def reset_dof(obj):
@@ -366,6 +369,13 @@ def apply_all_modifiers_on_obj(obj):
             bpy.ops.object.mode_set(mode="OBJECT")
             bpy.ops.object.convert(target="MESH", keep_original=False)
 
+        # Store the world position before transform application for reference points
+        if (obj.type == "MESH" and 
+            get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
+            # Store the position in a custom property that survives transform_apply
+            obj["bms_reference_point"] = tuple(obj.location)
+        
+        # Apply transforms using original logic (restored)
         if get_bml_type(obj) not in [
             BlenderNodeType.DOF,
             BlenderNodeType.SLOT,

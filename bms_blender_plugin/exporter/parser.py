@@ -54,11 +54,15 @@ def parse_mesh(
     for obj_vertex in obj_vertices:
         obj_vertices_data += obj_vertex.to_data()
 
-    # DOF children use coordinates local to their DOF
-    if get_bml_type(obj.parent) == BlenderNodeType.DOF and obj.parent.dof_type != DofType.TRANSLATE.name:
-        reference_point = to_bms_coords((0, 0, 0))
+    # Use stored reference point if available, otherwise fall back to current location. 
+    # Property assigned in util.py - preserves Blender origin to use as reference point for alpha sorting
+    # All objects now use their origins for reference points, including DOF children
+    if "bms_reference_point" in obj:
+        stored_position = Vector(obj["bms_reference_point"])
+        reference_point = to_bms_coords(stored_position)
     else:
-        reference_point = get_objcenter(obj)
+        # Fallback for objects without stored reference point
+        reference_point = to_bms_coords(obj.location)
 
     node = Primitive(
         index=len(nodes),
@@ -122,7 +126,15 @@ def parse_bbl_light(
     for obj_vertex in obj_vertices:
         obj_vertices_data += obj_vertex.to_data()
 
-    reference_point = get_objcenter(obj)
+    # Use stored reference point if available, otherwise fall back to world translation
+    # All objects now use their origins for reference points, including DOF children
+    if "bms_reference_point" in obj:
+        stored_position = Vector(obj["bms_reference_point"])
+        reference_point = to_bms_coords(stored_position)
+    else:
+        # Fallback for objects without stored reference point
+        reference_point = to_bms_coords(obj.matrix_world.translation)
+    
     node = Primitive(
         index=len(nodes),
         topology=PrimitiveTopology.TRIANGLE_LIST,
