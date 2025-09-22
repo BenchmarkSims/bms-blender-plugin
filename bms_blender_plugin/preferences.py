@@ -4,7 +4,83 @@ from bpy.types import Operator
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import DofType
-from bms_blender_plugin.common.util import get_bml_type
+from bms_blender_plugin.common.util import get_bml_type, get_dofs, get_switches, get_callbacks
+
+
+class ReloadDofList(Operator):
+    """Reload DOF list from DOF.xml file"""
+    bl_idname = "bml.reload_dof_list"
+    bl_label = "Reload DOF.xml"
+    bl_description = "Reload the DOF list from the DOF.xml file. Use this after modifying the XML file"
+    bl_options = {"REGISTER"}
+
+    def execute(self, context):
+        # Clear the global cache first
+        import bms_blender_plugin.common.util as util_module
+        util_module.dofs = []
+        
+        # Clear the scene cache
+        context.scene.dof_list.clear()
+        
+        # Repopulate the scene cache immediately
+        for dof in get_dofs():
+            item = context.scene.dof_list.add()
+            item.name = dof.name
+            item.dof_number = int(dof.dof_number)
+        
+        self.report({'INFO'}, f"Reloaded {len(context.scene.dof_list)} DOFs from DOF.xml")
+        return {'FINISHED'}
+
+
+class ReloadSwitchList(Operator):
+    """Reload Switch list from switch.xml file"""
+    bl_idname = "bml.reload_switch_list"
+    bl_label = "Reload switch.xml"
+    bl_description = "Reload the Switch list from the switch.xml file. Use this after modifying the XML file"
+    bl_options = {"REGISTER"}
+
+    def execute(self, context):
+        # Clear the global cache first
+        import bms_blender_plugin.common.util as util_module
+        util_module.switches = []
+        
+        # Clear the scene cache
+        context.scene.switch_list.clear()
+        
+        # Repopulate the scene cache immediately
+        for switch in get_switches():
+            item = context.scene.switch_list.add()
+            item.name = switch.name
+            item.switch_number = int(switch.switch_number)
+            item.branch_number = int(switch.branch)
+        
+        self.report({'INFO'}, f"Reloaded {len(context.scene.switch_list)} Switches from switch.xml")
+        return {'FINISHED'}
+
+
+class ReloadCallbackList(Operator):
+    """Reload Callback list from callbacks.xml file"""
+    bl_idname = "bml.reload_callback_list"
+    bl_label = "Reload callbacks.xml"
+    bl_description = "Reload the Callback list from the callbacks.xml file. Use this after modifying the XML file"
+    bl_options = {"REGISTER"}
+
+    def execute(self, context):
+        # Clear the global cache first
+        import bms_blender_plugin.common.util as util_module
+        util_module.callbacks = []
+        
+        # Clear the scene cache
+        context.scene.bml_all_callbacks.clear()
+        
+        # Repopulate the scene cache immediately
+        for callback in get_callbacks():
+            new_callback = context.scene.bml_all_callbacks.add()
+            new_callback.name = callback.name
+            new_callback.group = callback.group
+        
+        self.report({'INFO'}, f"Reloaded {len(context.scene.bml_all_callbacks)} Callbacks from callbacks.xml")
+        return {'FINISHED'}
 
 
 class ExporterPreferences(bpy.types.AddonPreferences):
@@ -115,6 +191,13 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         box.operator(ApplyEmptyDisplaysToDofs.bl_idname, icon="CHECKMARK")
 
         layout.separator()
+        layout.label(text="Data Management")
+        box = layout.box()
+        box.operator(ReloadDofList.bl_idname, icon="FILE_REFRESH")
+        box.operator(ReloadSwitchList.bl_idname, icon="FILE_REFRESH")
+        box.operator(ReloadCallbackList.bl_idname, icon="FILE_REFRESH")
+
+        layout.separator()
         layout.row().label(text="Debug options")
         layout.row().label(text="Use at your own risk. All options should be OFF by default.", icon="ERROR")
         box = layout.box()
@@ -164,6 +247,9 @@ class ApplyEmptyDisplaysToDofs(Operator):
 
 
 def register():
+    bpy.utils.register_class(ReloadDofList)
+    bpy.utils.register_class(ReloadSwitchList)
+    bpy.utils.register_class(ReloadCallbackList)
     bpy.utils.register_class(ApplyEmptyDisplaysToDofs)
     bpy.utils.register_class(ExporterPreferences)
 
@@ -171,3 +257,6 @@ def register():
 def unregister():
     bpy.utils.unregister_class(ExporterPreferences)
     bpy.utils.unregister_class(ApplyEmptyDisplaysToDofs)
+    bpy.utils.unregister_class(ReloadCallbackList)
+    bpy.utils.unregister_class(ReloadSwitchList)
+    bpy.utils.unregister_class(ReloadDofList)
