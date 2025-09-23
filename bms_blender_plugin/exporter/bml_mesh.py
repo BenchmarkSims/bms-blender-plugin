@@ -64,6 +64,8 @@ def get_bml_mesh_data(obj, max_vertex_index):
 
     world_normal = world_coord.inverted_safe().transposed().to_3x3()
 
+
+
     for face in mesh.polygons:
         # loop over face loop
         for vert in [mesh.loops[i] for i in face.loop_indices]:
