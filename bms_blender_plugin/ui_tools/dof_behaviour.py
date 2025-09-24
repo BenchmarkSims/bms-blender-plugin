@@ -119,13 +119,50 @@ def update_switch_or_dof_name(obj, context):
     """Updates the name of a DOF or Switch when their respective DOF/Switch values are changed. Overwrites any previous
     name updates by the user."""
     if get_bml_type(obj) == BlenderNodeType.SWITCH:
-        active_switch = get_switches()[obj.switch_list_index]
-        obj.name = f"Switch - {active_switch.name} ({active_switch.switch_number})"
+        # Prefer persistent properties
+        sw_num = getattr(obj, "bml_switch_number", -1)
+        sw_branch = getattr(obj, "bml_switch_branch", -1)
+        label_name = None
+        if sw_num is not None and sw_num >= 0 and sw_branch is not None and sw_branch >= 0:
+            # Try to find matching enum (to display its name) but tolerate absence
+            try:
+                for sw in get_switches():
+                    if sw.switch_number == sw_num and sw.branch == sw_branch:
+                        label_name = sw.name
+                        break
+            except Exception:
+                pass
+            if label_name is None:
+                label_name = "Custom"
+            obj.name = f"Switch - {label_name} ({sw_num}:{sw_branch})"
+        else:
+            # Legacy fallback
+            try:
+                active_switch = get_switches()[obj.switch_list_index]
+                obj.name = f"Switch - {active_switch.name} ({active_switch.switch_number})"
+            except Exception:
+                obj.name = "Switch - Unset"
     elif get_bml_type(obj) == BlenderNodeType.DOF:
-        active_dof = get_dofs()[obj.dof_list_index]
-
-        name = f"DOF - {active_dof.name} ({active_dof.dof_number})"
-        obj.name = name
+        dof_num = getattr(obj, "bml_dof_number", -1)
+        if dof_num is not None and dof_num >= 0:
+            # Try resolve name for consistency
+            dof_name = None
+            try:
+                for de in get_dofs():
+                    if de.dof_number == dof_num:
+                        dof_name = de.name
+                        break
+            except Exception:
+                pass
+            if dof_name is None:
+                dof_name = "Custom"
+            obj.name = f"DOF - {dof_name} ({dof_num})"
+        else:
+            try:
+                active_dof = get_dofs()[obj.dof_list_index]
+                obj.name = f"DOF - {active_dof.name} ({active_dof.dof_number})"
+            except Exception:
+                obj.name = "DOF - Unset"
 
         for tree in bpy.data.node_groups.values():
             if isinstance(tree, nodes_editor.dof_editor.DofNodeTree):

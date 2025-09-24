@@ -68,7 +68,32 @@ class DofPanel(BasePanel, bpy.types.Panel):
             "dof_list_index",
         )
         row = layout.row()
-        row.prop(dof, "dof_type")
+        # Persistent ID box shown first
+        box_ids = layout.box()
+        box_ids.label(text="Persistent ID for Export")
+        box_ids.prop(dof, "bml_dof_number")
+        dof_num = getattr(dof, "bml_dof_number", -1)
+        if dof_num < 0:
+            row_unset = box_ids.row(align=True)
+            row_unset.label(text="Not Assigned", icon="ERROR")
+            # Use popup to provide single + scene/collection batch assignment options
+            row_unset.operator("bml.assign_dof_popup", text="Assign...", icon="IMPORT")
+        else:
+            found = False
+            try:
+                from bms_blender_plugin.common.util import get_dofs
+                for de in get_dofs():
+                    if de.dof_number == dof_num:
+                        found = True
+                        break
+            except Exception:
+                pass
+            if not found:
+                box_ids.label(text="Warning: DOF number not found in DOF.xml (still exported)", icon="INFO")
+
+        # DOF Type selector moved below persistent ID box for clarity
+        type_row = layout.row()
+        type_row.prop(dof, "dof_type")
 
         layout.separator()
         row = layout.row()
@@ -122,12 +147,13 @@ class DofPanel(BasePanel, bpy.types.Panel):
             layout.label(text=f"Unknown DOF type: {active_object.dof_type}")
 
         layout.separator()
-        layout.label(text="DOF Options")
-        layout.prop(dof, "dof_check_limits")
-        layout.prop(dof, "dof_reverse")
-        layout.prop(dof, "dof_normalise")
-        layout.prop(dof, "dof_multiplier")
-        layout.prop(dof, "dof_multiply_min_max")
+        options_box = layout.box()
+        options_box.label(text="DOF Options")
+        options_box.prop(dof, "dof_check_limits")
+        options_box.prop(dof, "dof_reverse")
+        options_box.prop(dof, "dof_normalise")
+        options_box.prop(dof, "dof_multiplier")
+        options_box.prop(dof, "dof_multiply_min_max")
 
 
 def register():
