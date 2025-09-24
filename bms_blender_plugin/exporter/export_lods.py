@@ -409,29 +409,57 @@ def join_objects_with_same_materials(objects, materials_objects, auto_smooth_val
             print(f"Batch join {len(objects_with_same_material)} objects, material: '{material_name}'")
             
             # Fix UV layer preservation during join (Issue #21)
-            # Blender's join operation looks for "UVMap" specifically
+            # Blender's join tends to favor a layer literally named "UVMap". Keep exactly one primary UV layer.
+            # Exporter only uses a single UV layer, so we can safely collapse multiples.
             for obj in objects_with_same_material:
-                if len(obj.data.uv_layers) == 0:
-                    continue  # No UV layers, nothing to do
-                    
-                # Ensure we have an active layer
-                if not obj.data.uv_layers.active:
-                    obj.data.uv_layers.active_index = 0
-                    print(f"⚠️  Warning: Object '{obj.name}' has no active UV map, setting first layer as active")
+                uv_layers = obj.data.uv_layers
+                if len(uv_layers) == 0:
+                    continue  # No UV layers, nothing to normalize
 
-                # Already correct, no processing needed
-                if obj.data.uv_layers.active.name == "UVMap":
-                    continue  
-                
-                # Needs to be renamed: delete all other layers and rename active to "UVMap"
-                active_layer = obj.data.uv_layers.active
-                print(f"⚠️  Warning: Object '{obj.name}' UV map incorrectly named '{active_layer.name}'")
-                layers_to_remove = [layer for layer in obj.data.uv_layers if layer != active_layer]
-                for layer in layers_to_remove:
-                    obj.data.uv_layers.remove(layer)
-                print(f"⚠️  Warning: Renaming object '{obj.name}' active UV map to: UVMap")
-                # Get fresh reference after removals to avoid stale reference
-                obj.data.uv_layers.active.name = "UVMap"
+                # Ensure some layer is active
+                if not uv_layers.active:
+                    uv_layers.active_index = 0
+                    print(f"[BML Export] Warning: Object '{obj.name}' had no active UV layer; first layer set active")
+
+                # Prefer an existing primary layer actually named "UVMap" if present
+                primary_layer = uv_layers.get("UVMap")
+                if primary_layer is not None:
+                    # Make sure it's the active layer for downstream ops
+                    for i, layer in enumerate(uv_layers):
+                        if layer == primary_layer:
+                            uv_layers.active_index = i
+                            break
+                else:
+                    # No layer named "UVMap"; use the active layer as the primary and rename it
+                    primary_layer = uv_layers.active
+                    if primary_layer.name != "UVMap":
+                        print(f"📝  Info: Renaming active UV layer '{primary_layer.name}' on '{obj.name}' to 'UVMap'")
+                        primary_layer.name = "UVMap"
+
+                # Remove ALL other layers (exporter uses only one); collect NAMES first so we can re-resolve
+                removable_names = [layer.name for layer in uv_layers if layer.name != "UVMap"]
+                for lname in removable_names:
+                    # Re-fetch by name to avoid stale pointer if Blender reallocated internally
+                    layer_obj = uv_layers.get(lname)
+                    if layer_obj is None:
+                        # Already removed/renamed by previous operation
+                        continue
+                    try:
+                        uv_layers.remove(layer_obj)
+                    except RuntimeError as e:
+                        print(f"⚠️  Warning: Failed to remove secondary UV layer '{lname}' from '{obj.name}': {e}")
+
+                # Safety check
+                if uv_layers.active is None or uv_layers.active.name != "UVMap":
+                    # If something unexpected happened, fall back to first layer and rename
+                    if len(uv_layers):
+                        uv_layers.active_index = 0
+                        if uv_layers.active and uv_layers.active.name != "UVMap":
+                            try:
+                                uv_layers.active.name = "UVMap"
+                            except Exception:
+                                pass
+                        print(f"📝  Info: Repaired primary UVMap layer on '{obj.name}' after cleanup")
             
             # force autosmooth on all objects to be merged (reason: when joining, Blender will override the
             # smoothing options to the last object selected)
