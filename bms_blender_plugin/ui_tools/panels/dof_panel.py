@@ -28,6 +28,37 @@ class DofList(UIList):
     def __init__(self):
         self.use_filter_show = True
 
+    def filter_items(self, context, data, propname):
+        """Custom filter that matches both name and DOF numbers"""
+        dofs = getattr(data, propname)
+        
+        flt_flags = []
+        flt_neworder = []
+        
+        # Check if there's a search filter active
+        if self.filter_name:
+            # Start with name-based filtering
+            flt_flags = bpy.types.UI_UL_list.filter_items_by_name(
+                self.filter_name, self.bitflag_filter_item, dofs, "name"
+            )
+            
+            # Also check if the filter text matches DOF numbers
+            filter_text = self.filter_name.lower().strip()
+            if filter_text.isdigit():
+                for i, dof in enumerate(dofs):
+                    # If name filter already matched, keep it
+                    if flt_flags[i] & self.bitflag_filter_item:
+                        continue
+                    
+                    # Check if filter matches DOF number (supports partial matching)
+                    if str(dof.dof_number).startswith(filter_text):
+                        flt_flags[i] |= self.bitflag_filter_item
+        else:
+            # No filter, sort by name
+            flt_neworder = bpy.types.UI_UL_list.sort_items_by_name(dofs, "name")
+        
+        return flt_flags, flt_neworder
+
     def draw_item(
         self, context, layout, data, item, icon, active_data, active_propname, index
     ):
