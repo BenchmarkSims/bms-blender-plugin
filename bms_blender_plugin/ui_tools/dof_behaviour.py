@@ -20,7 +20,7 @@ from bms_blender_plugin.common.util import (
     reset_dof,
     get_parent_dof_or_switch,
 )
-from bms_blender_plugin.nodes_editor.util import get_bml_node_type, get_bml_node_tree_type
+from bms_blender_plugin.nodes_editor.util import get_bml_node_type, get_bml_node_tree_type, get_dof_enumeration
 
 
 class DofMediator:
@@ -50,7 +50,9 @@ class DofMediator:
         """Subscribes a DOF to dof_input updates for his DOF number"""
         if get_bml_type(dof) != BlenderNodeType.DOF:
             return
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
+        enum = get_dof_enumeration()
+        idx = getattr(dof, "dof_list_index", -1)
+        dof_number = enum[idx].dof_number if 0 <= idx < len(enum) else -1
 
         # first time subscription
         if dof not in cls.dof_dof_number.keys():
@@ -81,7 +83,9 @@ class DofMediator:
     @classmethod
     def unsubscribe(cls, dof):
         """Unsubscribes a DOF from all subscriptions"""
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
+        enum = get_dof_enumeration()
+        idx = getattr(dof, "dof_list_index", -1)
+        dof_number = enum[idx].dof_number if 0 <= idx < len(enum) else -1
         cls.dof_number_dofs[dof_number].remove(dof)
         cls.dof_dof_number.pop(dof)
 
@@ -90,11 +94,11 @@ class DofMediator:
         """Notifies that a DOF has received a new dof_input value. Updates the other DOFs to the same dof_input."""
         if bpy.app.background:
             return
-
         if dof not in cls.dof_dof_number:
             cls.rebuild_cache()
-
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
+        enum = get_dof_enumeration()
+        idx = getattr(dof, "dof_list_index", -1)
+        dof_number = enum[idx].dof_number if 0 <= idx < len(enum) else -1
 
         dofs_to_cleanup = []
         new_dof_input = dof.dof_input
@@ -159,7 +163,9 @@ def update_switch_or_dof_name(obj, context):
             obj.name = f"DOF - {dof_name} ({dof_num})"
         else:
             try:
-                active_dof = get_dofs()[obj.dof_list_index]
+                enum = get_dof_enumeration()
+                idx = getattr(obj, "dof_list_index", -1)
+                active_dof = enum[idx] if 0 <= idx < len(enum) else None
                 obj.name = f"DOF - {active_dof.name} ({active_dof.dof_number})"
             except Exception:
                 obj.name = "DOF - Unset"

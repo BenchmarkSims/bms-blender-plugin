@@ -165,7 +165,14 @@ class BML_OT_reassign_all_ids(bpy.types.Operator):
 # ---------------------------------------------------------------------------
 # Internal shared helper for wrapper batch operators (simpler popup usage)
 # ---------------------------------------------------------------------------
-def _batch_reassign(context, scope: str, target: str):
+def _batch_reassign(context, scope: str, target: str, target_objects=None):
+    """
+    Batch assign persistent IDs from list indices.
+    
+    Args:
+        target_objects: Optional list of specific objects to process. 
+                       If None, processes all objects in scope.
+    """
     switches_enum = get_switches()
     dofs_enum = get_dofs()
     processed_switches = 0
@@ -186,7 +193,12 @@ def _batch_reassign(context, scope: str, target: str):
         _rec(coll)
         return list(result)
 
-    objs = collect(scope)
+    # Use target_objects if provided, otherwise collect from scope
+    if target_objects is not None:
+        objs = target_objects
+    else:
+        objs = collect(scope)
+    
     for obj in objs:
         bml_type = get_bml_type(obj)
         if target in {"SWITCH", "BOTH"} and bml_type == BlenderNodeType.SWITCH:
@@ -205,6 +217,16 @@ def _batch_reassign(context, scope: str, target: str):
                 update_switch_or_dof_name(obj, context)
                 processed_dofs += 1
     return processed_switches, processed_dofs
+
+
+def assign_persistent_ids_to_objects(context, objects):
+    """
+    Assign persistent IDs to specific objects only.
+    
+    Returns (switches_assigned, dofs_assigned) counts.
+    Used by validation dialogs for targeted assignment.
+    """
+    return _batch_reassign(context, "SCENE", "BOTH", target_objects=objects)
 
 
 class BML_OT_reassign_switches_scene(bpy.types.Operator):
