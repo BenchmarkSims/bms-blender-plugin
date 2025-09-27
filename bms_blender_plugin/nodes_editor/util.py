@@ -1,5 +1,6 @@
 from bms_blender_plugin.common.blender_types import BlenderEditorNodeType, BlenderNodeTreeType
 from bms_blender_plugin.common.util import get_dofs
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number
 
 
 def get_incoming_nodes(node):
@@ -57,8 +58,15 @@ def get_valid_dof_nodes(tree):
 
     for node in tree.nodes:
         if get_bml_node_type(node) == BlenderEditorNodeType.DOF_MODEL and node.parent_dof:
-            dof_number = list_dof_numbers[node.parent_dof.dof_list_index].dof_number
-            if dof_number not in dofs.keys():
+            # Resolve via persistent ID first; fall back to list index if valid
+            dof_number = resolve_dof_number(node.parent_dof)
+            if dof_number is None:
+                idx = getattr(node.parent_dof, 'dof_list_index', -1)
+                if 0 <= idx < len(list_dof_numbers):
+                    dof_number = list_dof_numbers[idx].dof_number
+            if dof_number is None:
+                continue  # skip invalid/unresolved
+            if dof_number not in dofs:
                 dofs[dof_number] = [node]
             else:
                 dofs[dof_number].append(node)
@@ -129,7 +137,14 @@ def get_socket_distinct_outgoing_dof_numbers(output_socket):
             receiving_node = link.to_socket.node
             if get_bml_node_type(receiving_node) == BlenderEditorNodeType.DOF_MODEL:
                 if receiving_node.parent_dof:
-                    dof_number = get_dofs()[receiving_node.parent_dof.dof_list_index].dof_number
+                    dof_number = resolve_dof_number(receiving_node.parent_dof)
+                    if dof_number is None:
+                        idx = getattr(receiving_node.parent_dof, 'dof_list_index', -1)
+                        dofs_enum = get_dofs()
+                        if 0 <= idx < len(dofs_enum):
+                            dof_number = dofs_enum[idx].dof_number
+                    if dof_number is None:
+                        continue
                     if dof_number not in dof_numbers:
                         dof_numbers.append(dof_number)
                 else:
