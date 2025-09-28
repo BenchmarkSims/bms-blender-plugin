@@ -56,8 +56,11 @@ class SwitchList(UIList):
                         if switch_branch_text.startswith(filter_text):
                             flt_flags[i] |= self.bitflag_filter_item
         else:
-            # No filter, sort by name
-            flt_neworder = bpy.types.UI_UL_list.sort_items_by_name(switches, "name")
+            # No filter: preserve original insertion (XML) order which is already numeric (switch_number, branch_number)
+            if switches:
+                # Flag all items visible; no reordering
+                flt_flags = [self.bitflag_filter_item] * len(switches)
+                flt_neworder = []  # empty => keep original order
         
         return flt_flags, flt_neworder
 

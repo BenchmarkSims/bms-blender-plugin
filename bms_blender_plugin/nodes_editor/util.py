@@ -189,12 +189,24 @@ def get_bml_node_tree_type(obj):
 
 
 def dof_nodes_have_equal_dof_numbers(node_1, node_2):
-    """Returns if 2 nodes have equal DOF numbers. Returns false if either of the nodes or their parent DOFs are None"""
+    """Returns if 2 nodes have equal RESOLVED DOF numbers. Returns false if either node, parent DOF, or DOF number cannot be resolved."""
     if (get_bml_node_type(node_1) != BlenderEditorNodeType.DOF_MODEL or not node_1.parent_dof
             or get_bml_node_type(node_2) != BlenderEditorNodeType.DOF_MODEL or not node_2.parent_dof):
         return False
 
+    # Fast path (same node or same DOF object)
     if node_1 == node_2 or node_1.parent_dof == node_2.parent_dof:
         return True
 
-    return node_1.parent_dof.dof_list_index == node_2.parent_dof.dof_list_index
+    # Compare resolved DOF numbers instead of list indices
+    try:
+        dof_number_1 = resolve_dof_number(node_1.parent_dof)
+        dof_number_2 = resolve_dof_number(node_2.parent_dof)
+        
+        # Both must resolve to valid numbers to be considered equal
+        if dof_number_1 is not None and dof_number_2 is not None:
+            return dof_number_1 == dof_number_2
+        else:
+            return False
+    except Exception:
+        return False

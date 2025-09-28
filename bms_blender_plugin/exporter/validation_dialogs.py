@@ -137,47 +137,52 @@ class BML_OT_ValidationOutOfRangeDialog(Operator):
 
 
 class BML_OT_ValidationMissingIDDialog(Operator):
-    """Dialog for handling missing persistent ID issues."""
+    """Dialog for handling missing persistent ID issues.
+
+    Updated: Inline confirmation (no secondary pop-up) and clearer, action-focused labels.
+    """
     
     bl_idname = "bml.validation_missing_id_dialog" 
-    bl_label = "Legacy DOF/Switch Migration"
-    bl_description = "Resolve missing persistent ID issues"
+    bl_label = "DOF/Switch IDs Missing"
+    bl_description = "Assign persistent DOF / Switch IDs before continuing export"
     use_lods: BoolProperty(default=False)  # type: ignore[misc]
     
     action: EnumProperty(  # type: ignore[misc]
         name="Action",
         description="Choose how to handle missing persistent IDs",
         items=[
-            ('SELECT', 'Select Objects & Cancel', 'Select objects and cancel export for manual ID assignment'),
-            ('AUTO_ASSIGN', 'Auto-assign IDs & Continue', 'Automatically assign persistent IDs and continue export'),
-            ('CONTINUE', 'Continue Legacy Mode', 'Continue with legacy list-index behavior')
+            ('SELECT', 'Select & Cancel', 'Select objects and cancel export so you can assign IDs manually'),
+            ('AUTO_ASSIGN', 'Assign IDs & Continue', 'Automatically assign persistent IDs (recommended) and continue export'),
+            ('IGNORE', 'Ignore & Continue', 'Continue export without assigning (falls back to legacy index resolution; risky)')
         ],
-        default='AUTO_ASSIGN'
+        default='SELECT'
     )
     
     def draw(self, context):
         layout = self.layout
-        
-        layout.label(text="Legacy DOF/Switch Migration", icon='INFO')
+        layout.label(text="Persistent IDs Required", icon='INFO')
         layout.separator()
-        
+
         # Recompute issues to reflect current state
         issues = validate_export_readiness(context, _export_scope_objects(context, self.use_lods))
         missing_id_issues = get_missing_persistent_id_issues(issues)
-        
+
         if missing_id_issues:
             total_objects = sum(len(issue.objects) for issue in missing_id_issues)
             layout.label(text=f"Found {total_objects} objects using legacy indices without persistent IDs:")
-            
+
             box = layout.box()
             for issue in missing_id_issues:
                 issue_type = issue.issue_type.value.replace('_', ' ').title()
                 box.label(text=f"• {issue_type}: {len(issue.objects)} objects")
-        
-        layout.separator() 
-        layout.label(text="These may work for export but may break if XML files are incomplete.")
+
         layout.separator()
-        
+        col = layout.column(align=True)
+        col.label(text="Objects are still using legacy list indices.", icon='ERROR')
+        col.label(text="Assigning persistent IDs prevents future XML changes from breaking exports.")
+        col.label(text="Recommended: Assign IDs & Continue.")
+        layout.separator()
+
         layout.prop(self, "action", expand=True)
     
     def invoke(self, context, event):
@@ -196,7 +201,10 @@ class BML_OT_ValidationMissingIDDialog(Operator):
             total_objects = sum(len(issue.objects) for issue in missing_id_issues)
             switch_count, dof_count = self._auto_assign_persistent_ids(missing_id_issues)
             total_assigned = switch_count + dof_count
-            
+
+            # Console summary (acts as log)
+            print(f"[BML][AUTO_ASSIGN] Target Objects: {total_objects} | Switches Assigned: {switch_count} | DOFs Assigned: {dof_count}")
+
             if total_assigned == total_objects:
                 self.report({'INFO'}, f"Successfully assigned persistent IDs to all {total_assigned} objects")
             elif total_assigned > 0:
@@ -205,8 +213,8 @@ class BML_OT_ValidationMissingIDDialog(Operator):
                 self.report({'ERROR'}, "Failed to assign any persistent IDs - check console for details")
             # Continue with export
             
-        elif self.action == 'CONTINUE':
-            self.report({'INFO'}, "Continuing with legacy list-index behavior")
+        elif self.action == 'IGNORE':
+            self.report({'WARNING'}, "Continuing without assigning persistent IDs (legacy index fallback)")
             # Continue with export
         
         return {'FINISHED'}

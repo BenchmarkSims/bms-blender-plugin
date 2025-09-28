@@ -8,6 +8,7 @@ from bms_blender_plugin.common.util import (
     get_dofs,
     get_bounding_sphere,
 )
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.common.constants import (
     BMS_MAX_SWITCH_NUMBER,
     BMS_MAX_DOF_NUMBER,
@@ -24,9 +25,12 @@ def get_highest_switch_and_dof_number(objs):
     for obj in objs:
         if len(obj.children) > 0:
             if get_bml_type(obj) == BlenderNodeType.SWITCH:
-                # Prefer persistent properties
-                switch_number = getattr(obj, "bml_switch_number", -1)
-                if switch_number is None or switch_number < 0:
+                try:
+                    switch_number, _branch = resolve_switch_id(obj)
+                except Exception:
+                    switch_number = None
+                if switch_number is None:
+                    # legacy fallback
                     try:
                         sw = get_switches()[obj.switch_list_index]
                         switch_number = sw.switch_number
@@ -36,8 +40,11 @@ def get_highest_switch_and_dof_number(objs):
                 if required_switch_index > highest_switch_number:
                     highest_switch_number = required_switch_index
             elif get_bml_type(obj) == BlenderNodeType.DOF:
-                dof_number = getattr(obj, "bml_dof_number", -1)
-                if dof_number is None or dof_number < 0:
+                try:
+                    dof_number = resolve_dof_number(obj)
+                except Exception:
+                    dof_number = None
+                if dof_number is None:
                     try:
                         dof_enum = get_dofs()[obj.dof_list_index]
                         dof_number = dof_enum.dof_number

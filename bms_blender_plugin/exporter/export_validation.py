@@ -50,6 +50,7 @@ from enum import Enum
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType, LodItem
 from bms_blender_plugin.common.util import get_bml_type, get_dofs, get_switches
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 
 
 class ValidationIssueType(Enum):
@@ -149,23 +150,28 @@ class ExportValidator:
                 continue
                 
             persistent_id = getattr(obj, "bml_dof_number", -1)
-            list_index = getattr(obj, "dof_list_index", 0)
             
+            # Use resolver-aligned classification: consistent with export/runtime behavior
+            try:
+                resolved_dof_number = resolve_dof_number(obj)
+            except Exception:
+                resolved_dof_number = None
+                
             if persistent_id < 0:
                 # No persistent ID assigned
-                if list_index > max_dof_index:
-                    # List index is out of range - XML mismatch issue
+                if resolved_dof_number is None:
+                    # Cannot be resolved by any means - truly unresolvable
                     out_of_range_objects.append(obj)
                 else:
-                    # Valid list index but no persistent ID - migration needed
+                    # Resolvable via scene cache or XML but no persistent ID - migration needed  
                     missing_persistent_id_objects.append(obj)
         
         # Create issues for out-of-range objects
         if out_of_range_objects:
             description = (
-                f"Found {len(out_of_range_objects)} DOF(s) referencing XML entries "
-                f"not found in current DOF.xml (max index: {max_dof_index}). "
-                "This usually means your DOF.xml file is outdated."
+                f"Found {len(out_of_range_objects)} DOF(s) that cannot be resolved to valid DOF numbers. "
+                "These objects have no persistent ID and their list indices don't match any XML entries. "
+                "Export will use fallback DOF number 0."
             )
             issues.append(ValidationIssue(
                 ValidationIssueType.DOF_OUT_OF_RANGE,
@@ -204,23 +210,28 @@ class ExportValidator:
                 
             persistent_number = getattr(obj, "bml_switch_number", -1)
             persistent_branch = getattr(obj, "bml_switch_branch", -1) 
-            list_index = getattr(obj, "switch_list_index", 0)
+            
+            # Use resolver-aligned classification: consistent with export/runtime behavior
+            try:
+                resolved_switch_number, resolved_branch = resolve_switch_id(obj)
+            except Exception:
+                resolved_switch_number, resolved_branch = None, None
             
             if persistent_number < 0 or persistent_branch < 0:
                 # No persistent ID assigned
-                if list_index > max_switch_index:
-                    # List index is out of range - XML mismatch issue
+                if resolved_switch_number is None or resolved_branch is None:
+                    # Cannot be resolved by any means - truly unresolvable
                     out_of_range_objects.append(obj)
                 else:
-                    # Valid list index but no persistent ID - migration needed
+                    # Resolvable via scene cache or XML but no persistent ID - migration needed
                     missing_persistent_id_objects.append(obj)
         
         # Create issues for out-of-range objects
         if out_of_range_objects:
             description = (
-                f"Found {len(out_of_range_objects)} Switch(es) referencing XML entries "
-                f"not found in current Switch.xml (max index: {max_switch_index}). "
-                "This usually means your Switch.xml file is outdated."
+                f"Found {len(out_of_range_objects)} Switch(es) that cannot be resolved to valid switch numbers. "
+                "These objects have no persistent IDs and their list indices don't match any XML entries. "
+                "Export will use fallback switch number 0:0."
             )
             issues.append(ValidationIssue(
                 ValidationIssueType.SWITCH_OUT_OF_RANGE,

@@ -8,6 +8,7 @@ from bms_blender_plugin.common.bml_structs import Primitive, PrimitiveTopology, 
 from bms_blender_plugin.common.hotspot import Hotspot, MouseButton, ButtonType
 from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_switches, get_dofs, \
     get_non_translate_dof_parent
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
 from bms_blender_plugin.common.coordinates import to_bms_coords
 
@@ -184,57 +185,39 @@ def parse_slot(obj, nodes):
 
 def parse_switch(obj, nodes):
     """Adds a BML Switch to the BML node list.
-    Uses persistent properties (bml_switch_number / bml_switch_branch) when present, otherwise falls back to legacy index lookup."""
+
+    Resolution order delegated to resolve_switch_id(). If unresolved defaults to (0,0).
+    """
     print(f"{obj.name} is a SWITCH")
-    persistent_number = getattr(obj, "bml_switch_number", -1)
-    persistent_branch = getattr(obj, "bml_switch_branch", -1)
-    if persistent_number is None:
-        persistent_number = -1
-    if persistent_branch is None:
-        persistent_branch = -1
-
-    if persistent_number >= 0 and persistent_branch >= 0:
-        switch_number = persistent_number
-        branch = persistent_branch
-    else:
-        # Legacy fallback
-        try:
-            sw_enum = get_switches()[obj.switch_list_index]
-            switch_number = sw_enum.switch_number
-            branch = sw_enum.branch
-        except Exception:
-            switch_number = 0
-            branch = 0
-
-    nodes.append(
-        Switch(len(nodes), switch_number, branch, obj.switch_default_on)
-    )
+    try:
+        switch_number, branch = resolve_switch_id(obj)
+    except Exception:
+        switch_number, branch = None, None
+    if switch_number is None or branch is None:
+        switch_number, branch = 0, 0
+    nodes.append(Switch(len(nodes), switch_number, branch, obj.switch_default_on))
     return ParsedNodes(vertex_data=[], vertices_length=0, vertices_size=0)
 
 
 def parse_dof(obj, nodes):
     """Adds a BML DOF to the BML node list.
-    Uses persistent property (bml_dof_number) when present, otherwise falls back to legacy index lookup."""
+
+    Resolution order delegated to resolve_dof_number(); default 0 if unresolved.
+    """
     print(f"{obj.name} is a DOF")
-    # Determine DOF enum/number
-    persistent_number = getattr(obj, "bml_dof_number", -1)
-    if persistent_number is None:
-        persistent_number = -1
-    if persistent_number >= 0:
-        class _TmpDof:  # minimal shim to satisfy downstream attribute access
-            def __init__(self, dof_number):
-                self.dof_number = dof_number
-                self.name = f"DOF {dof_number}"
-        dof = _TmpDof(persistent_number)
-    else:
-        try:
-            dof = get_dofs()[obj.dof_list_index]
-        except Exception:
-            class _TmpDof:
-                def __init__(self):
-                    self.dof_number = 0
-                    self.name = "DOF 0"
-            dof = _TmpDof()
+    try:
+        resolved_number = resolve_dof_number(obj)
+    except Exception:
+        resolved_number = None
+    if resolved_number is None:
+        resolved_number = 0
+
+    class _TmpDof:
+        def __init__(self, dof_number):
+            self.dof_number = dof_number
+            self.name = f"DOF {dof_number}"
+
+    dof = _TmpDof(resolved_number)
 
     obj_orig_rotation_mode = obj.rotation_mode
     obj.rotation_mode = "QUATERNION"

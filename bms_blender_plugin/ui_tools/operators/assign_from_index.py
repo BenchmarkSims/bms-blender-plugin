@@ -29,13 +29,25 @@ class BML_OT_assign_switch_from_index(bpy.types.Operator):
         obj = get_parent_dof_or_switch(context.active_object)
         switches = get_switches()
         idx = getattr(obj, "switch_list_index", -1)
+        try:
+            print(f"[DEBUG] assign_switch_from_index.pre: obj={getattr(obj,'name',None)} index={idx} switches_len={len(switches)}")
+        except Exception:
+            pass
         if 0 <= idx < len(switches):
             sw = switches[idx]
             obj.bml_switch_number = sw.switch_number
             obj.bml_switch_branch = sw.branch
             update_switch_or_dof_name(obj, context)
+            try:
+                print(f"[DEBUG] assign_switch_from_index.post: obj={getattr(obj,'name',None)} assigned={sw.switch_number}:{sw.branch} from_index={idx}")
+            except Exception:
+                pass
             self.report({'INFO'}, f"Assigned Switch #{sw.switch_number} Branch {sw.branch} from index {idx}")
             return {'FINISHED'}
+        try:
+            print(f"[DEBUG] assign_switch_from_index.out_of_range: obj={getattr(obj,'name',None)} index={idx} len={len(switches)}")
+        except Exception:
+            pass
         self.report({'WARNING'}, (
             f"Switch list index {idx} out of range; no assignment performed. "
             f"List may be stale or truncated – reload switch.xml (disable/enable addon) or refresh definitions."

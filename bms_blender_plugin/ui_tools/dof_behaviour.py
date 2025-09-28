@@ -19,7 +19,10 @@ from bms_blender_plugin.common.util import (
     get_dofs,
     reset_dof,
     get_parent_dof_or_switch,
+    lookup_switch_label,
+    lookup_dof_label,
 )
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.nodes_editor.util import get_bml_node_type, get_bml_node_tree_type
 
 
@@ -47,10 +50,20 @@ class DofMediator:
 
     @classmethod
     def subscribe(cls, dof):
-        """Subscribes a DOF to dof_input updates for his DOF number"""
+        """Subscribes a DOF to dof_input updates for using resolved DOF number.
+
+        Uses resolve_dof_number() to tolerate legacy index-only DOFs. If the DOF
+        can't be resolved (returns None) we skip subscription silently rather than
+        raising an exception that could spam the depsgraph handler while the user
+        is mid-migration."""
         if get_bml_type(dof) != BlenderNodeType.DOF:
             return
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
+        try:
+            dof_number = resolve_dof_number(dof)
+        except Exception:
+            dof_number = None
+        if dof_number is None:
+            return
 
         # first time subscription
         if dof not in cls.dof_dof_number.keys():
@@ -81,9 +94,21 @@ class DofMediator:
     @classmethod
     def unsubscribe(cls, dof):
         """Unsubscribes a DOF from all subscriptions"""
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
-        cls.dof_number_dofs[dof_number].remove(dof)
-        cls.dof_dof_number.pop(dof)
+        try:
+            dof_number = resolve_dof_number(dof)
+        except Exception:
+            dof_number = None
+        if dof_number is None:
+            # Fallback: attempt legacy index if still valid
+            try:
+                dof_number = get_dofs()[dof.dof_list_index].dof_number
+            except Exception:
+                dof_number = None
+        if dof_number is None:
+            return
+        if dof_number in cls.dof_number_dofs and dof in cls.dof_number_dofs[dof_number]:
+            cls.dof_number_dofs[dof_number].remove(dof)
+        cls.dof_dof_number.pop(dof, None)
 
     @classmethod
     def post_new_dof_value(cls, dof):
@@ -94,12 +119,25 @@ class DofMediator:
         if dof not in cls.dof_dof_number:
             cls.rebuild_cache()
 
-        dof_number = get_dofs()[dof.dof_list_index].dof_number
+        try:
+            dof_number = resolve_dof_number(dof)
+        except Exception:
+            dof_number = None
+        if dof_number is None:
+            # Legacy fallback
+            try:
+                dof_number = get_dofs()[dof.dof_list_index].dof_number
+            except Exception:
+                return
+
+        if dof_number not in cls.dof_number_dofs:
+            # Nothing to propagate to
+            return
 
         dofs_to_cleanup = []
         new_dof_input = dof.dof_input
 
-        for other_dof in cls.dof_number_dofs[dof_number]:
+        for other_dof in list(cls.dof_number_dofs[dof_number]):
             if (
                 len(other_dof.users_collection) > 0
                 and other_dof.dof_input != new_dof_input
@@ -109,60 +147,60 @@ class DofMediator:
                 dofs_to_cleanup.append(other_dof)
 
         # clean up orphaned DOFs which might have accumulated
-        for dof in dofs_to_cleanup:
-            cls.dof_number_dofs[dof_number].remove(dof)
-            cls.dof_dof_number.pop(dof)
-            bpy.data.objects.remove(dof)
+        for cleanup_dof in dofs_to_cleanup:
+            cls.dof_number_dofs[dof_number].remove(cleanup_dof)
+            cls.dof_dof_number.pop(cleanup_dof, None)
+            try:
+                bpy.data.objects.remove(cleanup_dof)
+            except Exception:
+                pass
 
 
 def update_switch_or_dof_name(obj, context):
-    """Updates the name of a DOF or Switch when their respective DOF/Switch values are changed. Overwrites any previous
-    name updates by the user."""
-    if get_bml_type(obj) == BlenderNodeType.SWITCH:
-        # Prefer persistent properties
+    """Update object.name for Switch/DOF using persistent IDs, preferring scene-cached list first.
+    Fallback order per type:
+      Persistent IDs -> resolver -> direct index -> Unset
+    """
+    node_type = get_bml_type(obj)
+    if node_type == BlenderNodeType.SWITCH:
         sw_num = getattr(obj, "bml_switch_number", -1)
         sw_branch = getattr(obj, "bml_switch_branch", -1)
-        label_name = None
-        if sw_num is not None and sw_num >= 0 and sw_branch is not None and sw_branch >= 0:
-            # Try to find matching enum (to display its name) but tolerate absence
-            try:
-                for sw in get_switches():
-                    if sw.switch_number == sw_num and sw.branch == sw_branch:
-                        label_name = sw.name
-                        break
-            except Exception:
-                pass
-            if label_name is None:
-                label_name = "Custom"
-            obj.name = f"Switch - {label_name} ({sw_num}:{sw_branch})"
+        if sw_num >= 0 and sw_branch >= 0:
+            label = lookup_switch_label(sw_num, sw_branch) or "Custom"
+            obj.name = f"Switch - {label} ({sw_num}:{sw_branch})"
         else:
-            # Legacy fallback
             try:
-                active_switch = get_switches()[obj.switch_list_index]
-                obj.name = f"Switch - {active_switch.name} ({active_switch.switch_number})"
+                resolved_num, resolved_branch = resolve_switch_id(obj)
             except Exception:
-                obj.name = "Switch - Unset"
-    elif get_bml_type(obj) == BlenderNodeType.DOF:
+                resolved_num, resolved_branch = None, None
+            if resolved_num is not None and resolved_branch is not None:
+                label = lookup_switch_label(resolved_num, resolved_branch) or "Custom"
+                obj.name = f"Switch - {label} ({resolved_num}:{resolved_branch})"
+            else:
+                try:
+                    sw = get_switches()[getattr(obj, 'switch_list_index', -1)]
+                    obj.name = f"Switch - {sw.name} ({sw.switch_number}:{sw.branch})"
+                except Exception:
+                    obj.name = "Switch - Unset"
+    elif node_type == BlenderNodeType.DOF:
         dof_num = getattr(obj, "bml_dof_number", -1)
-        if dof_num is not None and dof_num >= 0:
-            # Try resolve name for consistency
-            dof_name = None
-            try:
-                for de in get_dofs():
-                    if de.dof_number == dof_num:
-                        dof_name = de.name
-                        break
-            except Exception:
-                pass
-            if dof_name is None:
-                dof_name = "Custom"
-            obj.name = f"DOF - {dof_name} ({dof_num})"
+        if dof_num >= 0:
+            label = lookup_dof_label(dof_num) or "Custom"
+            obj.name = f"DOF - {label} ({dof_num})"
         else:
             try:
-                active_dof = get_dofs()[obj.dof_list_index]
-                obj.name = f"DOF - {active_dof.name} ({active_dof.dof_number})"
+                resolved = resolve_dof_number(obj)
             except Exception:
-                obj.name = "DOF - Unset"
+                resolved = None
+            if resolved is not None:
+                label = lookup_dof_label(resolved) or "Custom"
+                obj.name = f"DOF - {label} ({resolved})"
+            else:
+                try:
+                    de = get_dofs()[getattr(obj, 'dof_list_index', -1)]
+                    obj.name = f"DOF - {de.name} ({de.dof_number})"
+                except Exception:
+                    obj.name = "DOF - Unset"
 
         for tree in bpy.data.node_groups.values():
             if isinstance(tree, nodes_editor.dof_editor.DofNodeTree):

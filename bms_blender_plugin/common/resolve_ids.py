@@ -28,10 +28,12 @@ def resolve_dof_number(obj) -> Optional[int]:
     if get_bml_type(obj) != BlenderNodeType.DOF:
         return None
 
+    # Persistent ID properties first
     pid = getattr(obj, "bml_dof_number", -1)
     if isinstance(pid, int) and pid >= 0:
         return pid
 
+    # Fallback to scene cached list
     idx = getattr(obj, "dof_list_index", -1)
     if not isinstance(idx, int) or idx < 0:
         return None
@@ -43,6 +45,7 @@ def resolve_dof_number(obj) -> Optional[int]:
         return getattr(item, "dof_number", None)
 
     # Global cache fallback
+    print("DOF Resolution: Fallback to global DOF list for index", idx)
     try:
         dofs = get_dofs()
         if 0 <= idx < len(dofs):
@@ -59,20 +62,24 @@ def resolve_switch_id(obj) -> Tuple[Optional[int], Optional[int]]:
     if get_bml_type(obj) != BlenderNodeType.SWITCH:
         return None, None
 
+    # Persistent ID properties first
     num = getattr(obj, "bml_switch_number", -1)
     br = getattr(obj, "bml_switch_branch", -1)
     if isinstance(num, int) and num >= 0 and isinstance(br, int) and br >= 0:
         return num, br
 
+    # Fallback to scene cached list
     idx = getattr(obj, "switch_list_index", -1)
     if not isinstance(idx, int) or idx < 0:
         return None, None
 
+    # Scene cached list first
     scene_list = getattr(bpy.context.scene, "switch_list", None)
     if scene_list and 0 <= idx < len(scene_list):
         item = scene_list[idx]
         return getattr(item, "switch_number", None), getattr(item, "branch_number", None)
 
+    print("Switch Resolution: Fallback to global Switch list for index", idx)
     try:
         switches = get_switches()
         if 0 <= idx < len(switches):
