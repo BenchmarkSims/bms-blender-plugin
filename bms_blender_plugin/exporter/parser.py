@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import math
 
 from mathutils import Matrix, Vector
@@ -55,13 +56,7 @@ def parse_mesh(
 
     vertex_size = 48  # since we only support v2 Primitives
 
-    if export_profiler:
-        with export_profiler.stage("mesh: pack vertex/index data"):
-            obj_vertices_data = b"".join(
-                chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
-            )
-            vertex_indices.extend(obj_indices)
-    else:
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
         obj_vertices_data = b"".join(
             chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
         )
@@ -132,13 +127,7 @@ def parse_bbl_light(
 
     vertex_size = 44  # size for PBR BB light
 
-    if export_profiler:
-        with export_profiler.stage("mesh: pack vertex/index data"):
-            obj_vertices_data = b"".join(
-                chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
-            )
-            vertex_indices.extend(obj_indices)
-    else:
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
         obj_vertices_data = b"".join(
             chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
         )
