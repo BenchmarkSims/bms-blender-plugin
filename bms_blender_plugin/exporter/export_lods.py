@@ -228,7 +228,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
 
             # end of parsing, append parsed data to the nodes list
             if parsed_nodes:
-                vertices_data.extend(parsed_nodes.vertex_data)
+                vertices_data.append(parsed_nodes.vertex_data)
                 current_vertices_index += parsed_nodes.vertices_length
                 current_vertices_size += parsed_nodes.vertices_size
 
@@ -268,7 +268,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
 
     material_count = len(material_names)
     with export_profiler.stage("nodes: pack index buffer") if export_profiler else nullcontext():
-        if len(vertex_indices) < 256:
+        if len(vertex_indices) < 65536:
             index_buffer_format = IndexBufferFormat.FORMAT_16
             vertex_indices_data = struct.pack("%sH" % len(vertex_indices), *vertex_indices)
             vertex_indices_data_size = 2 * len(vertex_indices)

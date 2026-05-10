@@ -98,7 +98,7 @@ def parse_mesh(
     nodes.append(node)
 
     return ParsedNodes(
-        vertex_data=[obj_vertices_data],
+        vertex_data=obj_vertices_data,
         vertices_length=len(obj_vertices),
         vertices_size=len(obj_vertices) * vertex_size,
     )
@@ -174,7 +174,7 @@ def parse_bbl_light(
     nodes.append(node)
 
     return ParsedNodes(
-        vertex_data=[obj_vertices_data],
+        vertex_data=obj_vertices_data,
         vertices_length=len(obj_vertices),
         vertices_size=len(obj_vertices) * vertex_size,
     )

@@ -1,6 +1,7 @@
 import bpy
 import bmesh
 import math
+from contextlib import nullcontext
 from mathutils import Vector
 
 from bms_blender_plugin.common.bml_structs import (
@@ -21,15 +22,7 @@ from bms_blender_plugin.common.coordinates import to_bms_coords
 def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
     """Returns the raw mesh data in the BML format as a tuple of vertices and vertex indices"""
     mesh = obj.data
-    if export_profiler:
-        with export_profiler.stage("mesh extraction: triangulate"):
-            bm = bmesh.new()
-            bm.from_mesh(mesh)
-
-            bmesh.ops.triangulate(bm, faces=bm.faces[:])
-            bm.to_mesh(mesh)
-            bm.free()
-    else:
+    with export_profiler.stage("mesh extraction: triangulate") if export_profiler else nullcontext():
         bm = bmesh.new()
         bm.from_mesh(mesh)
 
@@ -38,12 +31,7 @@ def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
         bm.free()
 
     if len(mesh.loops) > 0:
-        if export_profiler:
-            with export_profiler.stage("mesh extraction: normals/tangents"):
-                mesh.calc_normals()
-                if mesh.uv_layers.active:
-                    mesh.calc_tangents(uvmap=mesh.uv_layers.active.name)
-        else:
+        with export_profiler.stage("mesh extraction: normals/tangents") if export_profiler else nullcontext():
             mesh.calc_normals()
             if mesh.uv_layers.active:
                 mesh.calc_tangents(uvmap=mesh.uv_layers.active.name)
@@ -82,46 +70,7 @@ def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
 
     active_uv_layer = mesh.uv_layers.active.data if mesh.uv_layers.active else None
 
-    if export_profiler:
-        with export_profiler.stage("mesh extraction: build vertices"):
-            for face in mesh.polygons:
-                for vert in [mesh.loops[i] for i in face.loop_indices]:
-                    vertex_pbr = VertexPBR()
-                    vertex_index = vert.vertex_index
-                    vertex_indices.append(vert.index + max_vertex_index)
-
-                    object_global_coord = to_bms_coords(
-                        world_coord @ mesh.vertices[vertex_index].co
-                    )
-                    vertex_pbr.position = Vector3(
-                        object_global_coord.x, object_global_coord.y, object_global_coord.z
-                    )
-
-                    object_global_normal = to_bms_coords(world_normal @ vert.normal)
-                    object_global_normal = object_global_normal.normalized()
-                    vertex_pbr.normal = Vector3(
-                        object_global_normal.x, object_global_normal.y, object_global_normal.z
-                    )
-
-                    if active_uv_layer:
-                        object_global_tangent = to_bms_coords(vert.tangent)
-                        vertex_pbr.tangent = Vector3(
-                            object_global_tangent.x,
-                            object_global_tangent.y,
-                            object_global_tangent.z,
-                        )
-                        vertex_pbr.handedness = vert.bitangent_sign
-
-                        uv = tuple(to_bms_coords(tuple(active_uv_layer[vert.index].uv)))
-                        vertex_pbr.uv = Vector2(uv[0], uv[1])
-
-                    pb_vertices_per_face.append(vertex_pbr)
-
-                pb_vertices.append(pb_vertices_per_face[0])
-                pb_vertices.append(pb_vertices_per_face[2])
-                pb_vertices.append(pb_vertices_per_face[1])
-                pb_vertices_per_face = []
-    else:
+    with export_profiler.stage("mesh extraction: build vertices") if export_profiler else nullcontext():
         for face in mesh.polygons:
             for vert in [mesh.loops[i] for i in face.loop_indices]:
                 vertex_pbr = VertexPBR()
@@ -180,73 +129,7 @@ def get_pbr_light_data(obj, max_vertex_index, export_profiler=None):
 
     vertex_index = max_vertex_index
 
-    if export_profiler:
-        with export_profiler.stage("mesh extraction: build light vertices"):
-            for face in mesh.polygons:
-                if len(face.vertices) != 4:
-                    raise Exception("BBLights can only consist of rectangular planes")
-
-                face_width = (
-                    mesh.vertices[face.vertices[0]].co - mesh.vertices[face.vertices[1]].co
-                ).length
-                face_height = (
-                    mesh.vertices[face.vertices[1]].co - mesh.vertices[face.vertices[2]].co
-                ).length
-
-                color = (
-                    mesh.polygon_layers_float["bml_color_r"].data[face.index].value,
-                    mesh.polygon_layers_float["bml_color_g"].data[face.index].value,
-                    mesh.polygon_layers_float["bml_color_b"].data[face.index].value,
-                    mesh.polygon_layers_float["bml_color_a"].data[face.index].value,
-                )
-
-                normal = Vector(
-                    (
-                        mesh.polygon_layers_float["bml_normal_x"].data[face.index].value,
-                        mesh.polygon_layers_float["bml_normal_y"].data[face.index].value,
-                        mesh.polygon_layers_float["bml_normal_z"].data[face.index].value,
-                    )
-                )
-
-                current_light_position = world_coord @ face.center
-                current_light_normal = to_bms_coords(world_normal @ normal)
-                current_light_normal = current_light_normal.normalized()
-
-                for i in [1, 0, 3, 1, 3, 2]:
-                    vs_input_light = VSInputLight()
-                    vertex_indices.append(vertex_index)
-
-                    current_light_position_bms_coords = to_bms_coords(current_light_position)
-                    vs_input_light.position = Vector3(
-                        current_light_position_bms_coords.x,
-                        current_light_position_bms_coords.y,
-                        current_light_position_bms_coords.z,
-                    )
-                    vs_input_light.normal = Vector3(
-                        current_light_normal.x, current_light_normal.y, current_light_normal.z
-                    )
-
-                    color_bytes = (
-                        (from_blender_color(color[3]) << 24)
-                        + (from_blender_color(color[2]) << 16)
-                        + (from_blender_color(color[1]) << 8)
-                        + (from_blender_color(color[0]) << 0)
-                    )
-                    vs_input_light.color = color_bytes
-
-                    if mesh.uv_layers.active:
-                        uv = tuple(to_bms_coords(tuple(mesh.uv_layers.active.data[i].uv)))
-                        vs_input_light.uv1 = Vector2(uv[0], uv[1])
-
-                    uv2_signs = uv2_sign_lookup[i]
-                    uv2 = Vector(
-                        (uv2_signs[0] * face_width / 2, uv2_signs[1] * face_height / 2)
-                    )
-                    vs_input_light.uv2 = Vector2(uv2[0], uv2[1])
-
-                    bbl_vertices.append(vs_input_light)
-                    vertex_index += 1
-    else:
+    with export_profiler.stage("mesh extraction: build light vertices") if export_profiler else nullcontext():
         for face in mesh.polygons:
             if len(face.vertices) != 4:
                 raise Exception("BBLights can only consist of rectangular planes")
