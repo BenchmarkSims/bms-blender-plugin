@@ -249,7 +249,7 @@ def get_non_translate_dof_parent(obj):
 
 
 def copy_collection_flat(
-    from_collection, to_collection, excluded_collections, scale_factor
+    from_collection, to_collection, excluded_collections, scale_factor, export_profiler=None
 ):
     """Copies a collection and all of its objects but not its child-collections.
     Also applies a scale factor to its objects"""
@@ -260,12 +260,12 @@ def copy_collection_flat(
             if collection_object.parent is None:
                 # root object - copy that
                 copied_object = copy_object(
-                    collection_object, None, to_collection, scale_factor
+                    collection_object, None, to_collection, scale_factor, export_profiler
                 )
 
         for collection_child in from_collection.children:
             copy_collection_flat(
-                collection_child, to_collection, excluded_collections, scale_factor
+                collection_child, to_collection, excluded_collections, scale_factor, export_profiler
             )
 
         # toggle object mode to make sure that the scaling has been applied (Blender quirk)
@@ -295,102 +295,155 @@ def reset_dof(obj):
         obj.delta_scale.z = 1
 
 
-def copy_object(obj, parent, collection, scale_factor=1):
+def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
     """Recursively copies an object and all of its children and moves their copies to a given collection.
     Also applies a scale factor"""
     if not obj.hide_render and len(obj.users_collection) != 0:
-        copied_object = obj.copy()
-        copied_object.parent = parent
-        copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
+        if export_profiler:
+            with export_profiler.stage("collection copy: duplicate objects"):
+                copied_object = obj.copy()
+                copied_object.parent = parent
+                copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
 
-        if obj.data:
-            copied_object.data = copied_object.data.copy()
-        for k, e in obj.items():
-            copied_object[k] = e
+                if obj.data:
+                    copied_object.data = copied_object.data.copy()
+                for k, e in obj.items():
+                    copied_object[k] = e
 
-        # copy and apply all modifiers
-        for obj_modifier in obj.modifiers:
-            copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
-            if not copied_object_modifiers:
-                copied_object_modifiers = obj.modifiers.new(
-                    obj_modifier.name, obj_modifier.type
-                )
+                for obj_modifier in obj.modifiers:
+                    copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
+                    if not copied_object_modifiers:
+                        copied_object_modifiers = obj.modifiers.new(
+                            obj_modifier.name, obj_modifier.type
+                        )
 
-            # collect names of writable properties
-            properties = [
-                p.identifier
-                for p in obj_modifier.bl_rna.properties
-                if not p.is_readonly
-            ]
+                    properties = [
+                        p.identifier
+                        for p in obj_modifier.bl_rna.properties
+                        if not p.is_readonly
+                    ]
 
-            # copy those properties
-            for prop in properties:
-                setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
+                    for prop in properties:
+                        setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
 
-        # set all DOFs to 0
-        if get_bml_type(obj, False) == BlenderNodeType.DOF:
-            reset_dof(copied_object)
+                if get_bml_type(obj, False) == BlenderNodeType.DOF:
+                    reset_dof(copied_object)
 
-        # scale only the root objects
-        if scale_factor != 1 and obj.parent is None:
-            copied_object.scale *= scale_factor
-            copied_object.location *= scale_factor
+                if scale_factor != 1 and obj.parent is None:
+                    copied_object.scale *= scale_factor
+                    copied_object.location *= scale_factor
 
-        collection.objects.link(copied_object)
+                collection.objects.link(copied_object)
 
-        # override any selection restriction
-        copied_object.hide_select = False
-        copied_object.hide_viewport = False
-        copied_object.hide_set(False)
+                copied_object.hide_select = False
+                copied_object.hide_viewport = False
+                copied_object.hide_set(False)
+        else:
+            copied_object = obj.copy()
+            copied_object.parent = parent
+            copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
+
+            if obj.data:
+                copied_object.data = copied_object.data.copy()
+            for k, e in obj.items():
+                copied_object[k] = e
+
+            for obj_modifier in obj.modifiers:
+                copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
+                if not copied_object_modifiers:
+                    copied_object_modifiers = obj.modifiers.new(
+                        obj_modifier.name, obj_modifier.type
+                    )
+
+                properties = [
+                    p.identifier
+                    for p in obj_modifier.bl_rna.properties
+                    if not p.is_readonly
+                ]
+
+                for prop in properties:
+                    setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
+
+            if get_bml_type(obj, False) == BlenderNodeType.DOF:
+                reset_dof(copied_object)
+
+            if scale_factor != 1 and obj.parent is None:
+                copied_object.scale *= scale_factor
+                copied_object.location *= scale_factor
+
+            collection.objects.link(copied_object)
+
+            copied_object.hide_select = False
+            copied_object.hide_viewport = False
+            copied_object.hide_set(False)
 
         for obj_child in obj.children:
-            copy_object(obj_child, copied_object, collection, scale_factor)
+            copy_object(obj_child, copied_object, collection, scale_factor, export_profiler)
         return copied_object
 
 
-def apply_all_modifiers(collection):
+def apply_all_modifiers(collection, export_profiler=None):
     """Applies all modifiers to objects which are rooted in the given collection"""
     for obj in collection.objects:
         if obj.parent is None:
-            apply_all_modifiers_on_obj(obj)
+            apply_all_modifiers_on_obj(obj, export_profiler)
 
 
-def apply_all_modifiers_on_obj(obj):
+def apply_all_modifiers_on_obj(obj, export_profiler=None):
     """Applies all modifiers to a single object.
     Empties (DOFs, Slots and Switches) are excepted, since applying their modifiers would reset their positions.
     """
     if obj:
-        bpy.ops.object.select_all(action="DESELECT")
-        # apply the modifiers
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
+        if export_profiler:
+            with export_profiler.stage("modifier application: apply modifiers"):
+                bpy.ops.object.select_all(action="DESELECT")
+                obj.select_set(True)
+                bpy.context.view_layer.objects.active = obj
 
-        if obj.type == "MESH":
-            bpy.ops.object.mode_set(mode="OBJECT")
-            bpy.ops.object.convert(target="MESH", keep_original=False)
+                if obj.type == "MESH":
+                    bpy.ops.object.mode_set(mode="OBJECT")
+                    bpy.ops.object.convert(target="MESH", keep_original=False)
 
-        # Store the world position before transform application for reference points
-        if (obj.type == "MESH" and 
-            get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
-            # Store the position in a custom property that survives transform_apply
-            obj["bms_reference_point"] = tuple(obj.location)
-        
-        # Apply transforms using original logic (restored)
-        if get_bml_type(obj) not in [
-            BlenderNodeType.DOF,
-            BlenderNodeType.SLOT,
-            BlenderNodeType.HOTSPOT,
-        ]:
-            bpy.ops.object.transform_apply()
+                if (obj.type == "MESH" and
+                    get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
+                    obj["bms_reference_point"] = tuple(obj.location)
+
+                if get_bml_type(obj) not in [
+                    BlenderNodeType.DOF,
+                    BlenderNodeType.SLOT,
+                    BlenderNodeType.HOTSPOT,
+                ]:
+                    bpy.ops.object.transform_apply()
+                else:
+                    bpy.ops.object.transform_apply(
+                        location=False, rotation=False, scale=True, properties=False
+                    )
         else:
-            # only apply scaling operations to those objects
-            # all other operations would reset them since they are empties
-            bpy.ops.object.transform_apply(
-                location=False, rotation=False, scale=True, properties=False
-            )
+            bpy.ops.object.select_all(action="DESELECT")
+            obj.select_set(True)
+            bpy.context.view_layer.objects.active = obj
+
+            if obj.type == "MESH":
+                bpy.ops.object.mode_set(mode="OBJECT")
+                bpy.ops.object.convert(target="MESH", keep_original=False)
+
+            if (obj.type == "MESH" and
+                get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
+                obj["bms_reference_point"] = tuple(obj.location)
+
+            if get_bml_type(obj) not in [
+                BlenderNodeType.DOF,
+                BlenderNodeType.SLOT,
+                BlenderNodeType.HOTSPOT,
+            ]:
+                bpy.ops.object.transform_apply()
+            else:
+                bpy.ops.object.transform_apply(
+                    location=False, rotation=False, scale=True, properties=False
+                )
 
         for child in obj.children:
-            apply_all_modifiers_on_obj(child)
+            apply_all_modifiers_on_obj(child, export_profiler)
 
 
 def uncompress_file(src, dest):

@@ -1,5 +1,6 @@
 import datetime
 import math
+from time import perf_counter
 
 import bpy
 
@@ -17,6 +18,7 @@ from bms_blender_plugin.exporter.export_materials import (
 )
 from bms_blender_plugin.exporter.export_parent_dat import get_slots, export_parent_dat
 from bms_blender_plugin.exporter.export_bounding_boxes import export_bounding_boxes
+from bms_blender_plugin.exporter.export_profiler import ExportProfiler
 from mathutils import Vector
 
 
@@ -31,6 +33,8 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     """
 
     start_time = datetime.datetime.now()
+    start_perf_counter = perf_counter()
+    export_profiler = ExportProfiler()
     print(f"Starting BML export at {start_time}\n")
 
     # blender uses meters as base unit, BMS works in feet
@@ -56,7 +60,10 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     """
 
     # Gather all bounding boxes into an array of bounding_box objects.
-    BBox_Array = [BoundingBox(obj) for obj in context.scene.objects if get_bml_type(obj) == BlenderNodeType.BBOX]
+    with export_profiler.stage("scene: gather bounding boxes"):
+        BBox_Array = [
+            BoundingBox(obj) for obj in context.scene.objects if get_bml_type(obj) == BlenderNodeType.BBOX
+        ]
     """
     Get the first bounding box min and max coordinates. A bit arbitrary at this point, 
     but in instances of a single bbox, no harm and I suspect that these will be in named order. 
@@ -81,16 +88,18 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     elif len(lods) == 0:
         raise Exception("No active collection and no LODs - can not export")
 
-    all_exported_bmls, all_material_names, all_hotspots = export_lods(
-        context, file_directory, file_prefix, lods, scale_factor, export_settings
-    )
+    with export_profiler.stage("scene: export lods"):
+        all_exported_bmls, all_material_names, all_hotspots = export_lods(
+            context, file_directory, file_prefix, lods, scale_factor, export_settings, export_profiler
+        )
 
     if export_settings.export_materials_file or export_settings.export_textures:
-        export_materials(
-            all_material_names,
-            file_directory,
-            export_settings,
-        )
+        with export_profiler.stage("scene: export materials"):
+            export_materials(
+                all_material_names,
+                file_directory,
+                export_settings,
+            )
 
     if export_settings.export_materials_sets and len(context.scene.bml_material_sets) > 1:
         number_of_texture_sets = len(context.scene.bml_material_sets)
@@ -98,27 +107,30 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
         number_of_texture_sets = 1
 
     if export_settings.export_parent_dat:
-        export_parent_dat(
-            context,
-            file_directory,
-            file_prefix,
-            bounding_box_1_min_coords,
-            bounding_box_1_max_coords,
-            scale_factor,
-            number_of_texture_sets,
-            get_slots(context.scene),
-            lods
-        )
+        with export_profiler.stage("scene: export parent.dat"):
+            export_parent_dat(
+                context,
+                file_directory,
+                file_prefix,
+                bounding_box_1_min_coords,
+                bounding_box_1_max_coords,
+                scale_factor,
+                number_of_texture_sets,
+                get_slots(context.scene),
+                lods
+            )
 
     if export_settings.export_hotspots:
-        export_hotspots(all_hotspots, file_directory)
+        with export_profiler.stage("scene: export hotspots"):
+            export_hotspots(all_hotspots, file_directory)
 
     # If there is more than one bounding box defined, output all to a file.
     if len(BBox_Array) > 1:
-        export_bounding_boxes(BBox_Array, file_directory)
+        with export_profiler.stage("scene: export bounding boxes"):
+            export_bounding_boxes(BBox_Array, file_directory)
 
 
-    elapsed = datetime.datetime.now() - start_time
+    elapsed = datetime.timedelta(seconds=perf_counter() - start_perf_counter)
     elapsed_minutes = divmod(elapsed.total_seconds(), 60)
 
     success_message = (
@@ -128,4 +140,6 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
 
 
     print(success_message)
+    if export_profiler.has_records():
+        print(export_profiler.format_summary())
     return success_message, all_exported_bmls
