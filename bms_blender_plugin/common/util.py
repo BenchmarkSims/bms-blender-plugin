@@ -310,6 +310,7 @@ def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
             for k, e in obj.items():
                 copied_object[k] = e
 
+            # copy and apply all modifiers
             for obj_modifier in obj.modifiers:
                 copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
                 if not copied_object_modifiers:
@@ -317,24 +318,29 @@ def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
                         obj_modifier.name, obj_modifier.type
                     )
 
+                # collect names of writable properties
                 properties = [
                     p.identifier
                     for p in obj_modifier.bl_rna.properties
                     if not p.is_readonly
                 ]
 
+                # copy those properties
                 for prop in properties:
                     setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
 
+            # set all DOFs to 0
             if get_bml_type(obj, False) == BlenderNodeType.DOF:
                 reset_dof(copied_object)
 
+            # scale only the root objects
             if scale_factor != 1 and obj.parent is None:
                 copied_object.scale *= scale_factor
                 copied_object.location *= scale_factor
 
             collection.objects.link(copied_object)
 
+            # override any selection restriction
             copied_object.hide_select = False
             copied_object.hide_viewport = False
             copied_object.hide_set(False)
@@ -358,6 +364,7 @@ def apply_all_modifiers_on_obj(obj, export_profiler=None):
     if obj:
         with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
             bpy.ops.object.select_all(action="DESELECT")
+            # apply the modifiers
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
 
@@ -365,10 +372,13 @@ def apply_all_modifiers_on_obj(obj, export_profiler=None):
                 bpy.ops.object.mode_set(mode="OBJECT")
                 bpy.ops.object.convert(target="MESH", keep_original=False)
 
+            # Store the world position before transform application for reference points
             if (obj.type == "MESH" and
                 get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
+                # Store the position in a custom property that survives transform_apply
                 obj["bms_reference_point"] = tuple(obj.location)
 
+            # Apply transforms using original logic (restored)
             if get_bml_type(obj) not in [
                 BlenderNodeType.DOF,
                 BlenderNodeType.SLOT,
@@ -376,6 +386,8 @@ def apply_all_modifiers_on_obj(obj, export_profiler=None):
             ]:
                 bpy.ops.object.transform_apply()
             else:
+                # only apply scaling operations to those objects
+                # all other operations would reset them since they are empties
                 bpy.ops.object.transform_apply(
                     location=False, rotation=False, scale=True, properties=False
                 )

@@ -72,11 +72,13 @@ def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
 
     with export_profiler.stage("mesh extraction: build vertices") if export_profiler else nullcontext():
         for face in mesh.polygons:
+            # loop over face loop
             for vert in [mesh.loops[i] for i in face.loop_indices]:
                 vertex_pbr = VertexPBR()
                 vertex_index = vert.vertex_index
                 vertex_indices.append(vert.index + max_vertex_index)
 
+                # position
                 object_global_coord = to_bms_coords(
                     world_coord @ mesh.vertices[vertex_index].co
                 )
@@ -84,12 +86,15 @@ def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
                     object_global_coord.x, object_global_coord.y, object_global_coord.z
                 )
 
+                # normal
                 object_global_normal = to_bms_coords(world_normal @ vert.normal)
+                # normalize the vector to remove any rounding errors
                 object_global_normal = object_global_normal.normalized()
                 vertex_pbr.normal = Vector3(
                     object_global_normal.x, object_global_normal.y, object_global_normal.z
                 )
 
+                # tangent & uv
                 if active_uv_layer:
                     object_global_tangent = to_bms_coords(vert.tangent)
                     vertex_pbr.tangent = Vector3(
@@ -104,6 +109,7 @@ def get_bml_mesh_data(obj, max_vertex_index, export_profiler=None):
 
                 pb_vertices_per_face.append(vertex_pbr)
 
+            # switch the handedness by swapping the vertices
             pb_vertices.append(pb_vertices_per_face[0])
             pb_vertices.append(pb_vertices_per_face[2])
             pb_vertices.append(pb_vertices_per_face[1])
@@ -131,9 +137,12 @@ def get_pbr_light_data(obj, max_vertex_index, export_profiler=None):
 
     with export_profiler.stage("mesh extraction: build light vertices") if export_profiler else nullcontext():
         for face in mesh.polygons:
+            # loop over face loop
+
             if len(face.vertices) != 4:
                 raise Exception("BBLights can only consist of rectangular planes")
 
+            # calculate width and height
             face_width = (
                 mesh.vertices[face.vertices[0]].co - mesh.vertices[face.vertices[1]].co
             ).length
@@ -141,6 +150,7 @@ def get_pbr_light_data(obj, max_vertex_index, export_profiler=None):
                 mesh.vertices[face.vertices[1]].co - mesh.vertices[face.vertices[2]].co
             ).length
 
+            # load the stored colors and normals from the polygon layers
             color = (
                 mesh.polygon_layers_float["bml_color_r"].data[face.index].value,
                 mesh.polygon_layers_float["bml_color_g"].data[face.index].value,
@@ -157,23 +167,34 @@ def get_pbr_light_data(obj, max_vertex_index, export_profiler=None):
             )
 
             current_light_position = world_coord @ face.center
+
+            # the normal will already be set to [0, 0, 0] for omnidirectional lights by join_objects_with_same_materials()
             current_light_normal = to_bms_coords(world_normal @ normal)
+            # normalize the vector to remove any rounding errors
             current_light_normal = current_light_normal.normalized()
+
+            # for each poly, add two triangles (== 6 vertices)
+            # blender iterates counter-clockwise, so the following vertex indices will form 2 adjacent triangles of a
+            # rectangular poly
 
             for i in [1, 0, 3, 1, 3, 2]:
                 vs_input_light = VSInputLight()
                 vertex_indices.append(vertex_index)
 
+                # the position is identical for all vertices of a BBL
                 current_light_position_bms_coords = to_bms_coords(current_light_position)
                 vs_input_light.position = Vector3(
                     current_light_position_bms_coords.x,
                     current_light_position_bms_coords.y,
                     current_light_position_bms_coords.z,
                 )
+
+                # ... same as the normal
                 vs_input_light.normal = Vector3(
                     current_light_normal.x, current_light_normal.y, current_light_normal.z
                 )
 
+                # ... and its color
                 color_bytes = (
                     (from_blender_color(color[3]) << 24)
                     + (from_blender_color(color[2]) << 16)
@@ -182,10 +203,12 @@ def get_pbr_light_data(obj, max_vertex_index, export_profiler=None):
                 )
                 vs_input_light.color = color_bytes
 
+                # uv1 - just a regular texture uv
                 if mesh.uv_layers.active:
                     uv = tuple(to_bms_coords(tuple(mesh.uv_layers.active.data[i].uv)))
                     vs_input_light.uv1 = Vector2(uv[0], uv[1])
 
+                # uv2 - extrude the 4 corners of the vertex from the center point as origin
                 uv2_signs = uv2_sign_lookup[i]
                 uv2 = Vector(
                     (uv2_signs[0] * face_width / 2, uv2_signs[1] * face_height / 2)

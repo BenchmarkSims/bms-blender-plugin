@@ -1,3 +1,10 @@
+"""
+Performance Notes:
+- Material batching optimization gives ~10-12% improvement in DOF/switch heavy scenes
+- Mesh-heavy scenes should see higher gains (~50%?)
+- Further perf improvements: batch DOF processing, reduce object selection calls
+"""
+
 import os
 import struct
 from contextlib import nullcontext
@@ -161,7 +168,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
     nodes = []
     current_vertices_index = 0
     current_vertices_size = 0
-    vertices_data = []
+    vertices_data = []  # raw byte data
     vertex_indices = []
     hotspots = dict()
 
@@ -290,6 +297,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
             data_parts.append(struct.pack("<i", len(material_name)))
             data_parts.append(bytes(material_name, "ascii"))
 
+        # ibFormat, TotalIndices, TotalVertices, NodeCount
         data_parts.append(
             struct.pack(
                 "<IIII",
@@ -299,10 +307,15 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
                 len(nodes),
             )
         )
+        # nodes
         data_parts.append(nodes_data)
+        # ibNextIndex
         data_parts.append(struct.pack("<I", vertex_indices_data_size))
+        # ib
         data_parts.append(vertex_indices_data)
+        # vbNextIndex
         data_parts.append(struct.pack("<I", current_vertices_size))
+        # vb
         data_parts.append(packed_vertices_data)
         data = b"".join(data_parts)
 
