@@ -4,6 +4,7 @@ import bpy.utils.previews
 
 import os
 import struct
+from contextlib import nullcontext
 
 
 import lzma
@@ -299,46 +300,7 @@ def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
     """Recursively copies an object and all of its children and moves their copies to a given collection.
     Also applies a scale factor"""
     if not obj.hide_render and len(obj.users_collection) != 0:
-        if export_profiler:
-            with export_profiler.stage("collection copy: duplicate objects"):
-                copied_object = obj.copy()
-                copied_object.parent = parent
-                copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
-
-                if obj.data:
-                    copied_object.data = copied_object.data.copy()
-                for k, e in obj.items():
-                    copied_object[k] = e
-
-                for obj_modifier in obj.modifiers:
-                    copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
-                    if not copied_object_modifiers:
-                        copied_object_modifiers = obj.modifiers.new(
-                            obj_modifier.name, obj_modifier.type
-                        )
-
-                    properties = [
-                        p.identifier
-                        for p in obj_modifier.bl_rna.properties
-                        if not p.is_readonly
-                    ]
-
-                    for prop in properties:
-                        setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
-
-                if get_bml_type(obj, False) == BlenderNodeType.DOF:
-                    reset_dof(copied_object)
-
-                if scale_factor != 1 and obj.parent is None:
-                    copied_object.scale *= scale_factor
-                    copied_object.location *= scale_factor
-
-                collection.objects.link(copied_object)
-
-                copied_object.hide_select = False
-                copied_object.hide_viewport = False
-                copied_object.hide_set(False)
-        else:
+        with export_profiler.stage("collection copy: duplicate objects") if export_profiler else nullcontext():
             copied_object = obj.copy()
             copied_object.parent = parent
             copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
@@ -394,31 +356,7 @@ def apply_all_modifiers_on_obj(obj, export_profiler=None):
     Empties (DOFs, Slots and Switches) are excepted, since applying their modifiers would reset their positions.
     """
     if obj:
-        if export_profiler:
-            with export_profiler.stage("modifier application: apply modifiers"):
-                bpy.ops.object.select_all(action="DESELECT")
-                obj.select_set(True)
-                bpy.context.view_layer.objects.active = obj
-
-                if obj.type == "MESH":
-                    bpy.ops.object.mode_set(mode="OBJECT")
-                    bpy.ops.object.convert(target="MESH", keep_original=False)
-
-                if (obj.type == "MESH" and
-                    get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
-                    obj["bms_reference_point"] = tuple(obj.location)
-
-                if get_bml_type(obj) not in [
-                    BlenderNodeType.DOF,
-                    BlenderNodeType.SLOT,
-                    BlenderNodeType.HOTSPOT,
-                ]:
-                    bpy.ops.object.transform_apply()
-                else:
-                    bpy.ops.object.transform_apply(
-                        location=False, rotation=False, scale=True, properties=False
-                    )
-        else:
+        with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
             bpy.ops.object.select_all(action="DESELECT")
             obj.select_set(True)
             bpy.context.view_layer.objects.active = obj
