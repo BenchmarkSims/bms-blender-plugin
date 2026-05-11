@@ -1,0 +1,45 @@
+name: Van
+on:
+  push:
+    tags:
+      - van/v*.*.*
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install ruff
+        run: pip install ruff
+      - name: Lint with ruff
+        run: ruff check .
+
+  release-van:
+    needs: lint
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build and zip folder
+        run: |
+          release_tag="${GITHUB_REF#refs/tags/}"
+          tag_version="${release_tag#van/}"
+          version_tuple=$(echo "$tag_version" | awk -F'[v.]' '{print $2", "$3", "$4}')
+          sed -i "s/\"version\": .*/\"version\": (${version_tuple}),/" bms_blender_plugin/__init__.py
+          zip -r "bms_blender_plugin-van-${tag_version}.zip" bms_blender_plugin
+          echo "Zip file built"
+          echo "RELEASE_TAG=$release_tag" >> $GITHUB_ENV
+          echo "TAG_VERSION=$tag_version" >> $GITHUB_ENV
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "${{ env.RELEASE_TAG }}"
+          name: "Van ${{ env.TAG_VERSION }}"
+          files: |
+            bms_blender_plugin*.zip
