@@ -4,6 +4,7 @@ from bpy.props import FloatProperty, PointerProperty
 from bms_blender_plugin.common.blender_types import BlenderEditorNodeType
 from bms_blender_plugin.common.bml_structs import DofType, ArgType
 from bms_blender_plugin.common.util import get_dofs
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number
 from bms_blender_plugin.nodes_editor.dof_base_node import (
     DofBaseNode,
     subscribe_node,
@@ -180,11 +181,17 @@ class NodeDofModelInput(DofBaseNode):
                 BaseRenderControl.set_result_type(node, ArgType.SCRATCH_VARIABLE_ID)
             elif node.parent_dof:
                 # linked to a render control or another DOF - set our result type to the DOF of the current node
-                BaseRenderControl.set_result_type(
-                    node,
-                    ArgType.DOF_ID,
-                    get_dofs()[node.parent_dof.dof_list_index].dof_number,
-                )
+                dof_num = resolve_dof_number(node.parent_dof)
+                if dof_num is not None:
+                    BaseRenderControl.set_result_type(
+                        node,
+                        ArgType.DOF_ID,
+                        dof_num,
+                    )
+                else:
+                    # Fallback to scratch if unresolved to avoid crashes
+                    # TODO: warn user
+                    BaseRenderControl.set_result_type(node, ArgType.SCRATCH_VARIABLE_ID)
 
 
 def register():

@@ -19,6 +19,9 @@ from bms_blender_plugin.exporter.export_materials import (
 from bms_blender_plugin.exporter.export_parent_dat import get_slots, export_parent_dat
 from bms_blender_plugin.exporter.export_bounding_boxes import export_bounding_boxes
 from bms_blender_plugin.exporter.export_profiler import ExportProfiler
+from bms_blender_plugin.exporter.export_validation import (
+    show_validation_dialog_export,
+)
 from mathutils import Vector
 
 
@@ -31,6 +34,14 @@ def export_bml(context, lods, file_directory, file_prefix, export_settings: Expo
     * A single Parent.dat
     * A single 3dButtons.dat
     """
+
+    # PRE-FLIGHT VALIDATION: Check only the export scope (derived from LODs or active collection)
+    print("Validating scene...\n")
+
+    if show_validation_dialog_export(context, lods=lods):
+        # A dialog was invoked; cancel export and let the user resolve, then retry
+        print("Export cancelled")
+        return "Export cancelled by user", []
 
     start_time = datetime.datetime.now()
     start_perf_counter = perf_counter()
