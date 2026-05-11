@@ -500,32 +500,36 @@ def apply_all_modifiers(collection, export_profiler=None):
                     get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
                 obj["bms_reference_point"] = tuple(obj.location)
 
-        # --- batch transform_apply for regular objects (full: loc + rot + scale) ---
-        non_special_objs = [
-            obj for obj in all_objs
-            if get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]
-        ]
-        bpy.ops.object.select_all(action="DESELECT")
-        for obj in non_special_objs:
-            obj.select_set(True)
-        if non_special_objs:
-            bpy.context.view_layer.objects.active = non_special_objs[0]
-            bpy.ops.object.transform_apply()
+        # --- apply transforms one object at a time, parent before children ---
+        # Batched transform_apply over parent/child selections can corrupt relative
+        # transforms in hierarchies (mixed rotations/scales after export).
+        def _apply_transforms_recursively(obj):
+            if not obj:
+                return
 
-        # --- batch transform_apply (scale only) for DOF/Slot/Hotspot empties ---
-        # Applying loc/rot to empties would reset their pivot positions.
-        special_objs = [
-            obj for obj in all_objs
-            if get_bml_type(obj) in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]
-        ]
-        bpy.ops.object.select_all(action="DESELECT")
-        for obj in special_objs:
+            bpy.ops.object.select_all(action="DESELECT")
             obj.select_set(True)
-        if special_objs:
-            bpy.context.view_layer.objects.active = special_objs[0]
-            bpy.ops.object.transform_apply(
-                location=False, rotation=False, scale=True, properties=False
-            )
+            bpy.context.view_layer.objects.active = obj
+
+            if get_bml_type(obj) not in [
+                BlenderNodeType.DOF,
+                BlenderNodeType.SLOT,
+                BlenderNodeType.HOTSPOT,
+            ]:
+                bpy.ops.object.transform_apply()
+            else:
+                # only apply scaling operations to those objects
+                # all other operations would reset them since they are empties
+                bpy.ops.object.transform_apply(
+                    location=False, rotation=False, scale=True, properties=False
+                )
+
+            for child in obj.children:
+                _apply_transforms_recursively(child)
+
+        root_objs = [obj for obj in all_objs if obj.parent is None]
+        for root_obj in root_objs:
+            _apply_transforms_recursively(root_obj)
 
 
 def uncompress_file(src, dest):
