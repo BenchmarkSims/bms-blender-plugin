@@ -160,3 +160,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+bms_blender_plugin/exporter/validation_test_guide.py
