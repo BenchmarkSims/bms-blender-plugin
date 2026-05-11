@@ -189,7 +189,7 @@ def register_blender_properties():
         name="Index for switch_list", default=0, update=_update_switch_list_index
     )
     bpy.types.Object.switch_default_on = bpy.props.BoolProperty(
-        name="Default ON", description="The switch is ON by default", default=False
+        name="ON by default", description="This switch is ON by default", default=False
     )
     # Persistent switch number & branch (new). -1 => unset (legacy scenes)
     bpy.types.Object.bml_switch_number = bpy.props.IntProperty(

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Switch>
 		<SwitchNum>0</SwitchNum>
@@ -39,44 +39,12 @@
 	<Switch>
 		<SwitchNum>7</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Tail Strobe 0</Name>
-		<Comment>Off</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>7</SwitchNum>
-		<BranchNum>1</BranchNum>
-		<Name>Tail Strobe 1</Name>
-		<Comment>Normal</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>7</SwitchNum>
-		<BranchNum>2</BranchNum>
-		<Name>Tail Strobe 2</Name>
-		<Comment>Covert</Comment>
+		<Name>Tail Strobe</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>8</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Position Lights Wing 0</Name>
-		<Comment>Off</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>8</SwitchNum>
-		<BranchNum>1</BranchNum>
-		<Name>Position Lights Wing 1</Name>
-		<Comment>Normal</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>8</SwitchNum>
-		<BranchNum>2</BranchNum>
-		<Name>Position Lights Wing 2</Name>
-		<Comment>Dim</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>8</SwitchNum>
-		<BranchNum>3</BranchNum>
-		<Name>Position Lights Wing 3</Name>
-		<Comment>Covert</Comment>
+		<Name>Nav Lights</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>9</SwitchNum>
@@ -276,26 +244,7 @@
 	<Switch>
 		<SwitchNum>47</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Position Lights Intake Tail 0</Name>
-		<Comment>Off</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>47</SwitchNum>
-		<BranchNum>1</BranchNum>
-		<Name>Position Lights Intake Tail 1</Name>
-		<Comment>Normal</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>47</SwitchNum>
-		<BranchNum>2</BranchNum>
-		<Name>Position Lights Intake Tail 2</Name>
-		<Comment>Dim</Comment>
-	</Switch>
-	<Switch>
-		<SwitchNum>47</SwitchNum>
-		<BranchNum>3</BranchNum>
-		<Name>Position Lights Intake Tail 3</Name>
-		<Comment>Covert</Comment>
+		<Name>Nav Lights Flash</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>48</SwitchNum>
@@ -385,8 +334,7 @@
 	<Switch>
 		<SwitchNum>62</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Formation lights coverable</Name>
-		<Comment>Number of positions define in aircraft dat file</Comment>
+		<Name>Formation lights</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>63</SwitchNum>
@@ -403,34 +351,14 @@
 	<Switch>
 		<SwitchNum>66</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Tail Flood Light 0</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>66</SwitchNum>
-		<BranchNum>1</BranchNum>
-		<Name>Tail Flood Light 1</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>66</SwitchNum>
-		<BranchNum>2</BranchNum>
-		<Name>Tail Flood Light 2</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>66</SwitchNum>
-		<BranchNum>3</BranchNum>
-		<Name>Tail Flood Light 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>67</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>AAR Flood Light</Name>
-		<Comment>Number of positions define in aircraft dat file</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>68</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Formation lights not coverable</Name>
-		<Comment>Number of positions define in aircraft dat file</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>69</SwitchNum>
@@ -605,12 +533,27 @@
 	<Switch>
 		<SwitchNum>109</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Light ENG FIRE</Name>
+		<Name>Caution LEFT ENG FIRE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>109</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution RIGHT ENG FIRE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>109</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Caution AMAD FIRE</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>110</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Light Engine</Name>
+		<Name>Caution L BURN THRU</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>110</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution R BURN THRU</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>111</SwitchNum>
@@ -660,7 +603,7 @@
 	<Switch>
 		<SwitchNum>120</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>HSI Off Flag</Name>
+		<Name>Canopy Unlocked Light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>121</SwitchNum>
@@ -705,7 +648,162 @@
 	<Switch>
 		<SwitchNum>129</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Emergency Jettison Button</Name>
+		<Name>EmergJettNotPush</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>EmergJettPushed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Jettison OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Jettison COMBAT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Jettison A/A</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Jett not poshed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Jett Pushed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>DIS FREQ down</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>DIS FREQ middle</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>129</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>DIS FREQ up</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>130</SwitchNum>
@@ -718,14 +816,169 @@
 		<Name>Nose Gear Light</Name>
 	</Switch>
 	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>flaps lghtTrans yellow</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>flaps LghtFull green</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Caution SP BK OUT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Caution AUTO PLT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Caution PITCH RATIO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Caution ROLL RATIO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Caution CAS YAW</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Caution CAS ROLL</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Caution CAS PITCH</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>F15 Flap Retracted</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>131</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>F15 Flap Down</Name>
+	</Switch>
+	<Switch>
 		<SwitchNum>132</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Main Left Gear Light</Name>
+		<Name>Left Gear Light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>133</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Main Right Gear Light</Name>
+		<Name>Right Gear Light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>134</SwitchNum>
@@ -750,7 +1003,12 @@
 	<Switch>
 		<SwitchNum>138</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>JFS Light</Name>
+		<Name>STARTER READY LIGHT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>138</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution JFS LOW</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>139</SwitchNum>
@@ -830,7 +1088,12 @@
 	<Switch>
 		<SwitchNum>154</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Panel Elec Sys Light</Name>
+		<Name>Caution L GEN OUT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>154</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution R GEN OUT</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>155</SwitchNum>
@@ -850,7 +1113,52 @@
 	<Switch>
 		<SwitchNum>158</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Panel Fwd Fuel Low Light</Name>
+		<Name>Caution EMER BST ON</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution BST SYS MAL</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>FuelQtySelector BIT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>FuelQtySelector FEED</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>FuelQtySelector INTLWING</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>FuelQtySelector TANK1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>FuelQtySelector EXTWING</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>FuelQtySelector FXTCTRL</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>FuelQtySelector CONFTANK</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>158</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Fuel Flag OFF</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>159</SwitchNum>
@@ -860,7 +1168,32 @@
 	<Switch>
 		<SwitchNum>160</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Panel Engine Fault Light</Name>
+		<Name>Caution L EEC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>160</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution R EEC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>160</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Caution L INLET</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>160</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Caution R INLET</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>160</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Caution R INLET</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>160</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Caution R INLET</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>161</SwitchNum>
@@ -910,7 +1243,7 @@
 	<Switch>
 		<SwitchNum>170</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Panel Anti Skid Light</Name>
+		<Name>Caution ANTI SKID</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>171</SwitchNum>
@@ -935,8 +1268,154 @@
 	<Switch>
 		<SwitchNum>175</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Instruments Light</Name>
+		<Name>Standby Instruments Light 0</Name>
 	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Standby Instruments Light 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Lights Test 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Lights Test 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>LeftConsoleLight</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>RightConsoleLight</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>F15 NCI RDY Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>AuxInstr.Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>FlightInstr.Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>EngineInstr.Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>175</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>Stanby Instruments</Name>
+	</Switch>
+
 	<Switch>
 		<SwitchNum>176</SwitchNum>
 		<BranchNum>0</BranchNum>
@@ -1360,7 +1839,12 @@
 	<Switch>
 		<SwitchNum>206</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>CMDS Auto Degr</Name>
+		<Name>Oxygene green OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>206</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Oxygene green ON</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>207</SwitchNum>
@@ -1465,62 +1949,62 @@
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>18</BranchNum>
-		<Name>Digital Backup Down</Name>
+		<Name>Yaw off</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>19</BranchNum>
-		<Name>Digital Backup Up</Name>
+		<Name>Yaw reset</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>20</BranchNum>
-		<Name>Alt Flap Down</Name>
+		<Name>Yaw on</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>21</BranchNum>
-		<Name>Alt Flap Up</Name>
+		<Name>Roll off</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>22</BranchNum>
-		<Name>FLCS Rest Down</Name>
+		<Name>Roll reset</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>23</BranchNum>
-		<Name>FLCS Rest Up</Name>
+		<Name>Roll on</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>24</BranchNum>
-		<Name>LE Flap Lock Down</Name>
+		<Name>Pitch Off</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>25</BranchNum>
-		<Name>LE Flap Lock Up</Name>
+		<Name>Pitch reset</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>26</BranchNum>
-		<Name>Manual Tf Down</Name>
+		<Name>Pitch On</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>27</BranchNum>
-		<Name>Manual Tf Up</Name>
+		<Name>T/O not pressed</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>28</BranchNum>
-		<Name>Bit Down</Name>
+		<Name>T/O pressed</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
 		<BranchNum>29</BranchNum>
-		<Name>Bit Up</Name>
+		<Name>T/O light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>209</SwitchNum>
@@ -1585,12 +2069,12 @@
 	<Switch>
 		<SwitchNum>210</SwitchNum>
 		<BranchNum>10</BranchNum>
-		<Name>Unused</Name>
+		<Name>Wing Left/Right 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>210</SwitchNum>
 		<BranchNum>11</BranchNum>
-		<Name>Unused</Name>
+		<Name>Wing Left/Right 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>210</SwitchNum>
@@ -1951,146 +2435,158 @@
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>IFF Code Zero</Name>
-		<Comment>SimIFFMode4ReplyOff </Comment>
+		<Name>IFF Mode4</Name>
+		<Comment>ZERO</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>1</BranchNum>
-		<Name>IFF Code AB</Name>
-		<Comment>SimIFFMode4ReplyAlpha</Comment>
+		<Name>IFF Mode4</Name>
+		<Comment>NORM</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>2</BranchNum>
-		<Name>IFF Code Hold</Name>
-		<Comment>SimIFFMode4ReplyBravo</Comment>
+		<Name>IFF Mode4</Name>
+		<Comment>HOLD</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>3</BranchNum>
-		<Name>IFF Enable M1M3</Name>
-		<Comment>SimIFFEnableM1M3</Comment>
+		<Name>IFF mode4</Name>
+		<Comment>OUT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>4</BranchNum>
-		<Name>IFF Enable Off</Name>
-		<Comment>SimIFFEnableOff</Comment>
+		<Name>IFF mode4</Name>
+		<Comment>A</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>5</BranchNum>
-		<Name>IFF Enable M3MS</Name>
-		<Comment>SimIFFEnableM3MS</Comment>
+		<Name>IFF mode4</Name>
+		<Comment>B</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>6</BranchNum>
-		<Name>AVTR 0</Name>
+		<Name>F15 VIDEO RECORD OFF</Name>
+		<Comment>IFF Master EMERG</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>7</BranchNum>
-		<Name>AVTR 1</Name>
+		<Name>F15 VIDEO RECORD AUTO</Name>
+		<Comment>IFF Master NORM</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>8</BranchNum>
-		<Name>AVTR 2</Name>
+		<Name>F15 VIDEO RECORD HUD</Name>
+		<Comment>IFF Master LOW</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>9</BranchNum>
-		<Name>Landing Light 0</Name>
-		<Comment>Landing light off</Comment>
+		<Name>IFF MC</Name>
+		<Comment>OUT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>10</BranchNum>
-		<Name>Landing Light 1</Name>
-		<Comment>Taxi light on</Comment>
+		<Name>IFF MC</Name>
+		<Comment>ON</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>11</BranchNum>
-		<Name>Landing Light 2</Name>
-		<Comment>Landing light on</Comment>
+		<Name>IFF M3/A</Name>
+		<Comment>OUT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>12</BranchNum>
-		<Name>ECM Xmit 0</Name>
+		<Name>IFF M3/A</Name>
+		<Comment>ON</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>13</BranchNum>
-		<Name>ECM Xmit 1</Name>
+		<Name>IFF M2</Name>
+		<Comment>OUT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>14</BranchNum>
-		<Name>ECM Xmit 2</Name>
+		<Name>IFF M2</Name>
+		<Comment>ON</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>15</BranchNum>
-		<Name>Eng Data Ab 0</Name>
+		<Name>IFF M1</Name>
+		<Comment>OUT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>16</BranchNum>
-		<Name>Eng Data Ab 1</Name>
+		<Name>IFF M1</Name>
+		<Comment>ON</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>17</BranchNum>
-		<Name>Eng Data Ab 2</Name>
+		<Name>IFF REPLY</Name>
+		<Comment>LIGHT BRIGHT</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>18</BranchNum>
-		<Name>Hot Mike 0</Name>
+		<Name>IFF REPLY</Name>
+		<Comment>OFF</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>19</BranchNum>
-		<Name>Hot Mike 1</Name>
+		<Name>IFF REPLY</Name>
+		<Comment>AUDIO REC</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>20</BranchNum>
-		<Name>Hot Mike 2</Name>
+		<Name>IFF REPLY</Name>
+		<Comment>LIGHT SWITCH</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>21</BranchNum>
-		<Name>AP Roll 0 (Left Down)</Name>
+		<Name>ATT Hold Off</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>22</BranchNum>
-		<Name>AP Roll 1 (Left Mid)</Name>
+		<Name>ATT hold On</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>23</BranchNum>
-		<Name>AP Roll 2 (Left Up)</Name>
+		<Name>Null</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>24</BranchNum>
-		<Name>AP Pitch 0 (Right Down)</Name>
+		<Name>ALT Hold Off</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>25</BranchNum>
-		<Name>AP Pitch 1 (Right Mid)</Name>
+		<Name>Null</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
 		<BranchNum>26</BranchNum>
-		<Name>AP Pitch 2 (Right Up)</Name>
+		<Name>ALT Hold On</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>213</SwitchNum>
@@ -2260,12 +2756,47 @@
 	<Switch>
 		<SwitchNum>215</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Light Oxy Low</Name>
+		<Name>AAI MASTER OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>215</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>AAI MASTER AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>215</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>AAI MASTER NORM</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>215</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>AAI MASTER CC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>215</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>AAI MASTER XCC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>215</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>AAI MASTER XNORM</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>216</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Panel Equip Hot Light</Name>
+		<Name>Caution EECS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>216</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Caution WNDSHLD HOT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>216</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Caution FUEL HOT</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>217</SwitchNum>
@@ -2380,10 +2911,12 @@
 	<Switch>
 		<SwitchNum>217</SwitchNum>
 		<BranchNum>22</BranchNum>
+		<Name>Audio Intercom 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>217</SwitchNum>
 		<BranchNum>23</BranchNum>
+		<Name>Audio Intercom 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>217</SwitchNum>
@@ -2398,12 +2931,12 @@
 	<Switch>
 		<SwitchNum>217</SwitchNum>
 		<BranchNum>26</BranchNum>
-		<Name>Hook 0</Name>
+		<Name>Hook Down</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>217</SwitchNum>
 		<BranchNum>27</BranchNum>
-		<Name>Hook 1</Name>
+		<Name>Hook Up</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>217</SwitchNum>
@@ -2423,10 +2956,12 @@
 	<Switch>
 		<SwitchNum>218</SwitchNum>
 		<BranchNum>0</BranchNum>
+		<Name>Audio ILS 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>218</SwitchNum>
 		<BranchNum>1</BranchNum>
+		<Name>Audio ILS 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>218</SwitchNum>
@@ -2736,31 +3271,6 @@
 		<Name>HMCS Power 4</Name>
 	</Switch>
 	<Switch>
-		<SwitchNum>220</SwitchNum>
-		<BranchNum>10</BranchNum>
-		<Name>Extl light main power 0</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>220</SwitchNum>
-		<BranchNum>11</BranchNum>
-		<Name>Extl light main power 1</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>220</SwitchNum>
-		<BranchNum>12</BranchNum>
-		<Name>Extl light main power 2</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>220</SwitchNum>
-		<BranchNum>13</BranchNum>
-		<Name>Extl light main power 3</Name>
-	</Switch>
-	<Switch>
-		<SwitchNum>220</SwitchNum>
-		<BranchNum>14</BranchNum>
-		<Name>Extl light main power 4</Name>
-	</Switch>
-	<Switch>
 		<SwitchNum>221</SwitchNum>
 		<BranchNum>0</BranchNum>
 		<Name>CMDS Mode 0</Name>
@@ -2858,7 +3368,6 @@
 	<Switch>
 		<SwitchNum>222</SwitchNum>
 		<BranchNum>7</BranchNum>
-		<Name>UHF Volume 7</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>222</SwitchNum>
@@ -3225,27 +3734,27 @@
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>19</BranchNum>
 		<Name>Intercom Vol 1</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>20</BranchNum>
 		<Name>Intercom Vol 2</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>21</BranchNum>
 		<Name>Intercom Vol 3</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>22</BranchNum>
 		<Name>Intercom Vol 4</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>23</BranchNum>
 		<Name>Intercom Vol 5</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>24</BranchNum>
@@ -3255,7 +3764,7 @@
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>25</BranchNum>
 		<Name>Intercom Vol 7</Name>
-	</Switch>
+	</Switch>	
 	<Switch>
 		<SwitchNum>224</SwitchNum>
 		<BranchNum>26</BranchNum>
@@ -3354,47 +3863,47 @@
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>18</BranchNum>
-		<Name>ILS Volumn 0</Name>
+		<Name>ILS Volume 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>19</BranchNum>
-		<Name>ILS Volumn 1</Name>
-	</Switch>
+		<Name>ILS Volume 1</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>20</BranchNum>
-		<Name>ILS Volumn 2</Name>
-	</Switch>
+		<Name>ILS Volume 2</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>21</BranchNum>
-		<Name>ILS Volumn 3</Name>
-	</Switch>
+		<Name>ILS Volume 3</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>22</BranchNum>
-		<Name>ILS Volumn 4</Name>
-	</Switch>
+		<Name>ILS Volume 4</Name>
+	</Switch>		
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>23</BranchNum>
-		<Name>ILS Volumn 5</Name>
-	</Switch>
+		<Name>ILS Volume 5</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>24</BranchNum>
-		<Name>ILS Volumn 6</Name>
-	</Switch>
+		<Name>ILS Volume 6</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>25</BranchNum>
-		<Name>ILS Volumn 7</Name>
-	</Switch>
+		<Name>ILS Volume 7</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>225</SwitchNum>
 		<BranchNum>26</BranchNum>
-		<Name>ILS Volumn 8</Name>
+		<Name>ILS Volume 8</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>226</SwitchNum>
@@ -3599,27 +4108,27 @@
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Unused</Name>
+		<Name>unused</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>1</BranchNum>
-		<Name>FLCS A Test Light</Name>
+		<Name>FLCS A Test Light ON</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>2</BranchNum>
-		<Name>Unused</Name>
+		<Name>unused</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>3</BranchNum>
-		<Name>FLCS B Test Light</Name>
+		<Name>FLCS B Test Light ON</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>4</BranchNum>
-		<Name>Unused</Name>
+		<Name>unused</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
@@ -3629,7 +4138,7 @@
 	<Switch>
 		<SwitchNum>228</SwitchNum>
 		<BranchNum>6</BranchNum>
-		<Name>Unused</Name>
+		<Name>unused</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>228</SwitchNum>
@@ -3638,138 +4147,308 @@
 	</Switch>
 	<Switch>
 		<SwitchNum>229</SwitchNum>
-		<BranchNum>6</BranchNum>
+		<BranchNum>0</BranchNum>
 		<Name>Flt Control Run Light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>229</SwitchNum>
-		<BranchNum>7</BranchNum>
+		<BranchNum>1</BranchNum>
 		<Name>Flt Control Fail Light</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Pri Light Console 0</Name>
+		<Name>Left console lights 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>1</BranchNum>
-		<Name>Pri Light Console 1</Name>
+		<Name>Left console lights 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>2</BranchNum>
-		<Name>Pri Light Console 2</Name>
+		<Name>Left console lights 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>3</BranchNum>
-		<Name>Pri Light Instruments 0</Name>
+		<Name>Left console lights 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>4</BranchNum>
-		<Name>Pri Light Instruments 1</Name>
+		<Name>Left console lights 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>5</BranchNum>
-		<Name>Pri Light Instruments 2</Name>
+		<Name>Right console lights 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>6</BranchNum>
-		<Name>DED Display 0</Name>
+		<Name>Right console lights 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>7</BranchNum>
-		<Name>DED Display 1</Name>
+		<Name>Right console lights 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>8</BranchNum>
-		<Name>DED Display 2</Name>
+		<Name>Right console lights 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>9</BranchNum>
-		<Name>DED Display 3</Name>
+		<Name>Right console lights 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>10</BranchNum>
-		<Name>DED Display 4</Name>
+		<Name>AUX inst lights 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>11</BranchNum>
-		<Name>DED Display 5</Name>
+		<Name>AUX inst lights 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>12</BranchNum>
-		<Name>DED Display 6</Name>
+		<Name>AUX inst lights 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>13</BranchNum>
-		<Name>Flood Light Console 0</Name>
+		<Name>AUX inst lights 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>14</BranchNum>
-		<Name>Flood Light Console 1</Name>
+		<Name>AUX inst lights 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>15</BranchNum>
-		<Name>Flood Light Console 2</Name>
+		<Name>FLIGHT INSTR lights 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>16</BranchNum>
-		<Name>Flood Light Console 3</Name>
+		<Name>FLIGHT INSTR lights 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>17</BranchNum>
-		<Name>Flood Light Console 4</Name>
+		<Name>FLIGHT INSTR lights 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>18</BranchNum>
-		<Name>Flood Light Console 5</Name>
+		<Name>FLIGHT INSTR lights 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>19</BranchNum>
-		<Name>Flood Light Console 6</Name>
+		<Name>FLIGHT INSTR lights 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>20</BranchNum>
-		<Name>Flood Light Console 7</Name>
+		<Name>ENG INSTR lights 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>21</BranchNum>
-		<Name>Flood Light Inst 0</Name>
+		<Name>ENG INSTR lights 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>22</BranchNum>
-		<Name>Flood Light Inst 1</Name>
+		<Name>ENG INSTR lights 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>230</SwitchNum>
 		<BranchNum>23</BranchNum>
-		<Name>Flood Light Inst 2</Name>
+		<Name>ENG INSTR lights 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>ENG INSTR lights 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Flood light 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Flood light 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>Flood light 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>Flood light 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>Flood light 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>Flood light 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>230</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>Flood light 6</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>231</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Formation Lights</Name>
+		<Name>Formation Lights 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Formation Lights 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Formation Lights 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Formation Lights 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Formation Lights 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Formation Lights 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Formation Lights 6</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Position Lights 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Position Lights 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Position Lights 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>Position Lights 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Position Lights 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Position Lights 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Position Lights BRT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Position Lights FLASH</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Anticollision light Off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Anticollision light On</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Null</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Int Dim 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Int Dim 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Int Dim 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Int Dim 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>231</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Int Dim 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
@@ -3794,7 +4473,7 @@
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>4</BranchNum>
-		<Name>Seat Position 1</Name>
+		<Name>Seat Position 1></Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
@@ -3839,17 +4518,17 @@
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>13</BranchNum>
-		<Name>Landing Light 1</Name>
+		<Name>TAXI LIGHTS</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>14</BranchNum>
-		<Name>Landing Light 2</Name>
+		<Name>LIGH OFF</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>15</BranchNum>
-		<Name>Canopy  0</Name>
+		<Name>LANDING LIGHT</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
@@ -3865,197 +4544,206 @@
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>18</BranchNum>
 		<Name>JFS Start 0</Name>
-		<Comment>Down</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>19</BranchNum>
 		<Name>JFS Start 1</Name>
-		<Comment>Middle</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>20</BranchNum>
 		<Name>JFS Start 2</Name>
-		<Comment>Up</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>21</BranchNum>
 		<Name>Wing Tail Light 0</Name>
-		<Comment>Down</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>22</BranchNum>
 		<Name>Wing Tail Light 1</Name>
-		<Comment>Middle</Comment>
 	</Switch>
 	<Switch>
 		<SwitchNum>232</SwitchNum>
 		<BranchNum>23</BranchNum>
 		<Name>Wing Tail Light 2</Name>
-		<Comment>Up</Comment>
+	</Switch>
+	<Switch>
+		<SwitchNum>232</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Antiskid OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>232</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Antiskid PULSER</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>232</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Antiskid NORMAL</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Cockpit knee pad 0</Name>
-	</Switch>
+		<Name>left knee pad 0</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>1</BranchNum>
-		<Name>Cockpit knee pad 1</Name>
-	</Switch>
+		<Name>left knee pad 1</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>2</BranchNum>
-		<Name>Cockpit knee pad 2</Name>
-	</Switch>
+		<Name>left knee pad 2</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>3</BranchNum>
-		<Name>Cockpit knee pad 3</Name>
-	</Switch>
+		<Name>left knee pad 3</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>4</BranchNum>
-		<Name>Cockpit knee pad 4</Name>
-	</Switch>
+		<Name>left knee pad 4</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>5</BranchNum>
-		<Name>Cockpit knee pad 5</Name>
-	</Switch>
+		<Name>left knee pad 5</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>6</BranchNum>
-		<Name>Cockpit knee pad 6</Name>
-	</Switch>
+		<Name>left knee pad 6</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>7</BranchNum>
-		<Name>Cockpit knee pad 7</Name>
-	</Switch>
+		<Name>left knee pad 7</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>8</BranchNum>
-		<Name>Cockpit knee pad 8</Name>
-	</Switch>
+		<Name>left knee pad 8</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>9</BranchNum>
-		<Name>Cockpit knee pad 9</Name>
-	</Switch>
+		<Name>left knee pad 9</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>10</BranchNum>
-		<Name>Cockpit knee pad 10</Name>
-	</Switch>
+		<Name>left knee pad 10</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>11</BranchNum>
-		<Name>Cockpit knee pad 11</Name>
-	</Switch>
+		<Name>left knee pad 11</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>12</BranchNum>
-		<Name>Cockpit knee pad 12</Name>
+		<Name>left knee pad 12</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>13</BranchNum>
-		<Name>Cockpit knee pad 13</Name>
-	</Switch>
+		<Name>left knee pad 13</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>14</BranchNum>
-		<Name>Cockpit knee pad 14</Name>
-	</Switch>
+		<Name>left knee pad 14</Name>
+	</Switch>	
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>15</BranchNum>
-		<Name>Cockpit knee pad 15</Name>
+		<Name>left knee pad 15</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>16</BranchNum>
-		<Name>Cockpit knee pad 0</Name>
+		<Name>right knee pad 0</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>17</BranchNum>
-		<Name>Cockpit knee pad 1</Name>
+		<Name>right knee pad 1</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>18</BranchNum>
-		<Name>Cockpit knee pad 2</Name>
+		<Name>right knee pad 2</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>19</BranchNum>
-		<Name>Cockpit knee pad 3</Name>
+		<Name>right knee pad 3</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>20</BranchNum>
-		<Name>Cockpit knee pad 4</Name>
+		<Name>right knee pad 4</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>21</BranchNum>
-		<Name>Cockpit knee pad 5</Name>
+		<Name>right knee pad 5</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>22</BranchNum>
-		<Name>Cockpit knee pad 6</Name>
+		<Name>right knee pad 6</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>23</BranchNum>
-		<Name>Cockpit knee pad 7</Name>
+		<Name>right knee pad 7</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>24</BranchNum>
-		<Name>Cockpit knee pad 8</Name>
+		<Name>right knee pad 8</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>25</BranchNum>
-		<Name>Cockpit knee pad 9</Name>
+		<Name>right knee pad 9</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>26</BranchNum>
-		<Name>Cockpit knee pad 10</Name>
+		<Name>right knee pad 10</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>27</BranchNum>
-		<Name>Cockpit knee pad 11</Name>
+		<Name>right knee pad 11</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>28</BranchNum>
-		<Name>Cockpit knee pad 12</Name>
+		<Name>right knee pad 12</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>29</BranchNum>
-		<Name>Cockpit knee pad 13</Name>
+		<Name>right knee pad 13</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>30</BranchNum>
-		<Name>Cockpit knee pad 14</Name>
+		<Name>right knee pad 14</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>233</SwitchNum>
 		<BranchNum>31</BranchNum>
-		<Name>Cockpit knee pad 15</Name>
+		<Name>right knee pad 15</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>234</SwitchNum>
@@ -4092,6 +4780,12 @@
 		<BranchNum>6</BranchNum>
 		<Name>Anti Collision Mode 6</Name>
 	</Switch>
+
+	<Switch>
+		<SwitchNum>234</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Anti Collision Mode 7</Name>
+	</Switch>
 	<Switch>
 		<SwitchNum>235</SwitchNum>
 		<BranchNum>0</BranchNum>
@@ -4110,16 +4804,1151 @@
 	<Switch>
 		<SwitchNum>238</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Cockpit Legs</Name>
+		<Name>F15 MACH OFF flag</Name>
 	</Switch>
 	<Switch>
 		<SwitchNum>239</SwitchNum>
 		<BranchNum>0</BranchNum>
 		<Name>Caution Inlet Icing</Name>
 	</Switch>
-		<Switch>
+        <Switch>
 		<SwitchNum>240</SwitchNum>
 		<BranchNum>0</BranchNum>
-		<Name>Caution Inlet Icing</Name>
+		<Name>AAR light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>241</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>Fuselage Light 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>ECM Button 1 Unpressed Not Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>ECM Button 1 UnPressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>ECM Button 1 Pressed No Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>ECM Button 1 Pressed Standby Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ECM Button 1 Pressed Active Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ECM Button 1 Pressed Transmit Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>ECM Button 1 Pressed Failed Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>242</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>ECM Button 1 Pressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>ECM Button 2 Unpressed Not Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>ECM Button 2 UnPressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>ECM Button 2 Pressed No Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>ECM Button 2 Pressed Standby Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ECM Button 2 Pressed Active Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ECM Button 2 Pressed Transmit Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>ECM Button 2 Pressed Failed Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>243</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>ECM Button 2 Pressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>ECM Button 3 Unpressed Not Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>ECM Button 3 UnPressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>ECM Button 3 Pressed No Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>ECM Button 3 Pressed Standby Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ECM Button 3 Pressed Active Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ECM Button 3 Pressed Transmit Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>ECM Button 3 Pressed Failed Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>244</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>ECM Button 3 Pressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>ECM Button 4 Unpressed Not Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>ECM Button 4 UnPressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>ECM Button 4 Pressed No Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>ECM Button 4 Pressed Standby Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ECM Button 4 Pressed Active Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ECM Button 4 Pressed Transmit Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>ECM Button 4 Pressed Failed Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>245</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>ECM Button 4 Pressed All Lit</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>Radar Power OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Radar Power STBY</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Radar Power OPR</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Radar Power EMERG</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Radar Range 10</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Radar Range 20</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Radar Range 40</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Radar Range 80</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Radar Range 160</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>RADAR ELSCAN 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>RADAR ELSCAN 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>RADAR ELSCAN 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>RADAR ELSCAN 6</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>RADAR ELSCAN 8</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>RADAR AZSCAN 20</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>RADAR AZSCAN 60</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>RADAR AZSCAN 120</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Radar Frame LEFT0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Radar Frame LEFT1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Radar Frame LEFT2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Radar Frame LEFT3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Radar Frame RIGHT0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Radar Frame RIGHT1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Radar Frame RIGHT2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Radar Frame RIGHT3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Radar BAND NULL</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Radar BAND A</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>Radar BAND B</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>Radar BAND C</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>Radar CHAN 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>Radar CHAN 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>246</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>Radar CHAN 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>SplMode OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>SplMode MANTRK</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>SplMode SI</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>SplMode FLOOD</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ModeCtrl MAN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ModeCtrl AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>NctrEnable ON</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>NctrEnable OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>ModeSel A/A LRS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>ModeSel A/A VS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>ModeSel A/A SRS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>ModeSel A/A PULSE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>ModeSel BCN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>ModeSel A/G DPLR</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>ModeSel A/G RNG</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>247</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>ModeSel A/G MAP</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>EWR/ICS TRNG</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>EWR/ICS COMBAT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>PODS STBY</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>PODS XMIT</Name>
+	</Switch>
+
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>ICS STBY</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>ICS AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>ICS MAN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>ICS OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>ICS ON</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>SET-1 AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>SET-1 MAN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>SET-2 AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>SET-2 MAN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>SET-3 AUTO</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>SET-3 MAN</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>RWR OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>RWR ON</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>EWWS OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>EWWS ON</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>EWWS DEFEAT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>EWWS TONE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>light set-1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>light set-2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>light set-3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>EwWrnLgt PROGRAM</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>EwWrnLgt MINIMUM</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>EwWrnLgt CHAFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>EwWrnLgt FLARE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>EwWrnLgt SPRCHAFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>EwWrnLgt SPRFLARE</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>EwWrnLgt wtf1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>248</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>EwWrnLgt wtf2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>ECM HAF OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>ECM HAF STBY</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>ECM HAF OPER</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Radio2 Digit 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Radio2 Digit 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Radio2 Digit 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Radio2 Digit 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Radio2 Digit 2</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>249</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>Radio2 Digit 3</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>250</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>unused</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>JTIDS Mode Off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>JTIDS Mode Poll</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>JTIDS Mode Norm</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>JTIDS Mode Sil</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>JTIDS Mode Hold</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>JTIDS Voice A</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>JTIDS Voice B</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>JTIDS CipherNorm</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>251</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>JTIDS CipherZero</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>Radio2 Digit 4</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>Radio2 Digit 5</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>Radio2 mode Guard/Off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>Radio2 mode Man</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>Radio2 mode Chan</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>Mirrors Off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>252</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>Mirrors On</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>Master Arm 0</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Master Arm 1</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>AG mode</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>ADI mode</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>VI mode</Name>
+	</Switch>
+
+
+
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Flare Switch</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Both Switch</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Chaff Switch</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>F15 CMDS Mode Off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>F15 CMDS Mode Stby</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>F15 CMDS Mode Man Only</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>F15 CMDS Mode Semi Auto</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>F15 CMDS Mode Auto</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>F15 Flare Jett Cover closed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>F15 Flare Jett Cover open</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>F15 Flare Jettison</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>MCC AI Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>MCC SAM Light</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>253</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>F15 Shoot Lights</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>0</BranchNum>
+		<Name>Gen toggle left off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>1</BranchNum>
+		<Name>Gen toggle left on</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>2</BranchNum>
+		<Name>Gen toggle right off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>3</BranchNum>
+		<Name>Gen toggle right on</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>4</BranchNum>
+		<Name>Eec toggle left off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>5</BranchNum>
+		<Name>Eec toggle left on</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>6</BranchNum>
+		<Name>Eec toggle right off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>7</BranchNum>
+		<Name>Eec toggle right on</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>8</BranchNum>
+		<Name>LeftMasterEng OffOpen</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>9</BranchNum>
+		<Name>LeftMasterEng OnOpen</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>10</BranchNum>
+		<Name>LeftMasterEng OnClosed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>11</BranchNum>
+		<Name>RightMasterEng OffOpen</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>12</BranchNum>
+		<Name>RightMasterEng OnOpen</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>13</BranchNum>
+		<Name>RightMasterEng OnClosed</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>14</BranchNum>
+		<Name>Starter off</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>15</BranchNum>
+		<Name>Starter on</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>16</BranchNum>
+		<Name>MFD bright OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>17</BranchNum>
+		<Name>MPCD bright NIGHT</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>18</BranchNum>
+		<Name>MPCD bright DAY</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>19</BranchNum>
+		<Name>VSD bright OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>20</BranchNum>
+		<Name>VSD bright CONT</Name>
+	</Switch>
+
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>21</BranchNum>
+		<Name>NCI DATA CCC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>22</BranchNum>
+		<Name>NCI DATA WIND</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>23</BranchNum>
+		<Name>NCI DATA VIS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>24</BranchNum>
+		<Name>NCI DATA PP</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>25</BranchNum>
+		<Name>NCI DATA DEST</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>26</BranchNum>
+		<Name>NCI DATA O/S</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>27</BranchNum>
+		<Name>SELECT DATA CCC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>28</BranchNum>
+		<Name>SELECT DATA OFF</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>29</BranchNum>
+		<Name>SELECT DATA GC</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>30</BranchNum>
+		<Name>SELECT DATA INS</Name>
+	</Switch>
+	<Switch>
+		<SwitchNum>254</SwitchNum>
+		<BranchNum>31</BranchNum>
+		<Name>SELECT DATA TCN</Name>
 	</Switch>
 </Root>

@@ -101,7 +101,7 @@ class DofPanel(BasePanel, bpy.types.Panel):
         row = layout.row()
         # Persistent ID box shown first
         box_ids = layout.box()
-        box_ids.label(text="Persistent ID for Export")
+        box_ids.label(text="Persistent DOF Properties:")
         box_ids.prop(dof, "bml_dof_number")
         dof_num = getattr(dof, "bml_dof_number", -1)
         if dof_num < 0:

@@ -114,7 +114,7 @@ class SwitchPanel(BasePanel, bpy.types.Panel):
             layout.label(text=comment)
 
         box = layout.box()
-        box.label(text="Persistent IDs for Export")
+        box.label(text="Persistent Switch Properties:")
         row_ids = box.row(align=True)
         row_ids.prop(switch, "bml_switch_number")
         row_ids.prop(switch, "bml_switch_branch")
@@ -139,7 +139,7 @@ class SwitchPanel(BasePanel, bpy.types.Panel):
             if not found:
                 box.label(text="Warning: IDs not found in switch.xml (still exported)", icon="INFO")
 
-        layout.prop(switch, "switch_default_on")
+        box.prop(switch, "switch_default_on")
 
 
 def register():

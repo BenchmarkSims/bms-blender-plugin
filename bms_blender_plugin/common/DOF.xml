@@ -34,6 +34,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>8</DOFNum>
+		<Name>ChocksFR/SimpRudder1</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>9</DOFNum>
@@ -57,7 +58,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>14</DOFNum>
-		<Name/>
+		<Name>AWACSdome/SimpSwingWing4</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>15</DOFNum>
@@ -109,7 +110,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>27</DOFNum>
-		<Name/>
+		<Name>Canards</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>28</DOFNum>
@@ -200,7 +201,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>49</DOFNum>
-		<Name/>
+		<Name>RudderToeIn</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>50</DOFNum>
@@ -402,6 +403,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>99</DOFNum>
+		<Name>PilotVisor</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>100</DOFNum>
@@ -481,15 +483,15 @@
 	</DOF>
 	<DOF>
 		<DOFNum>119</DOFNum>
-		<Name>HSI Distance To Beacon Digit 1</Name>
+		<Name>HSI DME Digit 1</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>120</DOFNum>
-		<Name>HSI Distance To Beacon Digit 2</Name>
+		<Name>HSI DME Digit 2</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>121</DOFNum>
-		<Name>HSI Distance To Beacon Digit 3</Name>
+		<Name>HSI DME Digit 3</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>122</DOFNum>
@@ -553,23 +555,23 @@
 	</DOF>
 	<DOF>
 		<DOFNum>137</DOFNum>
-		<Name>Fuel Digit 1</Name>
+		<Name>Fuel Qty Total 1</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>138</DOFNum>
-		<Name>Fuel Digit 2</Name>
+		<Name>Fuel Qty Total 2</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>139</DOFNum>
-		<Name>Fuel Digit 3</Name>
+		<Name>Fuel Qty Total 3</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>140</DOFNum>
-		<Name>Fuel Digit 4</Name>
+		<Name>Fuel Qty Left 1</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>141</DOFNum>
-		<Name>Fuel Digit 5</Name>
+		<Name>Fuel Qty Left 2</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>142</DOFNum>
@@ -577,7 +579,7 @@
 	</DOF>
 	<DOF>
 		<DOFNum>143</DOFNum>
-		<Name>Fuel Forward</Name>
+		<Name>Fuel Forward/F15 FF right</Name>
 	</DOF>
 	<DOF>
 		<DOFNum>144</DOFNum>
@@ -734,5 +736,285 @@
 	<DOF>
 		<DOFNum>182</DOFNum>
 		<Name>Oil Needle 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>183</DOFNum>
+		<Name>HSI DME Digit 4 (only for EHSI)</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>184</DOFNum>
+		<Name>F15C Fuel Total Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>185</DOFNum>
+		<Name>Fuel Qty Right 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>186</DOFNum>
+		<Name>Fuel Qty Right 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>187</DOFNum>
+		<Name>F15C Fuel Bingo Bug</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>188</DOFNum>
+		<Name>ALT tens digits (F15C)</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>189</DOFNum>
+		<Name>Temp digit 1 left</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>190</DOFNum>
+		<Name>Temp digit 2 left</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>191</DOFNum>
+		<Name>Temp digit 3 left</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>192</DOFNum>
+		<Name>Temp digit 1 right</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>193</DOFNum>
+		<Name>Temp digit 2 right</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>194</DOFNum>
+		<Name>Temp digit 3 right</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>195</DOFNum>
+		<Name>RPM left digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>196</DOFNum>
+		<Name>RPM left digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>197</DOFNum>
+		<Name>RPM left digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>198</DOFNum>
+		<Name>RPM right digit 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>199</DOFNum>
+		<Name>RPM right digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>200</DOFNum>
+		<Name>JTDS left 0-1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>201</DOFNum>
+		<Name>JTDS center 0-9</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>202</DOFNum>
+		<Name>JTDS right 0-9</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>203</DOFNum>
+		<Name>RPM right digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>204</DOFNum>
+		<Name>IFF MCODE left</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>205</DOFNum>
+		<Name>IFF MCODE right</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>206</DOFNum>
+		<Name>IFF MAN FREQ 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>207</DOFNum>
+		<Name>IFF MAN FREQ 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>208</DOFNum>
+		<Name>IFF MAN FREQ 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>209</DOFNum>
+		<Name>IFF MAN FREQ 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>210</DOFNum>
+		<Name>AAI MODE DIGIT 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>211</DOFNum>
+		<Name>AAI CODE DIGIT 1</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>212</DOFNum>
+		<Name>AAI CODE DIGIT 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>213</DOFNum>
+		<Name>AAI CODE DIGIT 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>214</DOFNum>
+		<Name>AAI CODE DIGIT 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>215</DOFNum>
+		<Name>ILS Freq Digit 5</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>216</DOFNum>
+		<Name>ILS Freq Digit 4</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>217</DOFNum>
+		<Name>ILS Freq Digit 3</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>218</DOFNum>
+		<Name>ILS Freq Digit 2</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>219</DOFNum>
+		<Name>F15 Backup ASI Needle</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>220</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>221</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>222</DOFNum>
+		<Name>F15 Light Knob L CONSOLE</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>223</DOFNum>
+		<Name>F15 Light Knob R CONSOLE</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>224</DOFNum>
+		<Name>F15 Light Knob AUX INST</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>225</DOFNum>
+		<Name>F15 Light Knob FLT INST</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>226</DOFNum>
+		<Name>F15 Light Knob ENG INST</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>227</DOFNum>
+		<Name>F15 Light Knob STORM FLOOD</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>228</DOFNum>
+		<Name>F15 TEWS INT knob</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>229</DOFNum>
+		<Name>F15 G-Meter MIN G</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>230</DOFNum>
+		<Name>F15 G-Meter MAX G</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>231</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>232</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>233</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>234</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>235</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>236</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>237</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>238</DOFNum>
+		<Name>Turn Rate DegS</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>239</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>240</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>241</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>242</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>243</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>244</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>245</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>246</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>247</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>	
+		<DOFNum>248</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>249</DOFNum>
+		<Name>unused</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>250</DOFNum>
+		<Name>Radio2channelLeft</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>251</DOFNum>
+		<Name>Radio2channelRight</Name>
+	</DOF>
+	<DOF>
+		<DOFNum>255</DOFNum>
+		<Name>Sideslip Angle Deg</Name>
 	</DOF>
 </Root>
