@@ -503,7 +503,7 @@ def apply_all_modifiers(collection, export_profiler=None):
         # --- apply transforms one object at a time, parent before children ---
         # Batched transform_apply over parent/child selections can corrupt relative
         # transforms in hierarchies (mixed rotations/scales after export).
-        def _apply_transforms_recursively(obj):
+        def apply_transforms_recursively(obj):
             if not obj:
                 return
 
@@ -525,11 +525,11 @@ def apply_all_modifiers(collection, export_profiler=None):
                 )
 
             for child in obj.children:
-                _apply_transforms_recursively(child)
+                apply_transforms_recursively(child)
 
         root_objs = [obj for obj in all_objs if obj.parent is None]
         for root_obj in root_objs:
-            _apply_transforms_recursively(root_obj)
+            apply_transforms_recursively(root_obj)
 
 
 def uncompress_file(src, dest):
