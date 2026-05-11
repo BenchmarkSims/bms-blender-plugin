@@ -3,7 +3,6 @@ from bpy.props import FloatProperty, PointerProperty
 
 from bms_blender_plugin.common.blender_types import BlenderEditorNodeType
 from bms_blender_plugin.common.bml_structs import DofType, ArgType
-from bms_blender_plugin.common.util import get_dofs
 from bms_blender_plugin.common.resolve_ids import resolve_dof_number
 from bms_blender_plugin.nodes_editor.dof_base_node import (
     DofBaseNode,

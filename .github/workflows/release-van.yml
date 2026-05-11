@@ -32,14 +32,19 @@ jobs:
           tag_version="${release_tag#van/}"
           version_tuple=$(echo "$tag_version" | awk -F'[v.]' '{print $2", "$3", "$4}')
           sed -i "s/\"version\": .*/\"version\": (${version_tuple}),/" bms_blender_plugin/__init__.py
-          zip -r "bms_blender_plugin-van-${tag_version}.zip" bms_blender_plugin
+          zip_file="bms_blender_plugin-van-${tag_version}.zip"
+          zip -r "$zip_file" bms_blender_plugin \
+            -x "*/__pycache__/*" \
+            -x "*.pyc" \
+            -x "*.pyo"
           echo "Zip file built"
           echo "RELEASE_TAG=$release_tag" >> $GITHUB_ENV
           echo "TAG_VERSION=$tag_version" >> $GITHUB_ENV
+          echo "ZIP_FILE=$zip_file" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "${{ env.RELEASE_TAG }}"
           name: "Van ${{ env.TAG_VERSION }}"
-          files: |
-            bms_blender_plugin*.zip
+          body: "Install the uploaded bms_blender_plugin zip asset."
+          files: "${{ env.ZIP_FILE }}"

@@ -9,7 +9,6 @@ from bpy.props import EnumProperty, StringProperty, BoolProperty
 from bpy.types import Operator
 
 from bms_blender_plugin.exporter.export_validation import (
-    ValidationIssue,
     select_objects_from_issues,
     validate_export_readiness,
     get_out_of_range_issues,
