@@ -473,49 +473,59 @@ def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
 
 
 def apply_all_modifiers(collection, export_profiler=None):
-    """Applies all modifiers to objects which are rooted in the given collection"""
-    for obj in collection.objects:
-        if obj.parent is None:
-            apply_all_modifiers_on_obj(obj, export_profiler)
+    """Applies all modifiers and transforms to every object in the collection.
 
-
-def apply_all_modifiers_on_obj(obj, export_profiler=None):
-    """Applies all modifiers to a single object.
-    Empties (DOFs, Slots and Switches) are excepted, since applying their modifiers would reset their positions.
+    After copy_collection_flat all objects (including children) reside in the same
+    flat collection, so we can batch the two expensive bpy.ops calls instead of
+    issuing a select/deselect + operator call per object, which forces a full
+    depsgraph evaluation each time.
     """
-    if obj:
-        with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
-            bpy.ops.object.select_all(action="DESELECT")
-            # apply the modifiers
+    all_objs = list(collection.objects)
+
+    with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
+        # --- batch convert (applies modifiers) for all mesh objects at once ---
+        mesh_objs = [obj for obj in all_objs if obj.type == "MESH"]
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in mesh_objs:
             obj.select_set(True)
-            bpy.context.view_layer.objects.active = obj
+        if mesh_objs:
+            bpy.context.view_layer.objects.active = mesh_objs[0]
+            bpy.ops.object.mode_set(mode="OBJECT")
+            bpy.ops.object.convert(target="MESH", keep_original=False)
 
-            if obj.type == "MESH":
-                bpy.ops.object.mode_set(mode="OBJECT")
-                bpy.ops.object.convert(target="MESH", keep_original=False)
-
-            # Store the world position before transform application for reference points
+        # Store reference points after convert (modifiers resolved) but before
+        # transform_apply zeroes the location.
+        for obj in all_objs:
             if (obj.type == "MESH" and
-                get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
-                # Store the position in a custom property that survives transform_apply
+                    get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
                 obj["bms_reference_point"] = tuple(obj.location)
 
-            # Apply transforms using original logic (restored)
-            if get_bml_type(obj) not in [
-                BlenderNodeType.DOF,
-                BlenderNodeType.SLOT,
-                BlenderNodeType.HOTSPOT,
-            ]:
-                bpy.ops.object.transform_apply()
-            else:
-                # only apply scaling operations to those objects
-                # all other operations would reset them since they are empties
-                bpy.ops.object.transform_apply(
-                    location=False, rotation=False, scale=True, properties=False
-                )
+        # --- batch transform_apply for regular objects (full: loc + rot + scale) ---
+        non_special_objs = [
+            obj for obj in all_objs
+            if get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]
+        ]
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in non_special_objs:
+            obj.select_set(True)
+        if non_special_objs:
+            bpy.context.view_layer.objects.active = non_special_objs[0]
+            bpy.ops.object.transform_apply()
 
-        for child in obj.children:
-            apply_all_modifiers_on_obj(child, export_profiler)
+        # --- batch transform_apply (scale only) for DOF/Slot/Hotspot empties ---
+        # Applying loc/rot to empties would reset their pivot positions.
+        special_objs = [
+            obj for obj in all_objs
+            if get_bml_type(obj) in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]
+        ]
+        bpy.ops.object.select_all(action="DESELECT")
+        for obj in special_objs:
+            obj.select_set(True)
+        if special_objs:
+            bpy.context.view_layer.objects.active = special_objs[0]
+            bpy.ops.object.transform_apply(
+                location=False, rotation=False, scale=True, properties=False
+            )
 
 
 def uncompress_file(src, dest):
