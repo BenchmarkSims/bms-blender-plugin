@@ -26,9 +26,9 @@ class ToolsPanel(BasePanel, bpy.types.Panel):
             obj_bms_coords = to_bms_coords(
                 context.active_object.matrix_world.translation
             )
-            x_coord_text = f"{round(obj_bms_coords.x * scale_factor, 2): .2f}"
-            y_coord_text = f"{round(obj_bms_coords.y * scale_factor, 2): .2f}"
-            z_coord_text = f"{round(obj_bms_coords.z * scale_factor, 2): .2f}"
+            x_coord_text = f"{obj_bms_coords.x * scale_factor: .6f}"
+            y_coord_text = f"{obj_bms_coords.y * scale_factor: .6f}"
+            z_coord_text = f"{obj_bms_coords.z * scale_factor: .6f}"
 
             layout.label(text="BMS Coordinates")
             box = layout.box()

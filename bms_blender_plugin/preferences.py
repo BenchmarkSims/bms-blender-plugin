@@ -172,6 +172,20 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         description="The size of the Empty to display a Scale DOF as"
     )
 
+    switch_empty_type: EnumProperty(
+        name="Switch",
+        description="The Empty to display a Switch as",
+        items=empty_enum_items,
+        default="PLAIN_AXES",
+    )
+
+    switch_empty_size: FloatProperty(
+        default=1.0,
+        min=0.01,
+        name="Size",
+        description="The size of the Empty to display a Switch as"
+    )
+
 
     def draw(self, context):
         layout = self.layout
@@ -196,6 +210,15 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         row.prop(self, "dof_scale_empty_size")
 
         box.operator(ApplyEmptyDisplaysToDofs.bl_idname, icon="CHECKMARK")
+
+        layout.separator()
+        layout.label(text="Switch Display")
+        box = layout.box()
+        row = box.row()
+        row.prop(self, "switch_empty_type")
+        row.prop(self, "switch_empty_size")
+
+        box.operator(ApplyEmptyDisplaysToSwitches.bl_idname, icon="CHECKMARK")
 
         layout.separator()
         layout.label(text="Data Management")
@@ -256,16 +279,41 @@ class ApplyEmptyDisplaysToDofs(Operator):
         return {"FINISHED"}
 
 
+class ApplyEmptyDisplaysToSwitches(Operator):
+    """Applies the preferences for the Switch empties to all objects in the scene"""
+    bl_idname = "bml.apply_empty_displays_to_switches"
+    bl_label = "Apply to all Switches"
+    bl_description = "Applies the display preferences to all Switches in the scene"
+
+    # noinspection PyMethodMayBeStatic
+    def execute(self, context):
+        switch_empty = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.switch_empty_type
+        switch_empty_size = context.preferences.addons[
+            "bms_blender_plugin"
+        ].preferences.switch_empty_size
+
+        for obj in bpy.data.objects:
+            if get_bml_type(obj) == BlenderNodeType.SWITCH:
+                obj.empty_display_type = switch_empty
+                obj.empty_display_size = switch_empty_size
+
+        return {"FINISHED"}
+
+
 def register():
     bpy.utils.register_class(ReloadDofList)
     bpy.utils.register_class(ReloadSwitchList)
     bpy.utils.register_class(ReloadCallbackList)
     bpy.utils.register_class(ApplyEmptyDisplaysToDofs)
+    bpy.utils.register_class(ApplyEmptyDisplaysToSwitches)
     bpy.utils.register_class(ExporterPreferences)
 
 
 def unregister():
     bpy.utils.unregister_class(ExporterPreferences)
+    bpy.utils.unregister_class(ApplyEmptyDisplaysToSwitches)
     bpy.utils.unregister_class(ApplyEmptyDisplaysToDofs)
     bpy.utils.unregister_class(ReloadCallbackList)
     bpy.utils.unregister_class(ReloadSwitchList)
