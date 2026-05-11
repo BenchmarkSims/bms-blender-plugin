@@ -19,15 +19,13 @@ class ReloadDofList(Operator):
         import bms_blender_plugin.common.util as util_module
         util_module.dofs = []
         
-        # Clear the scene cache
+        # Clear the cache
+        util_module._dofs_hydrated = False
         context.scene.dof_list.clear()
-        
-        # Repopulate the scene cache immediately
-        for dof in get_dofs():
+        for dof in get_dofs(force_disk=True): # force_disk to bypass scene cache
             item = context.scene.dof_list.add()
             item.name = dof.name
             item.dof_number = int(dof.dof_number)
-        
         self.report({'INFO'}, f"Reloaded {len(context.scene.dof_list)} DOFs from DOF.xml")
         return {'FINISHED'}
 
@@ -44,16 +42,14 @@ class ReloadSwitchList(Operator):
         import bms_blender_plugin.common.util as util_module
         util_module.switches = []
         
-        # Clear the scene cache
+        # Clear the cache
+        util_module._switches_hydrated = False
         context.scene.switch_list.clear()
-        
-        # Repopulate the scene cache immediately
-        for switch in get_switches():
+        for switch in get_switches(force_disk=True): # force_disk to bypass scene cache
             item = context.scene.switch_list.add()
             item.name = switch.name
             item.switch_number = int(switch.switch_number)
             item.branch_number = int(switch.branch)
-        
         self.report({'INFO'}, f"Reloaded {len(context.scene.switch_list)} Switches from switch.xml")
         return {'FINISHED'}
 
@@ -103,6 +99,17 @@ class ExporterPreferences(bpy.types.AddonPreferences):
     do_not_join_materials: BoolProperty(
         name="Do not join same materials",
         description="Does not join objects with identical materials",
+        default=True,
+    )
+
+    prefer_scene_snapshot: BoolProperty(
+        name="Prefer Scene Snapshot",
+        description="Use scene-cached switch/DOF lists if present. (Recommended)",
+        default=True,
+    )
+    warn_xml_mismatch: BoolProperty(
+        name="Warn on XML Mismatch",
+        description="Print a console warning if disk XML differs from scene cache.",
         default=True,
     )
 
@@ -196,6 +203,9 @@ class ExporterPreferences(bpy.types.AddonPreferences):
         box.operator(ReloadDofList.bl_idname, icon="FILE_REFRESH")
         box.operator(ReloadSwitchList.bl_idname, icon="FILE_REFRESH")
         box.operator(ReloadCallbackList.bl_idname, icon="FILE_REFRESH")
+        box.separator()
+        box.prop(self, "prefer_scene_snapshot")
+        box.prop(self, "warn_xml_mismatch")
 
         layout.separator()
         layout.row().label(text="Debug options")

@@ -8,6 +8,11 @@ from bms_blender_plugin.common.util import (
     get_dofs,
     get_bounding_sphere,
 )
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
+from bms_blender_plugin.common.constants import (
+    BMS_MAX_SWITCH_NUMBER,
+    BMS_MAX_DOF_NUMBER,
+)
 from bms_blender_plugin.common.coordinates import to_bms_coords
 
 
@@ -16,34 +21,42 @@ def get_highest_switch_and_dof_number(objs):
     # default value 0 to prevent editor crashing
     highest_switch_number = 0
     highest_dof_number = 0
-    BMS_MAX_VALUE = 2048
 
     for obj in objs:
         if len(obj.children) > 0:
             if get_bml_type(obj) == BlenderNodeType.SWITCH:
                 try:
-                    switch = get_switches()[obj.switch_list_index]
-                    """parent.dat requires max(switch)+1 to function correctly due to a = vs <= issue in the BMS code. 
-                    This Should be resolved for 4.38."""
-                    required_switch_index = switch.switch_number+1
-                    if required_switch_index > highest_switch_number:
-                        highest_switch_number = required_switch_index
-                except IndexError:
-                    raise IndexError(f"Switch index {obj.switch_list_index} not found in switch.xml. Object: {obj.name}. Please update XML files and reload switch list.")
+                    switch_number, _branch = resolve_switch_id(obj)
+                except Exception:
+                    switch_number = None
+                if switch_number is None:
+                    # legacy fallback
+                    try:
+                        sw = get_switches()[obj.switch_list_index]
+                        switch_number = sw.switch_number
+                    except Exception:
+                        switch_number = 0
+                required_switch_index = switch_number + 1  # parent.dat off-by-one requirement
+                if required_switch_index > highest_switch_number:
+                    highest_switch_number = required_switch_index
             elif get_bml_type(obj) == BlenderNodeType.DOF:
                 try:
-                    dof = get_dofs()[obj.dof_list_index]
-                    """parent.dat requires max(dof)+1 to function correctly due to a = vs <= issue in the BMS code. 
-                    This Should be resolved for 4.38."""
-                    required_dof_index = dof.dof_number+1
-                    if required_dof_index > highest_dof_number:
-                        highest_dof_number = required_dof_index
-                except IndexError:
-                    raise IndexError(f"DOF index {obj.dof_list_index} not found in dof.xml. Object: {obj.name}. Please update XML files and reload DOF list.")
+                    dof_number = resolve_dof_number(obj)
+                except Exception:
+                    dof_number = None
+                if dof_number is None:
+                    try:
+                        dof_enum = get_dofs()[obj.dof_list_index]
+                        dof_number = dof_enum.dof_number
+                    except Exception:
+                        dof_number = 0
+                required_dof_index = dof_number + 1
+                if required_dof_index > highest_dof_number:
+                    highest_dof_number = required_dof_index
 
     # Cap values at BMS maximum
-    highest_switch_number = min(highest_switch_number, BMS_MAX_VALUE)
-    highest_dof_number = min(highest_dof_number, BMS_MAX_VALUE)
+    highest_switch_number = min(highest_switch_number, BMS_MAX_SWITCH_NUMBER)
+    highest_dof_number = min(highest_dof_number, BMS_MAX_DOF_NUMBER)
 
     return highest_switch_number, highest_dof_number
 
