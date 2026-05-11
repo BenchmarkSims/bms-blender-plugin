@@ -275,7 +275,8 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
 
     material_count = len(material_names)
     with export_profiler.stage("nodes: pack index buffer") if export_profiler else nullcontext():
-        # FORMAT_16 uses unsigned 16-bit indices, so it is valid while the largest vertex index fits in 0..65535.
+        # FORMAT_16 uses unsigned 16-bit indices (0..65535); current_vertices_index is the next index (vertex count),
+        # so FORMAT_16 is valid while that next index is still below 65536.
         if current_vertices_index < 65536:
             index_buffer_format = IndexBufferFormat.FORMAT_16
             vertex_indices_data = struct.pack("%sH" % len(vertex_indices), *vertex_indices)
