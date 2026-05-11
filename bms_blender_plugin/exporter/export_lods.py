@@ -1,12 +1,16 @@
 """
 Performance Notes:
-- Material batching optimization gives ~10-12% improvement in DOF/switch heavy scenes
-- Mesh-heavy scenes should see higher gains (~50%?)
-- Further perf improvements: batch DOF processing, reduce object selection calls
+- Modifier application was the dominant cost (~92% of export time): per-object
+  bpy.ops calls each trigger a full depsgraph evaluation. apply_all_modifiers()
+  now batches convert + transform_apply into O(1) operator calls regardless of
+  scene size.
+- Material batching gives ~10-12% improvement in DOF/switch-heavy scenes.
+- Further perf improvements: batch DOF processing, reduce object selection calls.
 """
 
 import os
 import struct
+from contextlib import nullcontext
 
 import bpy
 
@@ -42,7 +46,7 @@ from bms_blender_plugin.ui_tools.panels.material_sets_panel import revert_to_bas
 
 
 def export_lods(
-    context, file_directory, file_prefix, lod_list, scale_factor, export_settings: ExportSettings
+    context, file_directory, file_prefix, lod_list, scale_factor, export_settings: ExportSettings, export_profiler=None
 ):
     """Exports multiple LODs to single *.bml files and their material sets to *.mti files.
     Returns a list of exported files, a list of all material names and
@@ -56,7 +60,7 @@ def export_lods(
         bml_file_path = os.path.join(file_directory, file_prefix + lod.file_suffix + ".bml")
 
         material_names, hotspots = export_single_collection(
-            context, lod.collection, scale_factor, export_settings, bml_file_path
+            context, lod.collection, scale_factor, export_settings, bml_file_path, export_profiler
         )
 
         material_set_filepath = bml_file_path.replace(".bml", ".mti")
@@ -79,59 +83,68 @@ def export_lods(
 
 
 def export_single_collection(
-    context, collection, scale_factor, export_settings: ExportSettings, file_path
+    context, collection, scale_factor, export_settings: ExportSettings, file_path, export_profiler=None
 ):
     """Exports a single Blender collection to a BML file."""
     # create a temporary collection and copy the current collection's visible objects into it
     collection_copy_root = bpy.data.collections.new(collection.name + "_export")
     bpy.context.scene.collection.children.link(collection_copy_root)
-    copy_collection_flat(
-        collection,
-        collection_copy_root,
-        [collection_copy_root],
-        scale_factor,
-    )
+    with export_profiler.stage("lod: copy collection") if export_profiler else nullcontext():
+        copy_collection_flat(
+            collection,
+            collection_copy_root,
+            [collection_copy_root],
+            scale_factor,
+            export_profiler,
+        )
 
-    apply_all_modifiers(collection_copy_root)
+    with export_profiler.stage("lod: apply modifiers") if export_profiler else nullcontext():
+        apply_all_modifiers(collection_copy_root, export_profiler)
 
     # make sure we are on the base texture set
-    revert_to_base_material_set(context, collection_copy_root)
+    with export_profiler.stage("lod: revert material set") if export_profiler else nullcontext():
+        revert_to_base_material_set(context, collection_copy_root)
 
     # get the data of the root collection
-    nodes_output = get_nodes(
-        context,
-        collection_copy_root,
-        export_settings.script,
-        export_settings.auto_smooth_value,
-    )
+    with export_profiler.stage("lod: build payload") if export_profiler else nullcontext():
+        nodes_output = get_nodes(
+            context,
+            collection_copy_root,
+            export_settings.script,
+            export_settings.auto_smooth_value,
+            export_profiler,
+        )
     payload = nodes_output["data"]
     material_names = nodes_output["material_names"]
     hotspots = nodes_output["hotspots"]
 
     payload_size = len(payload)
 
-    if export_settings.compression == Compression.NONE:
-        payload_compressed_size = payload_size
-    elif export_settings.compression == Compression.LZ_4:
-        payload = compress_lz_4(payload)
-        payload_compressed_size = len(payload)
-    elif export_settings.compression == Compression.LZMA:
-        payload = compress_lzma(payload)
-        payload_compressed_size = len(payload)
-    else:
-        raise Exception("Unknown compression exception")
+    with export_profiler.stage("lod: final compression") if export_profiler else nullcontext():
+        if export_settings.compression == Compression.NONE:
+            payload_compressed_size = payload_size
+        elif export_settings.compression == Compression.LZ_4:
+            payload = compress_lz_4(payload)
+            payload_compressed_size = len(payload)
+        elif export_settings.compression == Compression.LZMA:
+            payload = compress_lzma(payload)
+            payload_compressed_size = len(payload)
+        else:
+            raise Exception("Unknown compression exception")
 
-    header = Header(
-        2, payload_size, payload_compressed_size, export_settings.compression
-    )
-    data = header.to_data() + payload
+    with export_profiler.stage("lod: assemble file") if export_profiler else nullcontext():
+        header = Header(
+            2, payload_size, payload_compressed_size, export_settings.compression
+        )
+        data = header.to_data() + payload
 
     if export_settings.export_models:
-        with open(file_path, "wb") as bml_file:
-            bml_file.write(data)
-            print(
-                f"Finished exporting LOD with {nodes_output['nodes_amount']} nodes to {file_path}...\n"
-            )
+        with export_profiler.stage("lod: write file") if export_profiler else nullcontext():
+            with open(file_path, "wb") as bml_file:
+                bml_file.write(data)
+                print(
+                    f"Finished exporting LOD with {nodes_output['nodes_amount']} nodes to {file_path}...\n"
+                )
 
     # delete the copied collection and its children
     if (
@@ -140,19 +153,21 @@ def export_single_collection(
             "bms_blender_plugin"
         ].preferences.do_not_delete_export_collection
     ):
-        for obj in collection_copy_root.objects:
-            bpy.data.objects.remove(obj, do_unlink=True)
-        bpy.data.collections.remove(collection_copy_root)
+        with export_profiler.stage("lod: cleanup temp collection") if export_profiler else nullcontext():
+            for obj in collection_copy_root.objects:
+                bpy.data.objects.remove(obj, do_unlink=True)
+            bpy.data.collections.remove(collection_copy_root)
 
     return material_names, hotspots
 
 
-def get_nodes(context, root_collection, script, auto_smooth_value):
+def get_nodes(context, root_collection, script, auto_smooth_value, export_profiler=None):
     """Recursively builds the BML node list for a given collection with all of its elements
     (refer to the BMLv2 format definition).
     Returns a triple of the nodes in binary format, the material list and the amount of nodes
     """
     material_names = []
+    material_lookup = {}
     nodes = []
     current_vertices_index = 0
     current_vertices_size = 0
@@ -177,9 +192,10 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
         ):
             prepared_objects = objects
         else:
-            prepared_objects = join_objects_with_same_materials(
-                objects, dict(), auto_smooth_value
-            )
+            with export_profiler.stage("nodes: join by material") if export_profiler else nullcontext():
+                prepared_objects = join_objects_with_same_materials(
+                    objects, dict(), auto_smooth_value
+                )
 
         # parse all objects of the current collection
         for obj in prepared_objects:
@@ -190,8 +206,10 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
                     nodes,
                     vertex_indices,
                     material_names,
+                    material_lookup,
                     current_vertices_index,
                     current_vertices_size,
+                    export_profiler,
                 )
 
             elif get_bml_type(obj) == BlenderNodeType.PBR_LIGHT:
@@ -200,8 +218,10 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
                     nodes,
                     vertex_indices,
                     material_names,
+                    material_lookup,
                     current_vertices_index,
                     current_vertices_size,
+                    export_profiler,
                 )
 
             elif get_bml_type(obj) == BlenderNodeType.SLOT:  # Slots can be empty
@@ -218,7 +238,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
 
             # end of parsing, append parsed data to the nodes list
             if parsed_nodes:
-                vertices_data.extend(parsed_nodes.vertex_data)
+                vertices_data.append(parsed_nodes.vertex_data)
                 current_vertices_index += parsed_nodes.vertices_length
                 current_vertices_size += parsed_nodes.vertices_size
 
@@ -257,44 +277,51 @@ def get_nodes(context, root_collection, script, auto_smooth_value):
         script_no = int(script)
 
     material_count = len(material_names)
-    data = struct.pack("<II", script_no, material_count)
-    for material_name in material_names:
-        data += struct.pack("<i", len(material_name))
-        data += bytes(material_name, "ascii")
+    with export_profiler.stage("nodes: pack index buffer") if export_profiler else nullcontext():
+        # FORMAT_16 uses unsigned 16-bit indices (0..65535); current_vertices_index is the next index (vertex count),
+        # so FORMAT_16 is valid while that next index is still below 65536.
+        if current_vertices_index < 65536:
+            index_buffer_format = IndexBufferFormat.FORMAT_16
+            vertex_indices_data = struct.pack("%sH" % len(vertex_indices), *vertex_indices)
+            vertex_indices_data_size = 2 * len(vertex_indices)
+        else:
+            index_buffer_format = IndexBufferFormat.FORMAT_32
+            vertex_indices_data = struct.pack("%sI" % len(vertex_indices), *vertex_indices)
+            vertex_indices_data_size = 4 * len(vertex_indices)
 
-    if len(vertex_indices) < 256:
-        index_buffer_format = IndexBufferFormat.FORMAT_16
-        vertex_indices_data = struct.pack("%sH" % len(vertex_indices), *vertex_indices)
-        vertex_indices_data_size = 2 * len(vertex_indices)
-    else:
-        index_buffer_format = IndexBufferFormat.FORMAT_32
-        vertex_indices_data = struct.pack("%sI" % len(vertex_indices), *vertex_indices)
-        vertex_indices_data_size = 4 * len(vertex_indices)
+    with export_profiler.stage("nodes: pack node data") if export_profiler else nullcontext():
+        nodes_data = b"".join(node.to_data() for node in nodes)
 
-    # ibFormat, TotalIndices, TotalVertices, NodeCount
-    data += struct.pack(
-        "<IIII",
-        index_buffer_format.value,
-        len(vertex_indices),
-        current_vertices_index,
-        len(nodes),
-    )
+    with export_profiler.stage("nodes: pack vertex buffer") if export_profiler else nullcontext():
+        packed_vertices_data = b"".join(vertices_data)
 
-    # nodes
-    for node in nodes:
-        data += node.to_data()
+    with export_profiler.stage("nodes: assemble payload") if export_profiler else nullcontext():
+        data_parts = [struct.pack("<II", script_no, material_count)]
+        for material_name in material_names:
+            data_parts.append(struct.pack("<i", len(material_name)))
+            data_parts.append(bytes(material_name, "ascii"))
 
-    # ibNextIndex
-    data += struct.pack("<I", vertex_indices_data_size)
-
-    # ib
-    data += vertex_indices_data
-
-    # vbNextIndex
-    data += struct.pack("<I", current_vertices_size)
-
-    # vb
-    data += b"".join(vertices_data)
+        # ibFormat, TotalIndices, TotalVertices, NodeCount
+        data_parts.append(
+            struct.pack(
+                "<IIII",
+                index_buffer_format.value,
+                len(vertex_indices),
+                current_vertices_index,
+                len(nodes),
+            )
+        )
+        # nodes
+        data_parts.append(nodes_data)
+        # ibNextIndex
+        data_parts.append(struct.pack("<I", vertex_indices_data_size))
+        # ib
+        data_parts.append(vertex_indices_data)
+        # vbNextIndex
+        data_parts.append(struct.pack("<I", current_vertices_size))
+        # vb
+        data_parts.append(packed_vertices_data)
+        data = b"".join(data_parts)
 
     return {
         "data": data,

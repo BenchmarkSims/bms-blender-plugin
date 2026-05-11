@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import math
 
 from mathutils import Matrix, Vector
@@ -6,7 +7,7 @@ from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import Primitive, PrimitiveTopology, Vector3, Slot, D3DMatrix, Switch, \
     DofType, Dof
 from bms_blender_plugin.common.hotspot import Hotspot, MouseButton, ButtonType
-from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_switches, get_dofs, \
+from bms_blender_plugin.common.util import get_bml_type, get_switches, get_dofs, \
     get_non_translate_dof_parent
 from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
@@ -26,14 +27,23 @@ class ParsedNodes:
         self.vertices_size = vertices_size
 
 
+def _get_material_index(material_name, material_names, material_lookup):
+    material_index = material_lookup.get(material_name)
+    if material_index is None:
+        material_index = len(material_names)
+        material_lookup[material_name] = material_index
+        material_names.append(material_name)
+    return material_index
+
+
 def parse_mesh(
-    obj, nodes, vertex_indices, material_names, vertex_index_offset, vertex_start_offset
+    obj, nodes, vertex_indices, material_names, material_lookup, vertex_index_offset, vertex_start_offset, export_profiler=None
 ):
     """Adds a mesh to the BML node list"""
     print(f"parsing mesh {obj.name}")
 
     # Prepare the mesh
-    obj_data = get_bml_mesh_data(obj, vertex_index_offset)
+    obj_data = get_bml_mesh_data(obj, vertex_index_offset, export_profiler)
     obj_vertices = obj_data["vertices"]
     obj_indices = obj_data["vertex_indices"]
 
@@ -43,17 +53,15 @@ def parse_mesh(
     else:
         material_name = "BML-Default"
 
-    try:
-        material_index = material_names.index(material_name)
-    except ValueError:
-        material_index = len(material_names)
-        material_names.append(material_name)
+    material_index = _get_material_index(material_name, material_names, material_lookup)
 
     vertex_size = 48  # since we only support v2 Primitives
 
-    obj_vertices_data = []
-    for obj_vertex in obj_vertices:
-        obj_vertices_data += obj_vertex.to_data()
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
+        obj_vertices_data = b"".join(
+            chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
+        )
+        vertex_indices.extend(obj_indices)
 
     # Use stored reference point if available, otherwise fall back to current location. 
     # Property assigned in util.py - preserves Blender origin to use as reference point for alpha sorting
@@ -84,7 +92,6 @@ def parse_mesh(
     )
 
     nodes.append(node)
-    vertex_indices += obj_indices
 
     return ParsedNodes(
         vertex_data=obj_vertices_data,
@@ -98,14 +105,16 @@ def parse_bbl_light(
     nodes,
     vertex_indices,
     material_names,
+    material_lookup,
     vertex_index_offset,
     vertex_start_offset,
+    export_profiler=None,
 ):
     """Adds a PBR billboard light to the BML node list"""
     print(f"parsing PBR BB light {obj.name}")
 
     # Prepare the mesh
-    obj_data = get_pbr_light_data(obj, vertex_index_offset)
+    obj_data = get_pbr_light_data(obj, vertex_index_offset, export_profiler)
     obj_vertices = obj_data["vertices"]
     obj_indices = obj_data["vertex_indices"]
 
@@ -115,17 +124,15 @@ def parse_bbl_light(
     else:
         material_name = "BML-BillboardGlowLight"
 
-    try:
-        material_index = material_names.index(material_name)
-    except ValueError:
-        material_index = len(material_names)
-        material_names.append(material_name)
+    material_index = _get_material_index(material_name, material_names, material_lookup)
 
     vertex_size = 44  # size for PBR BB light
 
-    obj_vertices_data = []
-    for obj_vertex in obj_vertices:
-        obj_vertices_data += obj_vertex.to_data()
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
+        obj_vertices_data = b"".join(
+            chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
+        )
+        vertex_indices.extend(obj_indices)
 
     # Use stored reference point if available, otherwise fall back to world translation
     # All objects now use their origins for reference points, including DOF children
@@ -155,7 +162,6 @@ def parse_bbl_light(
     )
 
     nodes.append(node)
-    vertex_indices += obj_indices
 
     return ParsedNodes(
         vertex_data=obj_vertices_data,

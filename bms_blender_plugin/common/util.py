@@ -2,6 +2,9 @@ import bpy
 import bpy.utils.previews
 import os
 import struct
+from contextlib import nullcontext
+
+
 import lzma
 import math
 from mathutils import Vector
@@ -369,7 +372,7 @@ def get_non_translate_dof_parent(obj):
 
 
 def copy_collection_flat(
-    from_collection, to_collection, excluded_collections, scale_factor
+    from_collection, to_collection, excluded_collections, scale_factor, export_profiler=None
 ):
     """Copies a collection and all of its objects but not its child-collections.
     Also applies a scale factor to its objects"""
@@ -380,12 +383,12 @@ def copy_collection_flat(
             if collection_object.parent is None:
                 # root object - copy that
                 copied_object = copy_object(
-                    collection_object, None, to_collection, scale_factor
+                    collection_object, None, to_collection, scale_factor, export_profiler
                 )
 
         for collection_child in from_collection.children:
             copy_collection_flat(
-                collection_child, to_collection, excluded_collections, scale_factor
+                collection_child, to_collection, excluded_collections, scale_factor, export_profiler
             )
 
         # toggle object mode to make sure that the scaling has been applied (Blender quirk)
@@ -415,102 +418,195 @@ def reset_dof(obj):
         obj.delta_scale.z = 1
 
 
-def copy_object(obj, parent, collection, scale_factor=1):
+def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
     """Recursively copies an object and all of its children and moves their copies to a given collection.
     Also applies a scale factor"""
     if not obj.hide_render and len(obj.users_collection) != 0:
-        copied_object = obj.copy()
-        copied_object.parent = parent
-        copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
+        with export_profiler.stage("collection copy: duplicate objects") if export_profiler else nullcontext():
+            copied_object = obj.copy()
+            copied_object.parent = parent
+            copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
 
-        if obj.data:
-            copied_object.data = copied_object.data.copy()
-        for k, e in obj.items():
-            copied_object[k] = e
+            if obj.data:
+                copied_object.data = copied_object.data.copy()
+            for k, e in obj.items():
+                copied_object[k] = e
 
-        # copy and apply all modifiers
-        for obj_modifier in obj.modifiers:
-            copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
-            if not copied_object_modifiers:
-                copied_object_modifiers = obj.modifiers.new(
-                    obj_modifier.name, obj_modifier.type
-                )
+            # copy and apply all modifiers
+            for obj_modifier in obj.modifiers:
+                copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
+                if not copied_object_modifiers:
+                    copied_object_modifiers = obj.modifiers.new(
+                        obj_modifier.name, obj_modifier.type
+                    )
 
-            # collect names of writable properties
-            properties = [
-                p.identifier
-                for p in obj_modifier.bl_rna.properties
-                if not p.is_readonly
-            ]
+                # collect names of writable properties
+                properties = [
+                    p.identifier
+                    for p in obj_modifier.bl_rna.properties
+                    if not p.is_readonly
+                ]
 
-            # copy those properties
-            for prop in properties:
-                setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
+                # copy those properties
+                for prop in properties:
+                    setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
 
-        # set all DOFs to 0
-        if get_bml_type(obj, False) == BlenderNodeType.DOF:
-            reset_dof(copied_object)
+            # set all DOFs to 0
+            if get_bml_type(obj, False) == BlenderNodeType.DOF:
+                reset_dof(copied_object)
 
-        # scale only the root objects
-        if scale_factor != 1 and obj.parent is None:
-            copied_object.scale *= scale_factor
-            copied_object.location *= scale_factor
+            # scale only the root objects
+            if scale_factor != 1 and obj.parent is None:
+                copied_object.scale *= scale_factor
+                copied_object.location *= scale_factor
 
-        collection.objects.link(copied_object)
+            collection.objects.link(copied_object)
 
-        # override any selection restriction
-        copied_object.hide_select = False
-        copied_object.hide_viewport = False
-        copied_object.hide_set(False)
+            # override any selection restriction
+            copied_object.hide_select = False
+            copied_object.hide_viewport = False
+            copied_object.hide_set(False)
 
         for obj_child in obj.children:
-            copy_object(obj_child, copied_object, collection, scale_factor)
+            copy_object(obj_child, copied_object, collection, scale_factor, export_profiler)
         return copied_object
 
 
-def apply_all_modifiers(collection):
-    """Applies all modifiers to objects which are rooted in the given collection"""
-    for obj in collection.objects:
-        if obj.parent is None:
-            apply_all_modifiers_on_obj(obj)
+def apply_all_modifiers(collection, export_profiler=None):
+    """Applies all modifiers and transforms to every object in the collection.
 
-
-def apply_all_modifiers_on_obj(obj):
-    """Applies all modifiers to a single object.
-    Empties (DOFs, Slots and Switches) are excepted, since applying their modifiers would reset their positions.
+    After copy_collection_flat all objects (including children) reside in a flat
+    collection, but parent-child transform order still matters. We batch modifier
+    conversion globally, then batch transform application by hierarchy depth so a
+    selected batch never contains both a parent and one of its descendants.
     """
-    if obj:
+    all_objs = list(collection.objects)
+    special_types = (BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT)
+    transform_epsilon = 1e-7
+
+    def _stage(stage_name):
+        return export_profiler.stage(stage_name) if export_profiler else nullcontext()
+
+    def _vector_nearly_equal(vector, expected):
+        return all(abs(vector[index] - expected[index]) <= transform_epsilon for index in range(3))
+
+    def _matrix_nearly_identity(matrix):
+        for row_index in range(4):
+            for column_index in range(4):
+                expected = 1.0 if row_index == column_index else 0.0
+                if abs(matrix[row_index][column_index] - expected) > transform_epsilon:
+                    return False
+        return True
+
+    def _needs_full_transform_apply(obj):
+        return not _matrix_nearly_identity(obj.matrix_basis)
+
+    def _needs_scale_transform_apply(obj):
+        return not (
+            _vector_nearly_equal(obj.scale, (1.0, 1.0, 1.0))
+            and _vector_nearly_equal(obj.delta_scale, (1.0, 1.0, 1.0))
+        )
+
+    def _hierarchy_levels(objects):
+        object_names = {obj.name for obj in objects}
+        levels = []
+        visited = set()
+
+        def add_obj(obj, depth):
+            if obj.name in visited or obj.name not in object_names:
+                return
+            visited.add(obj.name)
+            while len(levels) <= depth:
+                levels.append([])
+            levels[depth].append(obj)
+            for child in obj.children:
+                add_obj(child, depth + 1)
+
+        for obj in objects:
+            if obj.parent is None or obj.parent.name not in object_names:
+                add_obj(obj, 0)
+
+        for obj in objects:
+            add_obj(obj, 0)
+
+        return levels
+
+    def _batch_transform_apply(objects, **kwargs):
+        if not objects:
+            return
         bpy.ops.object.select_all(action="DESELECT")
-        # apply the modifiers
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
+        for obj in objects:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = objects[0]
+        bpy.ops.object.transform_apply(**kwargs)
 
-        if obj.type == "MESH":
-            bpy.ops.object.mode_set(mode="OBJECT")
-            bpy.ops.object.convert(target="MESH", keep_original=False)
+    with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
+        with _stage("modifier application: batch mesh convert"):
+            mesh_objs = [obj for obj in all_objs if obj.type == "MESH"]
+            bpy.ops.object.select_all(action="DESELECT")
+            for obj in mesh_objs:
+                obj.select_set(True)
+            if mesh_objs:
+                bpy.context.view_layer.objects.active = mesh_objs[0]
+                bpy.ops.object.mode_set(mode="OBJECT")
+                bpy.ops.object.convert(target="MESH", keep_original=False)
 
-        # Store the world position before transform application for reference points
-        if (obj.type == "MESH" and 
-            get_bml_type(obj) not in [BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT]):
-            # Store the position in a custom property that survives transform_apply
-            obj["bms_reference_point"] = tuple(obj.location)
-        
-        # Apply transforms using original logic (restored)
-        if get_bml_type(obj) not in [
-            BlenderNodeType.DOF,
-            BlenderNodeType.SLOT,
-            BlenderNodeType.HOTSPOT,
-        ]:
-            bpy.ops.object.transform_apply()
-        else:
-            # only apply scaling operations to those objects
-            # all other operations would reset them since they are empties
-            bpy.ops.object.transform_apply(
-                location=False, rotation=False, scale=True, properties=False
-            )
+        # Store reference points after convert (modifiers resolved) but before
+        # transform_apply zeroes the location.
+        with _stage("modifier application: store reference points"):
+            for obj in all_objs:
+                if obj.type == "MESH" and get_bml_type(obj) not in special_types:
+                    obj["bms_reference_point"] = tuple(obj.location)
 
-        for child in obj.children:
-            apply_all_modifiers_on_obj(child)
+        regular_applied = 0
+        regular_skipped = 0
+        regular_batches = 0
+        special_applied = 0
+        special_skipped = 0
+        special_batches = 0
+
+        for level_objs in _hierarchy_levels(all_objs):
+            regular_objs = []
+            special_objs = []
+
+            for obj in level_objs:
+                if get_bml_type(obj) in special_types:
+                    if _needs_scale_transform_apply(obj):
+                        special_objs.append(obj)
+                    else:
+                        special_skipped += 1
+                elif _needs_full_transform_apply(obj):
+                    regular_objs.append(obj)
+                else:
+                    regular_skipped += 1
+
+            if regular_objs:
+                with _stage("modifier application: batch regular transforms"):
+                    _batch_transform_apply(regular_objs)
+                regular_applied += len(regular_objs)
+                regular_batches += 1
+
+            if special_objs:
+                with _stage("modifier application: batch special scale transforms"):
+                    _batch_transform_apply(
+                        special_objs,
+                        location=False,
+                        rotation=False,
+                        scale=True,
+                        properties=False,
+                    )
+                special_applied += len(special_objs)
+                special_batches += 1
+
+            if regular_objs or special_objs:
+                bpy.context.view_layer.update()
+
+        print(
+            "[BML Export] Transform apply batches: "
+            f"{regular_batches} regular / {special_batches} special; "
+            f"objects applied: {regular_applied} regular / {special_applied} special; "
+            f"skipped: {regular_skipped} regular / {special_skipped} special"
+        )
 
 
 def uncompress_file(src, dest):
