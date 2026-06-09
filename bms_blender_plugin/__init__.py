@@ -6,15 +6,15 @@ from itertools import groupby
 from bms_blender_plugin.ext.blender_dds_addon.directx.texconv import unload_texconv
 
 bl_info = {
-    "name": "Falcon BMS Plugin - Van",
+    "name": "Falcon BMS Plugin",
     "author": "Benchmark Sims",
-    "version": (1, 1, 1),
+    "version": (1, 2, 0),
     "blender": (3, 6, 0),
     "location": "File > Export",
     "description": "Export as Falcon BMS BML",
     "warning": "",
-    "doc_url": "https://github.com/avan069/bms-blender-plugin",
-    "tracker_url": "https://github.com/avan069/bms-blender-plugin/issues",
+    "doc_url": "https://github.com/BenchmarkSims/bms-blender-plugin",
+    "tracker_url": "https://github.com/BenchmarkSims/bms-blender-plugin/issues",
     "support": "COMMUNITY",
     "category": "Import-Export",
 }
