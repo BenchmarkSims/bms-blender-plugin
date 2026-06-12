@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 import math
 
 from mathutils import Matrix, Vector
@@ -6,8 +7,8 @@ from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import Primitive, PrimitiveTopology, Vector3, Slot, D3DMatrix, Switch, \
     DofType, Dof
 from bms_blender_plugin.common.hotspot import Hotspot, MouseButton, ButtonType
-from bms_blender_plugin.common.util import get_bml_type, get_objcenter, get_switches, get_dofs, \
-    get_non_translate_dof_parent
+from bms_blender_plugin.common.util import get_bml_type, get_non_translate_dof_parent
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.exporter.bml_mesh import get_bml_mesh_data, get_pbr_light_data
 from bms_blender_plugin.common.coordinates import to_bms_coords
 
@@ -25,14 +26,23 @@ class ParsedNodes:
         self.vertices_size = vertices_size
 
 
+def _get_material_index(material_name, material_names, material_lookup):
+    material_index = material_lookup.get(material_name)
+    if material_index is None:
+        material_index = len(material_names)
+        material_lookup[material_name] = material_index
+        material_names.append(material_name)
+    return material_index
+
+
 def parse_mesh(
-    obj, nodes, vertex_indices, material_names, vertex_index_offset, vertex_start_offset
+    obj, nodes, vertex_indices, material_names, material_lookup, vertex_index_offset, vertex_start_offset, export_profiler=None
 ):
     """Adds a mesh to the BML node list"""
     print(f"parsing mesh {obj.name}")
 
     # Prepare the mesh
-    obj_data = get_bml_mesh_data(obj, vertex_index_offset)
+    obj_data = get_bml_mesh_data(obj, vertex_index_offset, export_profiler)
     obj_vertices = obj_data["vertices"]
     obj_indices = obj_data["vertex_indices"]
 
@@ -42,23 +52,25 @@ def parse_mesh(
     else:
         material_name = "BML-Default"
 
-    try:
-        material_index = material_names.index(material_name)
-    except ValueError:
-        material_index = len(material_names)
-        material_names.append(material_name)
+    material_index = _get_material_index(material_name, material_names, material_lookup)
 
     vertex_size = 48  # since we only support v2 Primitives
 
-    obj_vertices_data = []
-    for obj_vertex in obj_vertices:
-        obj_vertices_data += obj_vertex.to_data()
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
+        obj_vertices_data = b"".join(
+            chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
+        )
+        vertex_indices.extend(obj_indices)
 
-    # DOF children use coordinates local to their DOF
-    if get_bml_type(obj.parent) == BlenderNodeType.DOF and obj.parent.dof_type != DofType.TRANSLATE.name:
-        reference_point = to_bms_coords((0, 0, 0))
+    # Use stored reference point if available, otherwise fall back to current location. 
+    # Property assigned in util.py - preserves Blender origin to use as reference point for alpha sorting
+    # All objects now use their origins for reference points, including DOF children
+    if "bms_reference_point" in obj:
+        stored_position = Vector(obj["bms_reference_point"])
+        reference_point = to_bms_coords(stored_position)
     else:
-        reference_point = get_objcenter(obj)
+        # Fallback for objects without stored reference point
+        reference_point = to_bms_coords(obj.location)
 
     node = Primitive(
         index=len(nodes),
@@ -79,7 +91,6 @@ def parse_mesh(
     )
 
     nodes.append(node)
-    vertex_indices += obj_indices
 
     return ParsedNodes(
         vertex_data=obj_vertices_data,
@@ -93,14 +104,16 @@ def parse_bbl_light(
     nodes,
     vertex_indices,
     material_names,
+    material_lookup,
     vertex_index_offset,
     vertex_start_offset,
+    export_profiler=None,
 ):
     """Adds a PBR billboard light to the BML node list"""
     print(f"parsing PBR BB light {obj.name}")
 
     # Prepare the mesh
-    obj_data = get_pbr_light_data(obj, vertex_index_offset)
+    obj_data = get_pbr_light_data(obj, vertex_index_offset, export_profiler)
     obj_vertices = obj_data["vertices"]
     obj_indices = obj_data["vertex_indices"]
 
@@ -110,19 +123,25 @@ def parse_bbl_light(
     else:
         material_name = "BML-BillboardGlowLight"
 
-    try:
-        material_index = material_names.index(material_name)
-    except ValueError:
-        material_index = len(material_names)
-        material_names.append(material_name)
+    material_index = _get_material_index(material_name, material_names, material_lookup)
 
     vertex_size = 44  # size for PBR BB light
 
-    obj_vertices_data = []
-    for obj_vertex in obj_vertices:
-        obj_vertices_data += obj_vertex.to_data()
+    with export_profiler.stage("mesh: pack vertex/index data") if export_profiler else nullcontext():
+        obj_vertices_data = b"".join(
+            chunk for obj_vertex in obj_vertices for chunk in obj_vertex.to_data()
+        )
+        vertex_indices.extend(obj_indices)
 
-    reference_point = get_objcenter(obj)
+    # Use stored reference point if available, otherwise fall back to world translation
+    # All objects now use their origins for reference points, including DOF children
+    if "bms_reference_point" in obj:
+        stored_position = Vector(obj["bms_reference_point"])
+        reference_point = to_bms_coords(stored_position)
+    else:
+        # Fallback for objects without stored reference point
+        reference_point = to_bms_coords(obj.matrix_world.translation)
+    
     node = Primitive(
         index=len(nodes),
         topology=PrimitiveTopology.TRIANGLE_LIST,
@@ -142,7 +161,6 @@ def parse_bbl_light(
     )
 
     nodes.append(node)
-    vertex_indices += obj_indices
 
     return ParsedNodes(
         vertex_data=obj_vertices_data,
@@ -171,21 +189,40 @@ def parse_slot(obj, nodes):
 
 
 def parse_switch(obj, nodes):
-    """Adds a BML Switch to the BML node list"""
+    """Adds a BML Switch to the BML node list.
+
+    Resolution order delegated to resolve_switch_id(). If unresolved defaults to (0,0).
+    """
     print(f"{obj.name} is a SWITCH")
-    switch = get_switches()[obj.switch_list_index]
-    nodes.append(
-        Switch(len(nodes), switch.switch_number, switch.branch, obj.switch_default_on)
-    )
+    try:
+        switch_number, branch = resolve_switch_id(obj)
+    except Exception:
+        switch_number, branch = None, None
+    if switch_number is None or branch is None:
+        switch_number, branch = 0, 0
+    nodes.append(Switch(len(nodes), switch_number, branch, obj.switch_default_on))
     return ParsedNodes(vertex_data=[], vertices_length=0, vertices_size=0)
 
 
 def parse_dof(obj, nodes):
-    """Adds a BML DOF to the BML node list"""
-    print(f"{obj.name} is a DOF")
-    # add the DOF start node
+    """Adds a BML DOF to the BML node list.
 
-    dof = get_dofs()[obj.dof_list_index]
+    Resolution order delegated to resolve_dof_number(); default 0 if unresolved.
+    """
+    print(f"{obj.name} is a DOF")
+    try:
+        resolved_number = resolve_dof_number(obj)
+    except Exception:
+        resolved_number = None
+    if resolved_number is None:
+        resolved_number = 0
+
+    class _TmpDof:
+        def __init__(self, dof_number):
+            self.dof_number = dof_number
+            self.name = f"DOF {dof_number}"
+
+    dof = _TmpDof(resolved_number)
 
     obj_orig_rotation_mode = obj.rotation_mode
     obj.rotation_mode = "QUATERNION"

@@ -11,6 +11,7 @@ from bms_blender_plugin.common.bml_structs import (
 )
 from bms_blender_plugin.common.blender_types import BlenderEditorNodeType, BlenderNodeTreeType
 from bms_blender_plugin.common.util import get_dofs
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number
 from bms_blender_plugin.nodes_editor.dof_editor import (
     update_node_links,
 )
@@ -69,9 +70,16 @@ def get_render_control_nodes(node_start_index=0):
                         (ArgType.DOF_ID, render_control_node.arguments[0].type.argument_id)
                     )
                     result_type = ArgType.DOF_ID
-                    result_id = get_dofs()[
-                        render_control_node.parent_dof.dof_list_index
-                    ].dof_number
+                    try:
+                        result_id = resolve_dof_number(render_control_node.parent_dof)
+                    except Exception:
+                        result_id = None
+                    if result_id is None:
+                        # legacy fallback to list index
+                        try:
+                            result_id = get_dofs()[render_control_node.parent_dof.dof_list_index].dof_number
+                        except Exception:
+                            result_id = 0
                 elif render_control_node.arguments[0].type.argument_type == ArgType.SCRATCH_VARIABLE_ID:
                     # the DOF node receives its data from a scratch variable - create a "SET" RC for it
                     math_op = MathOp.SET
@@ -79,9 +87,15 @@ def get_render_control_nodes(node_start_index=0):
                         (ArgType.SCRATCH_VARIABLE_ID, render_control_node.arguments[0].type.argument_id)
                     )
                     result_type = ArgType.DOF_ID
-                    result_id = get_dofs()[
-                        render_control_node.parent_dof.dof_list_index
-                    ].dof_number
+                    try:
+                        result_id = resolve_dof_number(render_control_node.parent_dof)
+                    except Exception:
+                        result_id = None
+                    if result_id is None:
+                        try:
+                            result_id = get_dofs()[render_control_node.parent_dof.dof_list_index].dof_number
+                        except Exception:
+                            result_id = 0
 
                 elif render_control_node.arguments[0].type.argument_type == ArgType.DOF_ID:
                     # the DOF node receives its data directly from an RC with a target DOF - nothing to do

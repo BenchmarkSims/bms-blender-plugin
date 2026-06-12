@@ -8,6 +8,7 @@ from bms_blender_plugin.common.blender_types import (
     BlenderNodeTreeType,
 )
 from bms_blender_plugin.common.util import get_dofs
+from bms_blender_plugin.common.resolve_ids import resolve_dof_number
 from bms_blender_plugin.nodes_editor import dof_node_categories
 from bms_blender_plugin.nodes_editor.dof_base_node import DofBaseNode
 from bms_blender_plugin.nodes_editor.dof_nodes.dof_input_node import NodeDofModelInput
@@ -144,22 +145,28 @@ def update_node_links(node_tree):
 
                 # make sure that nodes are not connected with themselves
                 if outgoing_node == recursive_node:
-                    continue
+                    continue # protect against accidental self-links
                 if (
                     get_bml_node_type(outgoing_node) == BlenderEditorNodeType.DOF_MODEL
                     and outgoing_node.parent_dof
                     and get_bml_node_type(recursive_node) != BlenderEditorNodeType.DOF_MODEL
                 ):
-                    dof_number = list_dof_numbers[
-                        outgoing_node.parent_dof.dof_list_index
-                    ].dof_number
+                    # We are at a non-DOF node feeding a DOF node, we want to auto-link
+                    dof_number = resolve_dof_number(outgoing_node.parent_dof)
+                    if dof_number is None:
+                        # fallback: derive from list index if persistent ID missing
+                        idx = getattr(outgoing_node.parent_dof, 'dof_list_index', -1)
+                        if 0 <= idx < len(list_dof_numbers):
+                            dof_number = list_dof_numbers[idx].dof_number
+                    if dof_number is None:
+                        continue # give up silently if still unresolved
                     nodes_with_same_dof_number = dofs_dict[dof_number]
                     for node_with_same_dof_number in nodes_with_same_dof_number:
                         node_tree.links.new(
                             recursive_node.outputs[0],
                             node_with_same_dof_number.inputs[0],
                         )
-                    dofs_dict[dof_number] = []
+                    dofs_dict[dof_number] = []  # block so we don't do this again
 
             if (
                 get_bml_node_type(recursive_node)

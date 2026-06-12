@@ -1,9 +1,8 @@
 import bpy
-
 import bpy.utils.previews
-
 import os
 import struct
+from contextlib import nullcontext
 
 
 import lzma
@@ -82,37 +81,74 @@ def get_bml_type(obj, purge_orphaned_object=True):
 
 
 switches = []
+_switches_hydrated = False  # sentinel controlling hydration of global switch list
 
 
-def get_switches():
-    """Returns a list of BMS Switches which are loaded from the switch.xml"""
-    global switches
-    if switches is None or len(switches) == 0:
-        import os
+def _parse_switch_xml():
+    tree = ElementTree.parse(os.path.join(os.path.dirname(__file__), "switch.xml"))
+    root = tree.getroot()
+    parsed = []
+    for switch in root:
+        switch_number = int(switch.find("SwitchNum").text)
+        branch = int(switch.find("BranchNum").text)
+        name = switch.find("Name").text if switch.find("Name") is not None else ""
+        comment = switch.find("Comment").text if switch.find("Comment") is not None else ""
+        parsed.append(SwitchEnum(switch_number, branch, name, comment))
+    return parsed
 
-        switches_tree = ElementTree.parse(
-            os.path.join(os.path.dirname(__file__), "switch.xml")
-        )
-        root = switches_tree.getroot()
-        switches = []
 
-        for switch in root:
-            switch_number = int(switch.find("SwitchNum").text)
-            branch = int(switch.find("BranchNum").text)
-            if switch.find("Name") is not None:
-                name = switch.find("Name").text
-            else:
-                name = ""
+def get_switches(force_disk: bool = False):
+    """Return switch definitions using hybrid hydration strategy
 
-            if switch.find("Comment") is not None:
-                comment = switch.find("Comment").text
-            else:
-                comment = ""
+    Order of precedence (unless force_disk):
+      1. Already hydrated global list
+      2. Scene cached (scene.switch_list) if present & user prefers cached
+      3. Disk XML parse (and bootstrap scene snapshot if empty)
+    """
+    global switches, _switches_hydrated
+    if _switches_hydrated and not force_disk:
+        return switches
 
-            switches.append(SwitchEnum(switch_number, branch, name, comment))
+    scene = getattr(bpy.context, 'scene', None)
+    prefs = None
+    try:
+        prefs = bpy.context.preferences.addons[__package__.split('.')[0]].preferences
+    except Exception:
+        pass
+    prefer_scene = getattr(prefs, 'prefer_scene_snapshot', True) if prefs else True
+    warn_mismatch = getattr(prefs, 'warn_xml_mismatch', True) if prefs else True
+    scene_list = getattr(scene, 'switch_list', None) if scene else None
 
-        print(f"Imported {len(switches)} switches from file")
+    # Scene snapshot path
+    if not force_disk and prefer_scene and scene_list and len(scene_list) > 0:
+        switches = [
+            SwitchEnum(int(it.switch_number), int(it.branch_number), it.name, getattr(it, 'comment', ""))
+            for it in scene_list
+        ]
+        _switches_hydrated = True
+        if warn_mismatch:
+            try:
+                disk_list = _parse_switch_xml()
+                if len(disk_list) != len(switches) or any(
+                    (a.switch_number, a.branch) != (b.switch_number, b.branch)
+                    for a, b in zip(switches, disk_list[:len(switches)])
+                ):
+                    print("[BMS get_switches] switch.xml differs from scene snapshot – using scene snapshot (Reload switch.xml to adopt disk changes).")
+            except Exception:
+                pass
+        return switches
 
+    # Disk parse
+    disk_switches = _parse_switch_xml()
+    switches = disk_switches
+    _switches_hydrated = True
+    if scene_list is not None and len(scene_list) == 0:
+        for sw in switches:
+            item = scene_list.add()
+            item.name = sw.name
+            item.switch_number = sw.switch_number
+            item.branch_number = sw.branch
+    print(f"[BMS get_switches] Imported {len(switches)} switches from file")
     return switches
 
 
@@ -145,30 +181,57 @@ def get_scripts():
 
 
 dofs = []
+_dofs_hydrated = False
 
 
-def get_dofs():
-    """Returns a list of BMS DOFs which are loaded from the DOF.xml"""
-    global dofs
+def _parse_dof_xml():
+    tree = ElementTree.parse(os.path.join(os.path.dirname(__file__), "DOF.xml"))
+    root = tree.getroot()
+    parsed = []
+    for dof in root:
+        dof_number = int(dof.find("DOFNum").text)
+        name = dof.find("Name").text if (dof.find("Name") is not None and dof.find("Name").text) else ""
+        parsed.append(DofEnum(dof_number, name))
+    return parsed
 
-    if dofs is None or len(dofs) == 0:
-        dofs_tree = ElementTree.parse(
-            os.path.join(os.path.dirname(__file__), "DOF.xml")
-        )
-        root = dofs_tree.getroot()
-        dofs = []
 
-        for dof in root:
-            dof_number = int(dof.find("DOFNum").text)
-            if dof.find("Name") is not None and dof.find("Name").text is not None:
-                name = dof.find("Name").text
-            else:
-                name = ""
+def get_dofs(force_disk: bool = False):
+    """Return DOF definitions (hybrid hydration like switches)."""
+    global dofs, _dofs_hydrated
+    if _dofs_hydrated and not force_disk:
+        return dofs
 
-            dofs.append(DofEnum(dof_number, name))
+    scene = getattr(bpy.context, 'scene', None)
+    prefs = None
+    try:
+        prefs = bpy.context.preferences.addons[__package__.split('.')[0]].preferences
+    except Exception:
+        pass
+    prefer_scene = getattr(prefs, 'prefer_scene_snapshot', True) if prefs else True
+    warn_mismatch = getattr(prefs, 'warn_xml_mismatch', True) if prefs else True
+    scene_list = getattr(scene, 'dof_list', None) if scene else None
 
-        print(f"Imported {len(dofs)} dofs from file")
+    if not force_disk and prefer_scene and scene_list and len(scene_list) > 0:
+        dofs = [DofEnum(int(it.dof_number), it.name) for it in scene_list]
+        _dofs_hydrated = True
+        if warn_mismatch:
+            try:
+                disk_list = _parse_dof_xml()
+                if len(disk_list) != len(dofs) or any(a.dof_number != b.dof_number for a, b in zip(dofs, disk_list[:len(dofs)])):
+                    print("[BMS get_dofs] DOF.xml differs from scene snapshot – using scene snapshot (Reload DOF.xml to adopt disk changes).")
+            except Exception:
+                pass
+        return dofs
 
+    disk_dofs = _parse_dof_xml()
+    dofs = disk_dofs
+    _dofs_hydrated = True
+    if scene_list is not None and len(scene_list) == 0:
+        for de in dofs:
+            item = scene_list.add()
+            item.name = de.name
+            item.dof_number = de.dof_number
+    print(f"[BMS get_dofs] Imported {len(dofs)} dofs from file")
     return dofs
 
 
@@ -206,6 +269,66 @@ def get_callbacks():
         print(f"Imported {len(callbacks)} callbacks from file")
 
     return callbacks
+
+
+# -----------------------------------------------------------------------------
+# Get switch label for a given persistent switch ID/branch. Uses cached scene switch list first, then xml.
+# -----------------------------------------------------------------------------
+def lookup_switch_label(switch_number: int, branch_number: int) -> str | None:
+    """Return switch label from scene switch_list first, then global XML cache.
+
+    Args:
+        switch_number: persistent switch number
+        branch_number: persistent branch number
+    Returns:
+        Matching label (may be empty string) or None if not found.
+    """
+    try:
+        scene_list = getattr(bpy.context.scene, "switch_list", None)
+        if scene_list:
+            for item in scene_list:
+                if getattr(item, "switch_number", None) == switch_number and getattr(item, "branch_number", None) == branch_number:
+                    return getattr(item, "name", None)
+    except Exception:
+        pass
+    # Fallback to global cache
+    try:
+        for sw in get_switches():
+            if sw.switch_number == switch_number and sw.branch == branch_number:
+                return sw.name
+    except Exception:
+        pass
+    return None
+
+
+def lookup_dof_label(dof_number: int) -> str | None:
+    """Return DOF label from scene dof_list first, then global cache."""
+    try:
+        scene_list = getattr(bpy.context.scene, "dof_list", None)
+        if scene_list:
+            for item in scene_list:
+                if getattr(item, "dof_number", None) == dof_number:
+                    return getattr(item, "name", None)
+    except Exception:
+        pass
+    try:
+        for de in get_dofs():
+            if de.dof_number == dof_number:
+                return de.name
+    except Exception:
+        pass
+    return None
+
+__all__ = [
+    # existing public functions intentionally not exhaustively re-listed here
+    "get_switches",
+    "get_dofs",
+    "get_callbacks",
+    "get_bml_type",
+    "get_parent_dof_or_switch",
+    "lookup_switch_label",
+    "lookup_dof_label",
+]
 
 
 def flatten_collection(collection, parent_collection):
@@ -249,7 +372,7 @@ def get_non_translate_dof_parent(obj):
 
 
 def copy_collection_flat(
-    from_collection, to_collection, excluded_collections, scale_factor
+    from_collection, to_collection, excluded_collections, scale_factor, export_profiler=None
 ):
     """Copies a collection and all of its objects but not its child-collections.
     Also applies a scale factor to its objects"""
@@ -260,12 +383,12 @@ def copy_collection_flat(
             if collection_object.parent is None:
                 # root object - copy that
                 copied_object = copy_object(
-                    collection_object, None, to_collection, scale_factor
+                    collection_object, None, to_collection, scale_factor, export_profiler
                 )
 
         for collection_child in from_collection.children:
             copy_collection_flat(
-                collection_child, to_collection, excluded_collections, scale_factor
+                collection_child, to_collection, excluded_collections, scale_factor, export_profiler
             )
 
         # toggle object mode to make sure that the scaling has been applied (Blender quirk)
@@ -273,6 +396,9 @@ def copy_collection_flat(
         if copied_object:
             bpy.context.view_layer.objects.active = copied_object
             bpy.ops.object.mode_set(mode="OBJECT")
+    
+    # Single scene update at the end to refresh all transform matrices - attempt to fix nested DOF transforms failing due to Blender quirk
+    bpy.context.view_layer.update()
 
 
 def reset_dof(obj):
@@ -292,95 +418,195 @@ def reset_dof(obj):
         obj.delta_scale.z = 1
 
 
-def copy_object(obj, parent, collection, scale_factor=1):
+def copy_object(obj, parent, collection, scale_factor=1, export_profiler=None):
     """Recursively copies an object and all of its children and moves their copies to a given collection.
     Also applies a scale factor"""
     if not obj.hide_render and len(obj.users_collection) != 0:
-        copied_object = obj.copy()
-        copied_object.parent = parent
-        copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
+        with export_profiler.stage("collection copy: duplicate objects") if export_profiler else nullcontext():
+            copied_object = obj.copy()
+            copied_object.parent = parent
+            copied_object.matrix_parent_inverse = obj.matrix_parent_inverse.copy()
 
-        if obj.data:
-            copied_object.data = copied_object.data.copy()
-        for k, e in obj.items():
-            copied_object[k] = e
+            if obj.data:
+                copied_object.data = copied_object.data.copy()
+            for k, e in obj.items():
+                copied_object[k] = e
 
-        # copy and apply all modifiers
-        for obj_modifier in obj.modifiers:
-            copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
-            if not copied_object_modifiers:
-                copied_object_modifiers = obj.modifiers.new(
-                    obj_modifier.name, obj_modifier.type
-                )
+            # copy and apply all modifiers
+            for obj_modifier in obj.modifiers:
+                copied_object_modifiers = obj.modifiers.get(obj_modifier.name, None)
+                if not copied_object_modifiers:
+                    copied_object_modifiers = obj.modifiers.new(
+                        obj_modifier.name, obj_modifier.type
+                    )
 
-            # collect names of writable properties
-            properties = [
-                p.identifier
-                for p in obj_modifier.bl_rna.properties
-                if not p.is_readonly
-            ]
+                # collect names of writable properties
+                properties = [
+                    p.identifier
+                    for p in obj_modifier.bl_rna.properties
+                    if not p.is_readonly
+                ]
 
-            # copy those properties
-            for prop in properties:
-                setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
+                # copy those properties
+                for prop in properties:
+                    setattr(copied_object_modifiers, prop, getattr(obj_modifier, prop))
 
-        # set all DOFs to 0
-        if get_bml_type(obj, False) == BlenderNodeType.DOF:
-            reset_dof(copied_object)
+            # set all DOFs to 0
+            if get_bml_type(obj, False) == BlenderNodeType.DOF:
+                reset_dof(copied_object)
 
-        # scale only the root objects
-        if scale_factor != 1 and obj.parent is None:
-            copied_object.scale *= scale_factor
-            copied_object.location *= scale_factor
+            # scale only the root objects
+            if scale_factor != 1 and obj.parent is None:
+                copied_object.scale *= scale_factor
+                copied_object.location *= scale_factor
 
-        collection.objects.link(copied_object)
+            collection.objects.link(copied_object)
 
-        # override any selection restriction
-        copied_object.hide_select = False
-        copied_object.hide_viewport = False
-        copied_object.hide_set(False)
+            # override any selection restriction
+            copied_object.hide_select = False
+            copied_object.hide_viewport = False
+            copied_object.hide_set(False)
 
         for obj_child in obj.children:
-            copy_object(obj_child, copied_object, collection, scale_factor)
+            copy_object(obj_child, copied_object, collection, scale_factor, export_profiler)
         return copied_object
 
 
-def apply_all_modifiers(collection):
-    """Applies all modifiers to objects which are rooted in the given collection"""
-    for obj in collection.objects:
-        if obj.parent is None:
-            apply_all_modifiers_on_obj(obj)
+def apply_all_modifiers(collection, export_profiler=None):
+    """Applies all modifiers and transforms to every object in the collection.
 
-
-def apply_all_modifiers_on_obj(obj):
-    """Applies all modifiers to a single object.
-    Empties (DOFs, Slots and Switches) are excepted, since applying their modifiers would reset their positions.
+    After copy_collection_flat all objects (including children) reside in a flat
+    collection, but parent-child transform order still matters. We batch modifier
+    conversion globally, then batch transform application by hierarchy depth so a
+    selected batch never contains both a parent and one of its descendants.
     """
-    if obj:
+    all_objs = list(collection.objects)
+    special_types = (BlenderNodeType.DOF, BlenderNodeType.SLOT, BlenderNodeType.HOTSPOT)
+    transform_epsilon = 1e-7
+
+    def _stage(stage_name):
+        return export_profiler.stage(stage_name) if export_profiler else nullcontext()
+
+    def _vector_nearly_equal(vector, expected):
+        return all(abs(vector[index] - expected[index]) <= transform_epsilon for index in range(3))
+
+    def _matrix_nearly_identity(matrix):
+        for row_index in range(4):
+            for column_index in range(4):
+                expected = 1.0 if row_index == column_index else 0.0
+                if abs(matrix[row_index][column_index] - expected) > transform_epsilon:
+                    return False
+        return True
+
+    def _needs_full_transform_apply(obj):
+        return not _matrix_nearly_identity(obj.matrix_basis)
+
+    def _needs_scale_transform_apply(obj):
+        return not (
+            _vector_nearly_equal(obj.scale, (1.0, 1.0, 1.0))
+            and _vector_nearly_equal(obj.delta_scale, (1.0, 1.0, 1.0))
+        )
+
+    def _hierarchy_levels(objects):
+        object_names = {obj.name for obj in objects}
+        levels = []
+        visited = set()
+
+        def add_obj(obj, depth):
+            if obj.name in visited or obj.name not in object_names:
+                return
+            visited.add(obj.name)
+            while len(levels) <= depth:
+                levels.append([])
+            levels[depth].append(obj)
+            for child in obj.children:
+                add_obj(child, depth + 1)
+
+        for obj in objects:
+            if obj.parent is None or obj.parent.name not in object_names:
+                add_obj(obj, 0)
+
+        for obj in objects:
+            add_obj(obj, 0)
+
+        return levels
+
+    def _batch_transform_apply(objects, **kwargs):
+        if not objects:
+            return
         bpy.ops.object.select_all(action="DESELECT")
-        # apply the modifiers
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
+        for obj in objects:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = objects[0]
+        bpy.ops.object.transform_apply(**kwargs)
 
-        if obj.type == "MESH":
-            bpy.ops.object.mode_set(mode="OBJECT")
-            bpy.ops.object.convert(target="MESH", keep_original=False)
+    with export_profiler.stage("modifier application: apply modifiers") if export_profiler else nullcontext():
+        with _stage("modifier application: batch mesh convert"):
+            mesh_objs = [obj for obj in all_objs if obj.type == "MESH"]
+            bpy.ops.object.select_all(action="DESELECT")
+            for obj in mesh_objs:
+                obj.select_set(True)
+            if mesh_objs:
+                bpy.context.view_layer.objects.active = mesh_objs[0]
+                bpy.ops.object.mode_set(mode="OBJECT")
+                bpy.ops.object.convert(target="MESH", keep_original=False)
 
-        if get_bml_type(obj) not in [
-            BlenderNodeType.DOF,
-            BlenderNodeType.SLOT,
-            BlenderNodeType.HOTSPOT,
-        ]:
-            bpy.ops.object.transform_apply()
-        else:
-            # only apply scaling operations to those objects
-            # all other operations would reset them since they are empties
-            bpy.ops.object.transform_apply(
-                location=False, rotation=False, scale=True, properties=False
-            )
+        # Store reference points after convert (modifiers resolved) but before
+        # transform_apply zeroes the location.
+        with _stage("modifier application: store reference points"):
+            for obj in all_objs:
+                if obj.type == "MESH" and get_bml_type(obj) not in special_types:
+                    obj["bms_reference_point"] = tuple(obj.location)
 
-        for child in obj.children:
-            apply_all_modifiers_on_obj(child)
+        regular_applied = 0
+        regular_skipped = 0
+        regular_batches = 0
+        special_applied = 0
+        special_skipped = 0
+        special_batches = 0
+
+        for level_objs in _hierarchy_levels(all_objs):
+            regular_objs = []
+            special_objs = []
+
+            for obj in level_objs:
+                if get_bml_type(obj) in special_types:
+                    if _needs_scale_transform_apply(obj):
+                        special_objs.append(obj)
+                    else:
+                        special_skipped += 1
+                elif _needs_full_transform_apply(obj):
+                    regular_objs.append(obj)
+                else:
+                    regular_skipped += 1
+
+            if regular_objs:
+                with _stage("modifier application: batch regular transforms"):
+                    _batch_transform_apply(regular_objs)
+                regular_applied += len(regular_objs)
+                regular_batches += 1
+
+            if special_objs:
+                with _stage("modifier application: batch special scale transforms"):
+                    _batch_transform_apply(
+                        special_objs,
+                        location=False,
+                        rotation=False,
+                        scale=True,
+                        properties=False,
+                    )
+                special_applied += len(special_objs)
+                special_batches += 1
+
+            if regular_objs or special_objs:
+                bpy.context.view_layer.update()
+
+        print(
+            "[BML Export] Transform apply batches: "
+            f"{regular_batches} regular / {special_batches} special; "
+            f"objects applied: {regular_applied} regular / {special_applied} special; "
+            f"skipped: {regular_skipped} regular / {special_skipped} special"
+        )
 
 
 def uncompress_file(src, dest):
