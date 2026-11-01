@@ -23,6 +23,7 @@ class BlenderEditorNodeType (str, Enum):
     # DOF nodes
     DOF_MODEL = "dof_model"
     RENDER_CONTROL = "render_control"
+    SOLVER = "solver"
 
     # Material nodes
     MATERIAL = "material"

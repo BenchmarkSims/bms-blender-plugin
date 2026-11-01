@@ -4,7 +4,7 @@ from bpy.types import Operator
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType
 from bms_blender_plugin.common.bml_structs import DofType
-from bms_blender_plugin.common.util import get_bml_type, get_dofs, get_switches, get_callbacks
+from bms_blender_plugin.common.util import get_bml_type, get_dofs, get_switches, get_callbacks, get_addon_preferences
 
 
 class ReloadDofList(Operator):
@@ -246,17 +246,18 @@ class ApplyEmptyDisplaysToDofs(Operator):
 
     # noinspection PyMethodMayBeStatic
     def execute(self, context):
-        rotate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_rotate_empty_type
-        rotate_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_rotate_empty_size
+        prefs = get_addon_preferences(context)
+        rotate_empty = prefs.dof_rotate_empty_type
+        rotate_empty_size = prefs.dof_rotate_empty_size
 
-        translate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_type
-        translate_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_size
+        translate_empty = prefs.dof_translate_empty_type
+        translate_empty_size = prefs.dof_translate_empty_size
 
-        scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
-        scale_empty_size = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_size
+        scale_empty = prefs.dof_scale_empty_type
+        scale_empty_size = prefs.dof_scale_empty_size
 
-        translate_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_translate_empty_type
-        scale_empty = context.preferences.addons["bms_blender_plugin"].preferences.dof_scale_empty_type
+        translate_empty = prefs.dof_translate_empty_type
+        scale_empty = prefs.dof_scale_empty_type
 
         for obj in bpy.data.objects:
             if get_bml_type(obj) == BlenderNodeType.DOF:
@@ -287,12 +288,9 @@ class ApplyEmptyDisplaysToSwitches(Operator):
 
     # noinspection PyMethodMayBeStatic
     def execute(self, context):
-        switch_empty = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.switch_empty_type
-        switch_empty_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.switch_empty_size
+        prefs = get_addon_preferences(context)
+        switch_empty = prefs.switch_empty_type
+        switch_empty_size = prefs.switch_empty_size
 
         for obj in bpy.data.objects:
             if get_bml_type(obj) == BlenderNodeType.SWITCH:

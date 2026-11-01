@@ -21,6 +21,7 @@ from bms_blender_plugin.common.util import (
     get_parent_dof_or_switch,
     lookup_switch_label,
     lookup_dof_label,
+    get_addon_preferences,
 )
 from bms_blender_plugin.common.resolve_ids import resolve_dof_number, resolve_switch_id
 from bms_blender_plugin.nodes_editor.util import get_bml_node_type, get_bml_node_tree_type
@@ -218,33 +219,22 @@ def update_switch_or_dof_name(obj, context):
 def update_dof_display_type(obj, context):
     """Updates the display-type of a DOF Empty"""
     reset_dof(obj)
+    prefs = get_addon_preferences(context)
 
     if obj.dof_type == DofType.ROTATE.name:
         clear_parent_dof_rotation(obj)
-        obj.empty_display_type = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_rotate_empty_type
-        obj.empty_display_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_rotate_empty_size
+        obj.empty_display_type = prefs.dof_rotate_empty_type
+        obj.empty_display_size = prefs.dof_rotate_empty_size
 
     elif obj.dof_type == DofType.TRANSLATE.name:
         align_parent_dof_rotation(obj)
-        obj.empty_display_type = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_translate_empty_type
-        obj.empty_display_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_translate_empty_size
+        obj.empty_display_type = prefs.dof_translate_empty_type
+        obj.empty_display_size = prefs.dof_translate_empty_size
 
     elif obj.dof_type == DofType.SCALE.name:
         clear_parent_dof_rotation(obj)
-        obj.empty_display_type = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_scale_empty_type
-        obj.empty_display_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_scale_empty_size
+        obj.empty_display_type = prefs.dof_scale_empty_type
+        obj.empty_display_size = prefs.dof_scale_empty_size
 
 
 def dof_set_input(obj, value):

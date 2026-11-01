@@ -15,7 +15,7 @@ from bpy_types import Operator, PropertyGroup
 from bms_blender_plugin.common.blender_types import LodItem
 from bms_blender_plugin.common.bml_structs import Compression
 from bms_blender_plugin.common.export_settings import ExportSettings
-from bms_blender_plugin.common.util import get_scripts
+from bms_blender_plugin.common.util import get_scripts, get_addon_preferences
 from bms_blender_plugin.exporter import bml_output
 from bms_blender_plugin.exporter.export_materials import (
     get_texture_files_to_be_exported,
@@ -187,9 +187,7 @@ class ExportBML(Operator, ExportHelper):
             traceback.print_exc()
             return {"CANCELLED"}
 
-        editor_path = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.editor_path
+        editor_path = get_addon_preferences(context).editor_path
         if blender_export_settings.open_editor and editor_path and len(bml_file_list) > 0:
             subprocess.Popen([editor_path, bml_file_list[0]])
 
@@ -208,9 +206,7 @@ class ExportBML(Operator, ExportHelper):
         return super().invoke(context, event)
 
     def draw(self, context):
-        editor_path = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.editor_path
+        editor_path = get_addon_preferences(context).editor_path
         layout = self.layout
 
         export_file_list = []

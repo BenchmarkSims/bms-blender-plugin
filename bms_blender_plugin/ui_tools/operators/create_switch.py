@@ -2,7 +2,7 @@ import bpy
 from bpy.types import Operator
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType
-from bms_blender_plugin.common.util import get_switches
+from bms_blender_plugin.common.util import get_switches, get_addon_preferences
 
 
 class CreateSwitch(Operator):
@@ -28,12 +28,9 @@ class CreateSwitch(Operator):
             f"Switch - {switch.name} ({switch.switch_number})", None
         )
         switch_object.bml_type = str(BlenderNodeType.SWITCH)
-        switch_object.empty_display_type = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.switch_empty_type
-        switch_object.empty_display_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.switch_empty_size
+        prefs = get_addon_preferences(context)
+        switch_object.empty_display_type = prefs.switch_empty_type
+        switch_object.empty_display_size = prefs.switch_empty_size
 
         if context.active_object:
             # assumes that every object is linked to at least one collection

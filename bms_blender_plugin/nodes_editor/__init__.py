@@ -36,6 +36,9 @@ from bms_blender_plugin.nodes_editor.dof_nodes.rendercontrols.trigonometry.arcta
 from bms_blender_plugin.nodes_editor.dof_nodes.rendercontrols.trigonometry.cos_node import NodeDofCos
 from bms_blender_plugin.nodes_editor.dof_nodes.rendercontrols.trigonometry.sin_node import NodeDofSin
 from bms_blender_plugin.nodes_editor.dof_nodes.rendercontrols.trigonometry.tan_node import NodeDofTan
+from bms_blender_plugin.nodes_editor.dof_nodes.solvers.pointing_solver_node import NodePointingSolver
+from bms_blender_plugin.nodes_editor.dof_nodes.solvers.oleo_solver_node import NodeOleoSolver
+from bms_blender_plugin.nodes_editor.dof_nodes.solvers.linkage_solver_node import NodeLinkageSolver
 from bms_blender_plugin.nodes_editor.material_nodes.material_node import MaterialNode
 from bms_blender_plugin.nodes_editor.material_nodes.sampler_node import SamplerNode
 from bms_blender_plugin.nodes_editor.material_nodes.shader_parameter_node import ShaderNode
@@ -110,6 +113,15 @@ dof_node_categories = [
             NodeItem(NodeDofNormalize.__name__),
             NodeItem(NodeDofStep.__name__),
             NodeItem(NodeDofMultiplyFrameTime.__name__),
+        ],
+    ),
+    CustomDofNodeCategory(
+        "SOLVERS",
+        "Solvers",
+        items=[
+            NodeItem(NodePointingSolver.__name__),
+            NodeItem(NodeOleoSolver.__name__),
+            NodeItem(NodeLinkageSolver.__name__),
         ],
     ),
 ]

@@ -2,7 +2,7 @@ import bpy
 from bpy.types import Operator
 
 from bms_blender_plugin.common.blender_types import BlenderNodeType
-from bms_blender_plugin.common.util import get_dofs
+from bms_blender_plugin.common.util import get_dofs, get_addon_preferences
 from bms_blender_plugin.nodes_editor.dof_editor import DofNodeTree
 
 
@@ -24,13 +24,9 @@ class CreateDof(Operator):
         dof = get_dofs()[0]
         dof_object = bpy.data.objects.new(f"DOF - {dof.name} ({dof.dof_number})", None)
         dof_object.bml_type = str(BlenderNodeType.DOF)
-        dof_object.empty_display_type = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_rotate_empty_type
-
-        dof_object.empty_display_size = context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.dof_rotate_empty_size
+        prefs = get_addon_preferences(context)
+        dof_object.empty_display_type = prefs.dof_rotate_empty_type
+        dof_object.empty_display_size = prefs.dof_rotate_empty_size
 
         if context.active_object:
             # assumes that every object is linked to at least one collection

@@ -171,21 +171,25 @@ def get_bml_node_tree_type(obj):
     if not obj:
         return BlenderNodeTreeType.NONE
     else:
-        # the only way to get the tree type in Blender 3.6 is to check out the nodes
-        if len(obj.nodes) > 0 and obj.nodes[0].bml_node_type in {
+        # Check all nodes for DOF-tree types (supports trees that contain only solver nodes)
+        dof_tree_types = {
             BlenderEditorNodeType.DOF_MODEL,
             BlenderEditorNodeType.RENDER_CONTROL,
-        }:
-            return BlenderNodeTreeType.DOF_TREE
-
-        elif len(obj.nodes) > 0 and obj.nodes[0].bml_node_type in {
+            BlenderEditorNodeType.SOLVER,
+        }
+        material_tree_types = {
             BlenderEditorNodeType.MATERIAL,
             BlenderEditorNodeType.SHADER_PARAMETER,
             BlenderEditorNodeType.SAMPLER,
-        }:
-            return BlenderNodeTreeType.MATERIAL_TREE
-        else:
-            return BlenderNodeTreeType.NONE
+        }
+        for node in obj.nodes:
+            node_type = get_bml_node_type(node)
+            if node_type in dof_tree_types:
+                return BlenderNodeTreeType.DOF_TREE
+            if node_type in material_tree_types:
+                return BlenderNodeTreeType.MATERIAL_TREE
+
+        return BlenderNodeTreeType.NONE
 
 
 def dof_nodes_have_equal_dof_numbers(node_1, node_2):

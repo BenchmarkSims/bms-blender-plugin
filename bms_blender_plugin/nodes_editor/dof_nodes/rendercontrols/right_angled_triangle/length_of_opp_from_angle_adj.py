@@ -1,5 +1,6 @@
-import bpy
 import math
+
+import bpy
 
 from bms_blender_plugin.common.bml_structs import MathOp
 from bms_blender_plugin.nodes_editor.dof_base_node import subscribe_node, unsubscribe_node
@@ -24,7 +25,7 @@ class NodeDofLengthOfOppFromAngleAdj(BaseRenderControl):
         angle = self.get_argument_value("Angle")
         adjacent = self.get_argument_value("Adjacent")
 
-        result = math.atan(angle) * adjacent
+        result = math.tan(angle) * adjacent
 
         self.outputs[self.result.name].default_value = result
         self.result.value = result

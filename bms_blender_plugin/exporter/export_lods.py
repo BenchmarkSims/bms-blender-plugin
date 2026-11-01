@@ -30,6 +30,7 @@ from bms_blender_plugin.common.util import (
     compress_lz_4,
     compress_lzma,
     get_bml_type,
+    get_addon_preferences,
     force_auto_smoothing_on_object,
 )
 from bms_blender_plugin.exporter.export_materials import export_material_sets
@@ -147,12 +148,7 @@ def export_single_collection(
                 )
 
     # delete the copied collection and its children
-    if (
-        "bms_blender_plugin" in context.preferences.addons.keys()
-        and not context.preferences.addons[
-            "bms_blender_plugin"
-        ].preferences.do_not_delete_export_collection
-    ):
+    if not get_addon_preferences(context).do_not_delete_export_collection:
         with export_profiler.stage("lod: cleanup temp collection") if export_profiler else nullcontext():
             for obj in collection_copy_root.objects:
                 bpy.data.objects.remove(obj, do_unlink=True)
@@ -184,12 +180,7 @@ def get_nodes(context, root_collection, script, auto_smooth_value, export_profil
         nonlocal current_vertices_size
 
         # merge all objects with the same material in the current collection
-        if (
-            "bms_blender_plugin" in context.preferences.addons.keys()
-            and context.preferences.addons[
-                "bms_blender_plugin"
-            ].preferences.do_not_join_materials
-        ):
+        if get_addon_preferences(context).do_not_join_materials:
             prepared_objects = objects
         else:
             with export_profiler.stage("nodes: join by material") if export_profiler else nullcontext():

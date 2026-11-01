@@ -1,5 +1,6 @@
-import bpy
 import math
+
+import bpy
 
 from bms_blender_plugin.common.bml_structs import MathOp
 from bms_blender_plugin.nodes_editor.dof_base_node import subscribe_node, unsubscribe_node
@@ -27,12 +28,19 @@ class NodeDofAngleAFromAngleBSideASideB(BaseRenderControl):
         a = self.get_argument_value("a")
         b = self.get_argument_value("b")
 
-        if a == 0 or math.sin(B) == 0:
+        sine_b = math.sin(B)
+        if a == 0 or b == 0 or sine_b == 0:
             self.set_argument_error(self.result, "invalid argument")
             self.bl_icon = "ERROR"
             return
 
-        result = math.asin(b / math.sin(B) / a)
+        asin_argument = a * sine_b / b
+        if asin_argument < -1 or asin_argument > 1:
+            self.set_argument_error(self.result, "invalid argument")
+            self.bl_icon = "ERROR"
+            return
+
+        result = math.asin(asin_argument)
 
         self.outputs[self.result.name].default_value = result
         self.result.value = result

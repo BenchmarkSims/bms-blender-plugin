@@ -1,5 +1,6 @@
-import bpy
 import math
+
+import bpy
 
 from bms_blender_plugin.common.bml_structs import MathOp
 from bms_blender_plugin.nodes_editor.dof_base_node import subscribe_node, unsubscribe_node
@@ -8,7 +9,7 @@ from bms_blender_plugin.nodes_editor.dof_nodes.rendercontrols.base_render_contro
 
 class NodeDofArcTan2(BaseRenderControl):
     bl_label = "Arctan2"
-    bl_description = "arctan2(x)"
+    bl_description = "arctan2(y, x)"
     bl_icon = "DRIVER_TRANSFORM"
 
     def __init__(self):
@@ -24,17 +25,12 @@ class NodeDofArcTan2(BaseRenderControl):
         x = self.get_argument_value("x")
         y = self.get_argument_value("y")
 
-        if x == 0:
-            self.set_argument_error(self.result, "invalid value for x")
+        if x == 0 and y == 0:
+            self.set_argument_error(self.result, "invalid values for x and y")
             self.bl_icon = "ERROR"
             return
 
-        if y == 0:
-            self.set_argument_error(self.result, "invalid value for y")
-            self.bl_icon = "ERROR"
-            return
-
-        result = math.atan2(x, y)
+        result = math.atan2(y, x)
 
         self.outputs[self.result.name].default_value = result
         self.result.value = result

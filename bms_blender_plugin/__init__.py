@@ -3,12 +3,15 @@ import sys
 import os
 from itertools import groupby
 
-from bms_blender_plugin.ext.blender_dds_addon.directx.texconv import unload_texconv
+if __name__ != "bms_blender_plugin":
+    sys.modules["bms_blender_plugin"] = sys.modules[__name__]
+
+from .ext.blender_dds_addon.directx.texconv import unload_texconv
 
 bl_info = {
     "name": "Falcon BMS Plugin",
     "author": "Benchmark Sims",
-    "version": (1, 2, 0),
+    "version": (1, 2, 1),
     "blender": (3, 6, 0),
     "location": "File > Export",
     "description": "Export as Falcon BMS BML",

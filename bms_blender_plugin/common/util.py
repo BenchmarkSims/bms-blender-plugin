@@ -2,6 +2,7 @@ import bpy
 import bpy.utils.previews
 import os
 import struct
+import sys
 from contextlib import nullcontext
 
 
@@ -80,6 +81,27 @@ def get_bml_type(obj, purge_orphaned_object=True):
             return bml_type
 
 
+def get_addon_preferences(context=None):
+    """Return addon preferences, supporting renamed addon module folders."""
+    context = context or bpy.context
+    addon_keys = context.preferences.addons.keys()
+
+    root_module = sys.modules.get("bms_blender_plugin")
+    if root_module:
+        runtime_key = getattr(root_module, "__name__", "")
+        if runtime_key in addon_keys:
+            return context.preferences.addons[runtime_key].preferences
+
+    if "bms_blender_plugin" in addon_keys:
+        return context.preferences.addons["bms_blender_plugin"].preferences
+
+    for key in addon_keys:
+        if key.startswith("bms_blender_plugin"):
+            return context.preferences.addons[key].preferences
+
+    raise KeyError("No BMS Blender Plugin addon preferences entry found")
+
+
 switches = []
 _switches_hydrated = False  # sentinel controlling hydration of global switch list
 
@@ -112,7 +134,7 @@ def get_switches(force_disk: bool = False):
     scene = getattr(bpy.context, 'scene', None)
     prefs = None
     try:
-        prefs = bpy.context.preferences.addons[__package__.split('.')[0]].preferences
+        prefs = get_addon_preferences()
     except Exception:
         pass
     prefer_scene = getattr(prefs, 'prefer_scene_snapshot', True) if prefs else True
@@ -204,7 +226,7 @@ def get_dofs(force_disk: bool = False):
     scene = getattr(bpy.context, 'scene', None)
     prefs = None
     try:
-        prefs = bpy.context.preferences.addons[__package__.split('.')[0]].preferences
+        prefs = get_addon_preferences()
     except Exception:
         pass
     prefer_scene = getattr(prefs, 'prefer_scene_snapshot', True) if prefs else True

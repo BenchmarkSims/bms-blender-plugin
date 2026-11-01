@@ -91,6 +91,11 @@ def execute_active_node_tree():
                 break
 
 
+def _is_object_deleted(obj, scene):
+    """Returns True if an object reference should be cleared (object removed or orphaned)."""
+    return obj.name not in scene.objects or len(obj.users_collection) == 0
+
+
 def cleanup_deleted_dof_nodes(scene):
     """Cleans up all deleted nodes, checks their links and then executes the tree once to make sure its cache is
     up to-date."""
@@ -107,12 +112,23 @@ def cleanup_deleted_dof_nodes(scene):
                 if (
                     get_bml_node_type(node) == BlenderEditorNodeType.DOF_MODEL
                     and node.parent_dof
-                    and (
-                        node.parent_dof.name not in scene.objects
-                        or len(node.parent_dof.users_collection) == 0
-                    )
+                    and _is_object_deleted(node.parent_dof, scene)
                 ):
                     node.parent_dof = None
+
+                elif get_bml_node_type(node) == BlenderEditorNodeType.SOLVER:
+                    # Clear any stale object references on solver nodes.
+                    # Each solver node declares get_object_reference_attrs() to advertise
+                    # which of its attributes hold scene object PointerProperties.
+                    if not hasattr(node, "get_object_reference_attrs"):
+                        continue
+                    for attr in node.get_object_reference_attrs():
+                        obj_ref = getattr(node, attr, None)
+                        if obj_ref and _is_object_deleted(obj_ref, scene):
+                            try:
+                                setattr(node, attr, None)
+                            except Exception:
+                                pass
 
             update_node_links(tree)
             tree.is_updating = False

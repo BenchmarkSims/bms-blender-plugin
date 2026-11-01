@@ -88,6 +88,11 @@ bpy.types.Node.bml_node_type = bpy.props.EnumProperty(
             "A Render Control",
         ),
         (
+            str(BlenderEditorNodeType.SOLVER),
+            "Solver",
+            "A kinematic Solver node",
+        ),
+        (
             str(BlenderEditorNodeType.MATERIAL),
             "Material",
             "A BML Material",
